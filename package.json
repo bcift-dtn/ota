@@ -1,0 +1,25 @@
+{
+  "name": "ota",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/bcift-dtn/ota#readme",
+  "bugs": {
+    "url": "https://github.com/bcift-dtn/ota/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bcift-dtn/ota.git"
+  },
+  "license": "ISC",
+  "author": "digicom",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --env-file=.env server.js"
+  },
+  "dependencies": {
+    "ejs": "^5.0.2",
+    "express": "^5.2.1"
+  }
+}
