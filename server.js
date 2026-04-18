@@ -1,12 +1,42 @@
+// .ENV
+require('dotenv').config();
+
+// Dependencies
 const express = require('express');
 const path = require('path');
+const exSession = require('express-session');
 
+// Variable
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// EJS View Engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'src/views'));
+
+// JSON and URL-encoded middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.use(exSession({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false,
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24
+  }
+}));
+
+// Static Page
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get("/", (req, res) => {
+  res.render('pages/home');
+})
+
+// Listen to PORT
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
