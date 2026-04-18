@@ -7,7 +7,7 @@ COPY --chown=node:node package*.json ./
 
 USER node
 
-RUN npm install ci --only=production
+RUN npm install --only=production
 
 COPY --chown=node:node . .
 
