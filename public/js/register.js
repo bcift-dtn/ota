@@ -1,0 +1,87 @@
+const registerForm = document.querySelector('#registerForm');
+
+const passwordInput = document.querySelector('#password');
+const passwordLabel = document.querySelector('#passwordLabel')
+const confirmPasswordInput = document.querySelector('#confirmPassword')
+const confirmPasswordLabel = document.querySelector('#confirmPasswordLabel');
+const emailInput = document.querySelector('#email');
+const emailLabel = document.querySelector('#emailLabel');
+const signupText = document.querySelector('#signupText')
+const termsCheckbox = document.querySelector('#termsCheckbox')
+
+registerForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  // Get form value
+  const fullName = document.querySelector('#fullName').value.trim();
+  const email = emailInput.value.trim();
+  const password = document.querySelector('#password').value;
+  const confirmPassword = confirmPasswordInput.value;
+
+  if (password.length < 8) {
+    passwordInput.classList.add('warning-field');
+    passwordLabel.textContent = 'Must be 8 characters at least';
+
+    return;
+  }
+
+  passwordInput.classList.remove('warning-field');
+  passwordLabel.textContent = 'Must be 8 characters at least';
+
+  // Password match validation
+  if (!(password === confirmPassword)) {
+    confirmPasswordInput.classList.add('warning-field');
+    confirmPasswordLabel.textContent = 'Password do not match';
+
+    return;
+  }
+
+  confirmPasswordInput.classList.remove('warning-field');
+  confirmPasswordLabel.textContent = '';
+
+  if (!termsCheckbox.checked) {
+    signupText.textContent = "Please agree to the Terms and Conditions";
+    return;
+  }
+
+  // Fetch register response
+  try {
+    const response = await fetch('/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify({ fullName, email, password, confirmPassword })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (response.status === 409) {
+        emailInput.classList.add('warning-field');
+        emailLabel.textContent = data.error;
+      } else {
+        signupText.textContent = data.error || "Something went wrong";
+      }
+
+      return;
+    }
+
+    window.location.href = '/';
+  } catch (err) {
+    console.log('Fetch failed: ', err);
+  }
+})
+
+document.querySelectorAll('.toggle-password').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const targetId = btn.dataset.target;
+    const input = document.querySelector(`#${targetId}`);
+
+    if (input.type === 'password') {
+      input.type = 'text';
+      btn.textContent = 'Hide';
+    } else {
+      input.type = 'password';
+      btn.textContent = 'Show';
+    }
+  })
+})

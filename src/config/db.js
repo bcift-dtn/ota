@@ -1,7 +1,7 @@
-const { pool } = require('pg');
+const { Pool } = require('pg');
 require('dotenv').config();
 
-const pool = new pool({
+const pool = new Pool({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   database: process.env.DB_NAME,
@@ -14,4 +14,4 @@ pool.on('error', (err) => {
   process.exit(-1);
 });
 
-modile.exports = pool;
+module.exports = pool;

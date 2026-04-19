@@ -20,3 +20,5 @@ modalOverlay.addEventListener('click', e  => {
     modalOverlay.classList.add('hidden');
   }
 })
+
+const loginModalForm = document.querySelector('#loginModalForm');

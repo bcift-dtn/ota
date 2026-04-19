@@ -26,29 +26,37 @@
           <p></p>
         </div>
 
-        <form>
-          <label for="name">Full name:</label>
-          <input type="text" name="name" id="name" placeholder="Enter your name" required>
+        <form id="registerForm">
+          <label for="fullName">Full name:</label>
+          <input type="text" name="fullName" id="fullName" placeholder="Enter your name" required>
 
           <label for="email">E-mail:</label>
           <input type="email" name="email" id="email" placeholder="Enter your e-mail" required>
+          <label id="emailLabel" class="smaller-label warning-text" for="email"></label>
 
           <label for="password">Password:</label>
-          <input type="password" name="password" id="password" placeholder="Enter your password">
-          <label for="password" class="smaller-label">Must be 8 characters at least</label>
+          <div>
+            <input type="password" name="password" id="password" placeholder="Enter your password" minlength="8">
+            <button type="button" class="toggle-password" data-target="password">Show</button>
+          </div>
+          <label for="password" id="passwordLabel" class="smaller-label">Must be 8 characters at least</label>
 
-          <label for="confirmPassword">Password:</label>
-          <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password">
-          <label for="confirmPassword" class="smaller-label">Must be 8 characters at least</label>
+          <label for="confirmPassword">Confirm Password:</label>
+          <div>
+            <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" minlength="8">
+            <button type="button" class="toggle-password" data-target="confirmPassword">Show</button>
+          </div>
+          <label id="confirmPasswordLabel" for="confirmPassword" class="smaller-label warning-text"></label>
 
           <div class="terms-container">
-            <input type="checkbox"> 
+            <input id="termsCheckbox" type="checkbox"> 
             By creating an account means you agree to the
             <a href="#">Terms and Conditions</a>, and our
             <a href="#">Privacy Policy</a>.
           </div>
 
           <button class="signup-btn" id="signupBtn">Sign Up</button>
+          <p id="signupText" class="smaller-label warning-text"></p>
 
           <!-- clicking Sign in open up login modal -->
           <p>Already have an account? <span id="registerSigninBtn">Sign In</span></p>
@@ -57,5 +65,7 @@
     </div>
 
     <%- include('../partials/footer') %>
+
+    <script src="/js/register.js"></script>
   </body>
 </html>
