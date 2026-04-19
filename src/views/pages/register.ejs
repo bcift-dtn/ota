@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTA - Register</title>
+
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/components.css">
+  </head>
+
+  <body>
+    <%- include('../partials/navbar') %>
+
+    <div>
+      <!-- Banner -->
+      <section class="banner">
+
+      </section>
+
+      <!-- Register Form -->
+      <section class="register-container">
+        <div class="register-title">
+          <h1>Create your account</h1>
+          <p></p>
+        </div>
+
+        <form>
+          <label for="name">Full name:</label>
+          <input type="text" name="name" id="name" placeholder="Enter your name" required>
+
+          <label for="email">E-mail:</label>
+          <input type="email" name="email" id="email" placeholder="Enter your e-mail" required>
+
+          <label for="password">Password:</label>
+          <input type="password" name="password" id="password" placeholder="Enter your password">
+          <label for="password" class="smaller-label">Must be 8 characters at least</label>
+
+          <label for="confirmPassword">Password:</label>
+          <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password">
+          <label for="confirmPassword" class="smaller-label">Must be 8 characters at least</label>
+
+          <div class="terms-container">
+            <input type="checkbox"> 
+            By creating an account means you agree to the
+            <a href="#">Terms and Conditions</a>, and our
+            <a href="#">Privacy Policy</a>.
+          </div>
+
+          <button class="signup-btn" id="signupBtn">Sign Up</button>
+
+          <!-- clicking Sign in open up login modal -->
+          <p>Already have an account? <span id="registerSigninBtn">Sign In</span></p>
+        </form>
+      </section>
+    </div>
+
+    <%- include('../partials/footer') %>
+  </body>
+</html>

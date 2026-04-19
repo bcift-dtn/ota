@@ -6,6 +6,10 @@ const express = require('express');
 const path = require('path');
 const exSession = require('express-session');
 
+// Routes
+const authRoutes = require('./src/routes/authRoutes');
+
+
 // Variable
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,6 +39,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get("/", (req, res) => {
   res.render('pages/home');
 })
+
+app.use('/auth', authRoutes);
 
 // Listen to PORT
 app.listen(PORT, () => {

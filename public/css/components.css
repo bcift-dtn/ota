@@ -1,0 +1,117 @@
+/* Login Modal */
+.modal-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+
+  background-color: rgb(0, 0, 0, 0.1);
+}
+
+.login-modal {
+  display: flex;
+  flex-direction: column;
+
+  width: 18rem;
+  padding: 1rem 1.5rem;
+
+  border-radius: 20px;
+
+  box-shadow: 0 0 10px 2px rgb(0, 0, 0, 0.25);
+
+  background-color: white;
+}
+
+.login-modal span {
+  align-self: flex-end;
+  cursor: pointer;
+}
+
+.login-modal h3 {
+  align-self: center;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.login-modal form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-modal .email,
+.login-modal .password {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.login-modal .email-field,
+.login-modal .password-field {
+  padding: 0.6rem 0.3rem;
+
+  border: none;
+  border-radius: 5px;
+  background-color: var(--clr-secondary);
+}
+
+.login-modal .email-field:focus,
+.login-modal .password-field:focus {
+  outline: none;
+  border: 1px solid var(--clr-primary);
+}
+
+.login-modal .password {
+  margin: 1rem 0;
+}
+
+.login-modal .submit-login-btn {
+  align-self: center;
+
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0rem 1rem;
+
+  background-color: var(--clr-primary);
+  color: white;
+  font-weight: 800;
+
+  border: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+}
+
+.login-modal .modal-optional-option {
+  margin-bottom: 0.5rem;
+
+  text-align: center;
+  font-size: var(--fs-3);
+}
+
+.modal-optional-option a {
+  color: var(--clr-primary);
+  text-decoration: none;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  } to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.login-modal {
+  animation: slideDown 0.5s cubic-bezier(0.24, -0.07, 0, 1.66) forwards;
+}
+
+@media (min-width: 768px) {
+  .login-modal {
+    width: 20rem;
+  }
+}

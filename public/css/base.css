@@ -18,11 +18,21 @@
   --text-main: var(--clr-neutral);
   --action-color: var(--clr-primary);
 
-  --fs-1: 1rem;
-  --fs-2: 1.1rem;
-  --fs-5: 2rem;
-  --fs-6: 3rem;
-  --fs-7: 4rem;
+  --fs-1: 0.6rem;
+  --fs-2: 0.7rem;
+  --fs-3: 0.8rem;
+  --fs-4: 1rem;
+  --fs-5: 1.1rem;
+  --fs-6: 1.5rem;
+  --fs-7: 2rem;
+  --fs-8: 2.5rem;
+  --fs-9: 3rem;
+  --fs-10: 4rem;
+
+  /* Padding / Spcacing */
+  --spacing-horizontal-1: 1rem;
+
+  --spacing-vertical-1: 0.5rem;
 }
 
 *,
@@ -34,6 +44,44 @@
 }
 
 body {
+  margin: 0 auto;
+  min-height: 100vh;
   font-family: "Roboto", sans-serif;
   background-color: var(--clr-bg);
+}
+
+h1 {
+  font-size: var(--fs-7);
+}
+
+h2 {
+  font-size: var(--fs-6);
+}
+
+p,
+label,
+input,
+a {
+  font-size: var(--fs-3)
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: var(--fs-8);
+  }
+
+  h2 {
+    font-size: var(--fs-7);
+  }
+
+  p,
+  label,
+  input,
+  a {
+    font-size: var(--fs-4)
+  }
 }
