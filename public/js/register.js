@@ -26,7 +26,6 @@ registerForm.addEventListener('submit', async (e) => {
   }
 
   passwordInput.classList.remove('warning-field');
-  passwordLabel.textContent = 'Must be 8 characters at least';
 
   // Password match validation
   if (!(password === confirmPassword)) {
@@ -44,8 +43,13 @@ registerForm.addEventListener('submit', async (e) => {
     return;
   }
 
+  const signupBtn = document.querySelector('#signupBtn');
+
   // Fetch register response
   try {
+    signupBtn.disabled = true;
+    signupBtn.textContent = 'Creating account...';
+
     const response = await fetch('/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
@@ -62,8 +66,14 @@ registerForm.addEventListener('submit', async (e) => {
         signupText.textContent = data.error || "Something went wrong";
       }
 
+      signupBtn.disabled = false;
+      signupBtn.textContent = 'Sign Up';
+
       return;
     }
+
+    signupBtn.disabled = false;
+    signupBtn.textContent = 'Sign Up';
 
     window.location.href = '/';
   } catch (err) {

@@ -49,8 +49,14 @@
   gap: 0.4rem;
 }
 
-.login-modal .email-field,
-.login-modal .password-field {
+.password div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.login-modal .email-input,
+.login-modal .password-input {
   padding: 0.6rem 0.3rem;
 
   border: none;
@@ -58,14 +64,28 @@
   background-color: var(--clr-secondary);
 }
 
-.login-modal .email-field:focus,
-.login-modal .password-field:focus {
+.login-modal .email-input:focus,
+.login-modal .password-input:focus {
   outline: none;
   border: 1px solid var(--clr-primary);
 }
 
 .login-modal .password {
   margin: 1rem 0;
+}
+
+.login-modal .password-input {
+  width: 100%;
+}
+
+.login-modal .toggle-password {
+  border: 0;
+  background-color: white;
+}
+
+.toggle-password i,
+.toggle-password svg {
+  filter: brightness(0) saturate(100%) invert(49%) sepia(8%) saturate(2646%) hue-rotate(144deg) brightness(92%) contrast(96%);;
 }
 
 .login-modal .submit-login-btn {

@@ -13,10 +13,10 @@ const createUser = async (fullName, email, hashedPassword) => {
 }
 
 const findUserByEmail = async (email) => {
-  const query = 'SELECT * FROM ota.users WHERE emails = $1';
+  const query = 'SELECT * FROM ota.users WHERE email = $1';
   
   try {
-    const res = await pool.query(query, email);
+    const res = await pool.query(query, [email]);
     return res.rows[0];
   } catch (err) {
     throw err;

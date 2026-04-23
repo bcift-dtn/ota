@@ -33,6 +33,10 @@ app.use(exSession({
   }
 }));
 
+// Consistent Data
+const setLocals = require('./src/middlewares/setLocals');
+app.use(setLocals);
+
 // Static Page
 app.use(express.static(path.join(__dirname, 'public')));
 

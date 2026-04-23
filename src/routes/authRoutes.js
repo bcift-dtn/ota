@@ -11,4 +11,11 @@ router.post('/register', registerUser);
 
 router.post('/login', loginUser);
 
+router.post('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) console.error(err);
+    res.redirect('/');
+  })
+})
+
 module.exports = router;

@@ -17,7 +17,7 @@ const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const newUser = await createUser(fullName, email, hashedPassword);
 
-    return res.status(201).json({ message: 'Account Created', user: newUser });
+    return res.status(201).json({ message: 'Account Created'});
   } catch (err) {
     // 23505 is postgre unique vialation error
     if (err.code === '23505') {
@@ -44,7 +44,12 @@ const loginUser = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid credentials'});
     } else {
-      req.session.user = { id, fullName, email, role}
+      req.session.user = { 
+        id: user.id,
+        fullName: user.full_name,
+        email: user.email,
+        role: user.role
+      }
       return res.status(200).json({ success: 'Login success'})
     }
   } catch (err) {
