@@ -5,5 +5,4 @@ profileBtn?.addEventListener('click', e => {
   e.preventDefault();
 
   profileDropdownContainer.classList.toggle('hidden');
-
 })

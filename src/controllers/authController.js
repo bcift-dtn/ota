@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
-const { createUser, findUserByEmail } = require('../models/userModel');
+const { createUser, findUserByEmail, generateVerificationToken, findUserByToken, verifyUserEmail} = require('../models/userModel');
+const { sendVerificationEmail } = require('../config/mailer');
 
 const registerUser = async (req, res) => {
   const { fullName, email, password, confirmPassword } = req.body;
@@ -15,9 +16,12 @@ const registerUser = async (req, res) => {
   try {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const newUser = await createUser(fullName, email, hashedPassword);
+    const verificationToken = generateVerificationToken();
+    const newUser = await createUser(fullName, email, hashedPassword, verificationToken);
+    
+    await sendVerificationEmail(email, verificationToken);
 
-    return res.status(201).json({ message: 'Account Created'});
+    return res.status(201).json({ message: 'Account Created. Please check your email to verify.'});
   } catch (err) {
     // 23505 is postgre unique vialation error
     if (err.code === '23505') {
@@ -39,6 +43,10 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials'});
     }
 
+    if (!user.is_verified) {
+      return res.status(403).json({ error: 'Please verify your email before loggin in.'})
+    }
+
     const isMatch = await bcrypt.compare(password, user.password)
 
     if (!isMatch) {
@@ -58,4 +66,40 @@ const loginUser = async (req, res) => {
   }
 }
 
-module.exports = { registerUser, loginUser };
+const logout = async (req, res) => {
+  try {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(400).send(`<h1>Something went wrong!</h1>`);
+      }
+      res.redirect('/');
+    })
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const verifyEmail = async (req, res) => {
+  const token = req.query.token;
+
+  if (!token) {
+    return res.status(400).send('<h1>Invalid verification link.</h1>');
+  }
+
+  try {
+    const user = await findUserByToken(token);
+
+    if (!user) {
+      return res.status(400).send(`<h1>Invalid or expired verification link.</h1>`)
+    } 
+
+    await verifyUserEmail(user.id);
+
+    res.redirect('/');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('<h1>Something went wrong.</h1>');
+  }
+}
+
+module.exports = { registerUser, loginUser, logout, verifyEmail };
