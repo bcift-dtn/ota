@@ -32,6 +32,7 @@ nav .nav-login-btn {
   background-color: var(--clr-primary);
   color: white;
   font-weight: 700;
+  cursor: pointer;
 }
 
 nav .profile-wrapper {

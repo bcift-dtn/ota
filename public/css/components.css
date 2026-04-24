@@ -30,6 +30,7 @@
 .login-modal span {
   align-self: flex-end;
   cursor: pointer;
+  padding: 0.5rem;
 }
 
 .login-modal h3 {

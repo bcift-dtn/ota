@@ -72,26 +72,20 @@ registerForm.addEventListener('submit', async (e) => {
       return;
     }
 
-    signupBtn.disabled = false;
-    signupBtn.textContent = 'Sign Up';
+    signupBtn.disabled = true;
+    signupBtn.textContent = 'Success';
 
-    window.location.href = '/';
+    signupText.classList.remove('warning-text');
+    signupText.classList.add('success-text');
+    signupText.textContent = data.message;
+
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 2000);
+
   } catch (err) {
     console.log('Fetch failed: ', err);
+    signupBtn.disabled = false;
+    signupBtn.textContent = 'Sign Up';
   }
-})
-
-document.querySelectorAll('.toggle-password').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const targetId = btn.dataset.target;
-    const input = document.querySelector(`#${targetId}`);
-
-    if (input.type === 'password') {
-      input.type = 'text';
-      btn.textContent = 'Hide';
-    } else {
-      input.type = 'password';
-      btn.textContent = 'Show';
-    }
-  })
 })

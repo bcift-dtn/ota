@@ -86,6 +86,10 @@ button {
   color: red;
 }
 
+.success-text {
+  color: green;
+}
+
 @media (min-width: 768px) {
   h1 {
     font-size: var(--fs-8);

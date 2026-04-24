@@ -24,8 +24,8 @@ modalOverlay.addEventListener('click', e  => {
 
 const loginModalForm = document.querySelector('#loginModalForm');
 
-const emailInput = document.querySelector('#emailInput');
-const passwordInput = document.querySelector('#passwordInput');
+const loginEmailInput = document.querySelector('#loginEmailInput');
+const loginPasswordInput = document.querySelector('#loginPasswordInput');
 
 loginModalForm.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -34,8 +34,8 @@ loginModalForm.addEventListener('submit', async (e) => {
   submitLoginBtn.disabled = true;
   submitLoginBtn.textContent = 'Loading...';
 
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
+  const email = loginEmailInput.value.trim();
+  const password = loginPasswordInput.value;
 
   console.log(email, password)
 
@@ -74,14 +74,16 @@ document.querySelectorAll('.toggle-password').forEach(btn => {
   btn.addEventListener('click', () => {
     const targetId = btn.dataset.target;
     const input = document.querySelector(`#${targetId}`);
-    const icon = btn.querySelector('i') || btn.querySelector('svg');;
+    const iconHolder = btn.querySelector('[data-lucide]');
+
+    if (!input || !iconHolder) return;
 
     if (input.type === 'password') {
       input.type = 'text';
-      icon.setAttribute('data-lucide', 'eye');
+      iconHolder.setAttribute('data-lucide', 'eye');
     } else {
       input.type = 'password';
-      icon.setAttribute('data-lucide', 'eye-closed');
+      iconHolder.setAttribute('data-lucide', 'eye-closed');
     }
 
     lucide.createIcons();

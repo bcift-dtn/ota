@@ -37,14 +37,14 @@
           <label for="password">Password:</label>
           <div>
             <input type="password" name="password" id="password" placeholder="Enter your password" minlength="8">
-            <button type="button" class="toggle-password" data-target="password">Show</button>
+            <button type="button" class="toggle-password" data-target="password"><i data-lucide="eye-closed"></i></button>
           </div>
           <label for="password" id="passwordLabel" class="smaller-label">Must be 8 characters at least</label>
 
           <label for="confirmPassword">Confirm Password:</label>
           <div>
             <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" minlength="8">
-            <button type="button" class="toggle-password" data-target="confirmPassword">Show</button>
+            <button type="button" class="toggle-password" data-target="confirmPassword"><i data-lucide="eye-closed">></i></button>
           </div>
           <label id="confirmPasswordLabel" for="confirmPassword" class="smaller-label warning-text"></label>
 
@@ -65,6 +65,8 @@
     </div>
 
     <%- include('../partials/footer') %>
+
+    <%- include('../partials/loginModal') %>
 
     <script src="/js/register.js"></script>
   </body>
