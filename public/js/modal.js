@@ -22,6 +22,14 @@ modalOverlay.addEventListener('click', e  => {
   }
 })
 
+const registerSigninBtn = document.querySelector('#registerSigninBtn');
+
+registerSigninBtn?.addEventListener('click', e => {
+  e.preventDefault();
+
+  modalOverlay.classList.remove('hidden');
+})
+
 const loginModalForm = document.querySelector('#loginModalForm');
 
 const loginEmailInput = document.querySelector('#loginEmailInput');

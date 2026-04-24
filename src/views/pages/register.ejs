@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/layout.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/pages/register.css">
   </head>
 
   <body>
     <%- include('../partials/navbar') %>
 
-    <div>
+    <div class="register-wrapper">
       <!-- Banner -->
       <section class="banner">
 
@@ -23,43 +24,53 @@
       <section class="register-container">
         <div class="register-title">
           <h1>Create your account</h1>
-          <p></p>
+          <p>It's free and easy</p>
         </div>
 
-        <form id="registerForm">
-          <label for="fullName">Full name:</label>
-          <input type="text" name="fullName" id="fullName" placeholder="Enter your name" required>
-
-          <label for="email">E-mail:</label>
-          <input type="email" name="email" id="email" placeholder="Enter your e-mail" required>
-          <label id="emailLabel" class="smaller-label warning-text" for="email"></label>
-
-          <label for="password">Password:</label>
-          <div>
-            <input type="password" name="password" id="password" placeholder="Enter your password" minlength="8">
-            <button type="button" class="toggle-password" data-target="password"><i data-lucide="eye-closed"></i></button>
+        <form id="registerForm" class="register-form">
+          <p id="signupText" class="smaller-label warning-text"></p>
+          <div class="register-fields">
+            <label for="fullName">Full name:</label>
+            <input type="text" name="fullName" id="fullName" placeholder="Enter your name" required>
           </div>
-          <label for="password" id="passwordLabel" class="smaller-label">Must be 8 characters at least</label>
 
-          <label for="confirmPassword">Confirm Password:</label>
-          <div>
-            <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" minlength="8">
-            <button type="button" class="toggle-password" data-target="confirmPassword"><i data-lucide="eye-closed">></i></button>
+          <div class="register-fields">
+            <label for="email">E-mail:</label>
+            <input type="email" name="email" id="email" placeholder="Enter your e-mail" required>
+            <label id="emailLabel" class="smaller-label warning-text" for="email"></label>
           </div>
-          <label id="confirmPasswordLabel" for="confirmPassword" class="smaller-label warning-text"></label>
 
-          <div class="terms-container">
+          <div class="register-fields register-password-wrapper">
+            <label for="password">Password:</label>
+            <div>
+              <input type="password" name="password" id="password" placeholder="Enter your password" minlength="8">
+              <button type="button" class="toggle-password" data-target="password"><i data-lucide="eye-closed"></i></button>
+            </div>
+            <label for="password" id="passwordLabel" class="smaller-label"></label>
+          </div>
+
+          <div class="register-fields register-password-wrapper">
+            <label for="confirmPassword">Confirm Password:</label>
+            <div>
+              <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" minlength="8">
+              <button type="button" class="toggle-password" data-target="confirmPassword"><i data-lucide="eye-closed">></i></button>
+            </div>
+            <label id="confirmPasswordLabel" for="confirmPassword" class="smaller-label warning-text"></label>
+          </div>
+
+          <div class="register-terms-checkbox">
             <input id="termsCheckbox" type="checkbox"> 
-            By creating an account means you agree to the
-            <a href="#">Terms and Conditions</a>, and our
-            <a href="#">Privacy Policy</a>.
+            <p>
+              By creating an account means you agree to the
+              <a href="#">Terms and Conditions</a>, and our
+              <a href="#">Privacy Policy</a>.
+            </p>
           </div>
 
           <button class="signup-btn" id="signupBtn">Sign Up</button>
-          <p id="signupText" class="smaller-label warning-text"></p>
 
           <!-- clicking Sign in open up login modal -->
-          <p>Already have an account? <span id="registerSigninBtn">Sign In</span></p>
+          <p class="have-account-text">Already have an account? <span id="registerSigninBtn">Sign In</span></p>
         </form>
       </section>
     </div>

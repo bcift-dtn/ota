@@ -1,0 +1,121 @@
+.register-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  margin: auto 0;
+}
+
+.banner {
+  display: none;
+}
+
+.register-container {
+  max-width: 1920px;
+  width: 100%;
+  padding: 1rem;
+  margin: auto 0;
+}
+
+.register-title {
+  margin: 1rem 0 3rem;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.register-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.register-fields input {
+  padding: 0.6rem 0.3rem;
+
+  border: none;
+  border-radius: 5px;
+  background-color: var(--clr-secondary);
+}
+
+.register-fields input:focus {
+  outline: none;
+  border: 1px solid var(--clr-primary);
+}
+
+.register-password-wrapper div {
+  display: flex;
+  gap: 1rem;
+}
+
+.register-password-wrapper input {
+  width: 100%;
+}
+
+.register-password-wrapper button {
+  background: none;
+  outline: none;
+  border: none;
+}
+
+.register-terms-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+
+  margin: 1rem 0;
+}
+
+.register-terms-checkbox input {
+  accent-color: var(--clr-primary);
+}
+
+.signup-btn {
+  width: 100%;
+  padding: 0.6rem 0;
+  margin-bottom: 1rem;
+
+  background-color: var(--clr-primary);
+  color: white;
+  font-weight: 800;
+
+  border: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+}
+
+.have-account-text {
+  text-align: center;
+}
+
+.have-account-text span {
+  color: #0000FF;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .register-wrapper {
+    margin: 0;
+  }
+
+  .banner {
+    flex: 1.5;
+    display: flex;
+    background-color: rgb(218, 218, 218);
+  }
+
+  .register-container {
+    flex: 1;
+
+    padding: 5rem;
+    margin: 0;
+  }
+
+  .register-form {
+    gap: 1rem;
+  }
+}

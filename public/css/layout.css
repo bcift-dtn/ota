@@ -136,10 +136,9 @@ nav svg {
 
 /* Footer */
 footer {
-  left: 0;
-  bottom: 0;
   width: 100%;
   padding: var(--spacing-vertical-1) var(--spacing-horizontal-1);
+  margin-top: auto;
 
   background-color: var(--clr-primary);
   color: white;

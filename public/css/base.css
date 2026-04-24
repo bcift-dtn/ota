@@ -47,7 +47,11 @@
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+
   margin: 0 auto;
+  max-width: 1920px;
   min-height: 100vh;
   font-family: "Roboto", sans-serif;
   background-color: var(--clr-bg);

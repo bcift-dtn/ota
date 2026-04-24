@@ -20,12 +20,15 @@ registerForm.addEventListener('submit', async (e) => {
 
   if (password.length < 8) {
     passwordInput.classList.add('warning-field');
+    passwordLabel.classList.add('warning-text');
     passwordLabel.textContent = 'Must be 8 characters at least';
 
     return;
   }
 
   passwordInput.classList.remove('warning-field');
+  passwordLabel.classList.remove('warning-text');
+  passwordLabel.textContent = '';
 
   // Password match validation
   if (!(password === confirmPassword)) {
@@ -43,6 +46,7 @@ registerForm.addEventListener('submit', async (e) => {
     return;
   }
 
+  signupText.textContent = "";
   const signupBtn = document.querySelector('#signupBtn');
 
   // Fetch register response
