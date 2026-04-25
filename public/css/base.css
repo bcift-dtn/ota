@@ -65,6 +65,14 @@ h2 {
   font-size: var(--fs-6);
 }
 
+h3 {
+  font-size: var(--fs-4);
+}
+
+h4 {
+  font-size: var(--fs-3);
+}
+
 p,
 label,
 input,
@@ -103,11 +111,23 @@ button {
     font-size: var(--fs-7);
   }
 
+  h3 {
+    font-size: var(--fs-6);
+  }
+
+  h4 {
+    font-size: var(--fs-5);
+  }
+
   p,
   label,
   input,
   a,
   button {
     font-size: var(--fs-4)
+  }
+
+  li a {
+    font-size: var(--fs-3)
   }
 }
