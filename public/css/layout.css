@@ -10,6 +10,10 @@ nav {
   
 
   position: sticky;
+  top: 0;
+  z-index: 2;
+
+  background-color: var(--clr-bg);
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
   
   font-size: var(--fs-4);
@@ -199,7 +203,7 @@ footer li a {
 
 @media (min-width: 800px) {
   footer {
-    padding: 1rem 4rem 1rem;
+    padding: 2rem 4rem 1rem;
   }
 
   footer p,
@@ -210,7 +214,7 @@ footer li a {
 
   .footer-top {
     flex-direction: row;
-    padding: 1rem 0;
+    padding-bottom: 2rem;
   }
 
   .footer-one,

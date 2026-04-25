@@ -21,14 +21,12 @@ registerForm.addEventListener('submit', async (e) => {
   if (password.length < 8) {
     passwordInput.classList.add('warning-field');
     passwordLabel.classList.add('warning-text');
-    passwordLabel.textContent = 'Must be 8 characters at least';
 
     return;
   }
 
   passwordInput.classList.remove('warning-field');
   passwordLabel.classList.remove('warning-text');
-  passwordLabel.textContent = '';
 
   // Password match validation
   if (!(password === confirmPassword)) {
@@ -67,6 +65,7 @@ registerForm.addEventListener('submit', async (e) => {
         emailInput.classList.add('warning-field');
         emailLabel.textContent = data.error;
       } else {
+        emailLabel.textContent = '';
         signupText.textContent = data.error || "Something went wrong";
       }
 

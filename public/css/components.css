@@ -58,7 +58,7 @@
 
 .login-modal .email-input,
 .login-modal .password-input {
-  padding: 0.6rem 0.3rem;
+  padding: 0.6rem 0.5rem;
 
   border: none;
   border-radius: 5px;
@@ -110,11 +110,6 @@
 
   text-align: center;
   font-size: var(--fs-3);
-}
-
-.modal-optional-option a {
-  color: var(--clr-primary);
-  text-decoration: none;
 }
 
 @keyframes slideDown {

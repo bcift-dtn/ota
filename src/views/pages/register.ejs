@@ -14,7 +14,7 @@
   <body>
     <%- include('../partials/navbar') %>
 
-    <div class="register-wrapper">
+    <main class="register-wrapper">
       <!-- Banner -->
       <section class="banner">
         <img class="person-banner" src="/images/example.webp" alt="a man with laptop" width="1280">
@@ -46,14 +46,14 @@
               <input type="password" name="password" id="password" placeholder="Enter your password" minlength="8">
               <button type="button" class="toggle-password" data-target="password"><i data-lucide="eye-closed"></i></button>
             </div>
-            <label for="password" id="passwordLabel" class="smaller-label"></label>
+            <label for="password" id="passwordLabel" class="smaller-label">Must be 8 characters at least</label>
           </div>
 
           <div class="register-fields register-password-wrapper">
             <label for="confirmPassword">Confirm Password:</label>
             <div>
               <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" minlength="8">
-              <button type="button" class="toggle-password" data-target="confirmPassword"><i data-lucide="eye-closed">></i></button>
+              <button type="button" class="toggle-password" data-target="confirmPassword"><i data-lucide="eye-closed"></i></button>
             </div>
             <label id="confirmPasswordLabel" for="confirmPassword" class="smaller-label warning-text"></label>
           </div>
@@ -73,7 +73,7 @@
           <p class="have-account-text">Already have an account? <span id="registerSigninBtn">Sign In</span></p>
         </form>
       </section>
-    </div>
+    </main>
 
     <%- include('../partials/footer') %>
 
