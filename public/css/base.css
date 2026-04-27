@@ -77,8 +77,17 @@ p,
 label,
 input,
 a,
-button {
+button, 
+select {
   font-size: var(--fs-3);
+}
+
+.smaller-label {
+  font-size: var(--fs-2);
+}
+
+nav a {
+  font-size: var(--fs-1);
 }
 
 a {
@@ -132,11 +141,16 @@ a:hover {
   label,
   input,
   a,
-  button {
+  button,
+  select {
     font-size: var(--fs-4)
   }
 
   li a {
     font-size: var(--fs-3)
   }
+
+  .smaller-label {
+  font-size: var(--fs-3);
+}
 }

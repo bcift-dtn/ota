@@ -8,17 +8,365 @@
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/layout.css">
     <link rel="stylesheet" href="/css/components.css">
-    
+    <link rel="stylesheet" href="/css/pages/home.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"/>
   </head>
 
   <body>
     <!-- Login button will be on navbar right side -->
     <%- include('../partials/navbar') %>
 
-    <h1>Hello, World!</h1>
+    <main>
+      <section class="hero-banner"></section>
+
+      <section class="search-component">
+        <div class="search-wrapper">
+          <div class="tab-bar">
+            <div class="tab-highlight"></div>
+            <button class="tab-btn" data-service="ferry">FERRY</button>
+            <button class="tab-btn" data-service="car-rental">CAR RENTAL</button>
+            <button class="tab-btn" data-service="activities">ACTIVITIES</button>
+          </div>
+          
+          <div class="search-forms">
+            <div class="search-form " data-form="ferry">
+              <form action="">
+                <div class="search-form-top">
+                  <div class="trip-type-wrapper">
+                    <input type="radio" class="one-way-radio" id="onewayRadio" name="tripType" value="one-way" checked>
+                    <label for="onewayRadio">One way</label>
+                    <input type="radio" class="two-way-radio" id="twowayRadio" name="tripType" value="two-way">
+                    <label for="twowayRadio">Two way</label>
+                  </div>
+
+                  <div class="pax-counter-wrapper">
+                    <button type="button" class="pax-summary-btn" id="paxSummaryBtn">
+                      1 Adult, 0 Child, 0 Infant
+                    </button>
+                    <div class="pax-counter hidden">
+                      <div class="adult-pax">
+                        <div>
+                          <p>Adult</p>
+                          <p class="smaller-label">Age x - x</p>
+                        </div>
+                        <button type="button" class="pax-counter-btn" id="adultMinBtn">-</button>
+                        <p class="pax-counter-text" id="adultCounterText">1</p>
+                        <button type="button" class="pax-counter-btn" id="adultPlusBtn">+</button>
+                      </div>
+                      <div class="child-pax">
+                        <div>
+                          <p>Child</p>
+                          <p class="smaller-label">Age x - x</p>
+                        </div>
+                        <button type="button" class="pax-counter-btn" id="childMinBtn">-</button>
+                        <p class="pax-counter-text" id="childCounterText">0</p>
+                        <button type="button" class="pax-counter-btn" id="childPlusBtn">+</button>
+                      </div>
+                      <div class="infant-pax">
+                        <div>
+                          <p>Infant</p>
+                          <p class="smaller-label">Age x - x</p>
+                        </div>
+                        <button type="button" class="pax-counter-btn" id="infantMinBtn">-</button>
+                        <p class="pax-counter-text" id="infantCounterText">0</p>
+                        <button type="button" class="pax-counter-btn" id="infantPlusBtn">+</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="search-form-bottom">
+                  <div class="from-to-wrapper">
+                    <div class="search-input-wrapper">
+                      <label for="fromPort">From</label>
+                      <div class="input-icon-wrapper">
+                        <select name="fromPort" class="fromPort" id="fromPort">
+                          <option value="batam-center-terminal">Batam Center Terminal</option>
+                          <option value="harbourfront">Harbourfront</option>
+                          <option value="tanah-merah">Tanah Merah</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="search-input-wrapper">
+                      <label for="toPort">To</label>
+                      <div class="input-icon-wrapper">
+                        <select name="toPort" class="toPort" id="toPort">
+                          <option value="batam-center-terminal">Batam Center Terminal</option>
+                          <option value="harbourfront">Harbourfront</option>
+                          <option value="tanah-merah">Tanah Merah</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="search-date-wrapper">
+                    <div class="search-input-wrapper">
+                      <label for="departureDate">Departure Date</label>
+                      <input type="date" class="departure-date" id="departureDate" name="departureDate">
+                    </div>
+                    <div class="search-input-wrapper hidden" id="returnDateWrapper">
+                      <label for="returnDate">Return Date</label>
+                      <input type="date" class="return-date" id="returnDate" name="returnDate">
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="submit-search-btn" id="submitFerrySearchBtn">Search</button>
+              </form>
+            </div>
+
+            <div class="search-form hidden" data-form="car-rental">
+              <form action="">
+                <div class="search-form-top">
+                  <div class="driver-wrapper">
+                    <input type="radio" class="with-driver-radio" id="withDriverRadio" name="driver-needs" value="with-driver" checked>
+                    <label for="withDriverRadio">With Driver</label>
+
+                    <input type="radio" class="without-driver-radio" id="withoutDriverRadio" name="driver-needs" value="without-driver">
+                    <label for="withoutDriverRadio">Without Driver</label>
+                  </div>
+                </div>
+
+                <div class="search-form-bottom">
+                  <div class="search-input-wrapper">
+                    <label for="carRentalLocation">Location</label>
+                    <div class="input-icon-wrapper">
+                      <img src="/images/icons/location-pin.svg" alt="Map pin" width="24">
+                      <input type="text" class="car-rental-location" id="carRentalLocation" placeholder="Batam">
+                      <img src="/images/icons/chevron-down.svg" alt="Chevron arrow pointing down" width="19.2">
+                    </div>
+                  </div>
+
+                  <div class="search-date-wrapper">
+                    <div class="search-input-wrapper">
+                      <label for="carPickupDate">Car Pickup Date</label>
+                      <input type="date" class="car-pickup-date" id="carPickupDate" name="carPickupDate">
+                    </div>
+                    <div class="search-input-wrapper">
+                      <label for="carReturnDate">Car Return Date</label>
+                      <input type="date" class="car-return-date" id="carReturnDate" name="carReturnDate">
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="submit-search-btn" id="submitCarRentalSearchBtn">Search</button>
+              </form>
+            </div>
+
+            <div class="search-form hidden" data-form="activities">
+              <form action="">
+                <div class="search-form-top">
+                  <div class="search-activities-wrapper">
+                    <label for="activitiesTypes">Activities Type</label>
+                    <div class="input-icon-wrapper">
+                      <select name="activities" class="activities-types" id="activitiesTypes">
+                        <option value="placeholder">Placeholder</option>
+                        <option value="placeholder">Placeholder</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="search-form-bottom">
+                  <div class="search-input-wrapper">
+                    <label for="activitiesLocation">Location</label>
+                    <div class="input-icon-wrapper">
+                      <img src="/images/icons/location-pin.svg" alt="Map pin" width="24">
+                      <input type="text" class="activities-location" id="activitiesLocation" name="activitiesLocation" placeholder="Batam">
+                      <img src="/images/icons/chevron-down.svg" alt="Chevron arrow pointing down" width="19.2">
+                    </div>
+                  </div>
+
+                  <div class="search-booking-wrapper">
+                    <label for="activitiesBookingDate">Booking Date</label>
+                    <input type="date" class="activities-booking-date" id="activitiesBookingDate" name="activitiesBookingDate">
+                  </div>
+                </div>
+
+                <button type="submit" class="submit-search-btn" id="submitActivitiesSearchBtn">Search</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="exclusive-deals">
+        <div class="section-container">
+          <div class="section-header">
+            <h2>Exclusive Deals</h2>
+          </div>
+
+          <div class="deals-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide"></div>
+              <div class="swiper-slide"></div>
+              <div class="swiper-slide"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="banner-ads">
+        <div class="banner-swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide"></div>
+            <div class="swiper-slide"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="top-hotels">
+        <div class="section-container">
+          <div class="section-header">
+            <h2>Top Rated Hotels</h2>
+            <p class="smaller-label">
+              Lorem ipsum dolor, sit amet consectetur adipisicing 
+              elit. Excepturi asperiores quia harum expedita, sint 
+              dolorem repudiandae explicabo aliquid debitis, eaque 
+              porro, maiores ipsum quae illum doloremque quasi. 
+              Nostrum, vel quasi.
+            </p>
+          </div>
+
+          <div class="hotels-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <div class="hotel-card">
+                  <div class="card-image"></div>
+                  <div class="card-detail">
+                    <div class="card-review-rating">
+                      <!-- Star icon, rating, (total review) --> 
+                    </div>
+                    <h3>Hotel Name</h3>
+                    <p>
+                      <!-- Location pin --> Location
+                    </p>
+                    <p>★★★★☆</p>
+                    <div class="card-price-book-wrapper">
+                      <div class="card-price-wrapper">
+                        <p>Starts from</p>
+                        <p>IDR </p>
+                        <p>per night/room</p>
+                      </div>
+
+                      <button>Book Now</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hotel-card">
+                  <div class="card-image"></div>
+                  <div class="card-detail">
+                    <div class="card-review-rating">
+                      <!-- Star icon, rating, (total review) --> 
+                    </div>
+                    <h3>Hotel Name</h3>
+                    <p>
+                      <!-- Location pin --> Location
+                    </p>
+                    <p>★★★★☆</p>
+                    <div class="card-price-book-wrapper">
+                      <div class="card-price-wrapper">
+                        <p>Starts from</p>
+                        <p>IDR </p>
+                        <p>per night/room</p>
+                      </div>
+
+                      <button>Book Now</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hotel-card">
+                  <div class="card-image"></div>
+                  <div class="card-detail">
+                    <div class="card-review-rating">
+                      <!-- Star icon, rating, (total review) --> 
+                    </div>
+                    <h3>Hotel Name</h3>
+                    <p>
+                      <!-- Location pin --> Location
+                    </p>
+                    <p>★★★★☆</p>
+                    <div class="card-price-book-wrapper">
+                      <div class="card-price-wrapper">
+                        <p>Starts from</p>
+                        <p>IDR </p>
+                        <p>per night/room</p>
+                      </div>
+
+                      <button>Book Now</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hotel-card">
+                  <div class="card-image"></div>
+                  <div class="card-detail">
+                    <div class="card-review-rating">
+                      <!-- Star icon, rating, (total review) --> 
+                    </div>
+                    <h3>Hotel Name</h3>
+                    <p>
+                      <!-- Location pin --> Location
+                    </p>
+                    <p>★★★★☆</p>
+                    <div class="card-price-book-wrapper">
+                      <div class="card-price-wrapper">
+                        <p>Starts from</p>
+                        <p>IDR </p>
+                        <p>per night/room</p>
+                      </div>
+
+                      <button>Book Now</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="top-destinations">
+        <div class="section-container">
+          <div class="section--header">
+            <h2>Top Destination</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione aliquam veniam temporibus aperiam hic, incidunt repellendus nam ab, accusantium eaque maxime a. Sapiente doloremque assumenda adipisci commodi autem, libero rem.</p>
+          </div>
+
+          <div class="destinations-grid">
+            <div class="destination-card">
+              <!-- Will have image in it -->
+               <p>INDONESIA</p>
+            </div>
+
+            <div class="destination-card">
+              <!-- Will have image in it -->
+               <p>SINGAPORE</p>
+            </div>
+
+            <div class="destination-card">
+              <!-- Will have image in it -->
+               <p>MALAYSIA</p>
+            </div>
+            
+            <div class="destination-card">
+              <!-- Will have image in it -->
+               <p>KOREA</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
 
     <%- include('../partials/footer') %>
 
     <%- include('../partials/loginModal') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+    <script src="/js/home.js"></script>
   </body>
 </html>

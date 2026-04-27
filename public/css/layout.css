@@ -25,7 +25,13 @@ nav a {
   color: var(--clr-neutral);
 }
 
+nav a:hover {
+  text-decoration: none;
+}
+
 nav ul {
+  display: flex;
+  gap: 1rem;
   list-style: none;
 }
 
