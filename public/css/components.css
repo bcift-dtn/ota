@@ -114,18 +114,18 @@
   font-size: var(--fs-3);
 }
 
-@keyframes slideDown {
+@keyframes modalZoomIn {
   from {
-    transform: translateY(-50px);
+    transform: scale(0.5);
     opacity: 0;
   } to {
-    transform: translateY(0);
+    transform: scale(1);
     opacity: 1;
   }
 }
 
 .login-modal {
-  animation: slideDown 0.5s cubic-bezier(0.24, -0.07, 0, 1.66) forwards;
+  animation: modalZoomIn 0.4s cubic-bezier(0.24, -0.07, 0, 1.66) forwards;
 }
 
 @media (min-width: 768px) {

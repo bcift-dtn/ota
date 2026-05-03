@@ -11,7 +11,7 @@ nav {
 
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 100;
 
   background-color: var(--clr-bg);
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
@@ -31,7 +31,7 @@ nav a:hover {
 
 nav ul {
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
   list-style: none;
 }
 
@@ -86,6 +86,11 @@ nav .profile-dropdown-container {
   transform: rotate(45deg);
 }
 
+.profile-dropdown-container .profile-dropdown{
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .profile-dropdown-container > p {
   font-size: var(--fs-6);
   margin: 0.5rem 0 1rem;
@@ -122,6 +127,7 @@ li form {
   cursor: pointer;
   color: var(--clr-neutral);
   font-weight: 600;
+  font-size: var(--fs-3);
 }
 
 nav i,

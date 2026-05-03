@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const { registerUser, loginUser, logout, verifyEmail } = require('../controllers/authController');
+const redirectIfAuthenticated = require('../middlewares/redirectIfAuthenticated');
 
-router.get('/register', (req, res) => {
+router.get('/register', redirectIfAuthenticated, (req, res) => {
   res.render('pages/register');
 })
 

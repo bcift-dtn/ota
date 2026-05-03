@@ -158,18 +158,6 @@
             <div class="search-form hidden" data-form="activities">
               <form action="">
                 <div class="search-form-top">
-                  <div class="search-activities-wrapper">
-                    <label for="activitiesTypes">Activities Type</label>
-                    <div class="input-icon-wrapper">
-                      <select name="activities" class="activities-types" id="activitiesTypes">
-                        <option value="placeholder">Placeholder</option>
-                        <option value="placeholder">Placeholder</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="search-form-bottom">
                   <div class="search-input-wrapper">
                     <label for="activitiesLocation">Location</label>
                     <div class="input-icon-wrapper">
@@ -198,21 +186,35 @@
             <h2>Exclusive Deals</h2>
           </div>
 
-          <div class="deals-swiper">
+          <div class="deals-swiper swiper">
             <div class="swiper-wrapper">
-              <div class="swiper-slide"></div>
-              <div class="swiper-slide"></div>
-              <div class="swiper-slide"></div>
+              <div class="swiper-slide">
+                <div class="deals-card"></div>
+              </div>
+              <div class="swiper-slide">
+                <div class="deals-card"></div>
+              </div>
+              <div class="swiper-slide">
+                <div class="deals-card"></div>
+              </div>
+
+              <div class="swiper-slide">
+                <div class="deals-card"></div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <section class="banner-ads">
-        <div class="banner-swiper">
+        <div class="banner-swiper swiper">
           <div class="swiper-wrapper">
-            <div class="swiper-slide"></div>
-            <div class="swiper-slide"></div>
+            <div class="swiper-slide">
+              <div class="promo-banner"></div>
+            </div>
+            <div class="swiper-slide">
+              <div class="promo-banner"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -230,7 +232,7 @@
             </p>
           </div>
 
-          <div class="hotels-swiper">
+          <div class="hotels-swiper swiper">
             <div class="swiper-wrapper">
               <div class="swiper-slide">
                 <div class="hotel-card">
@@ -240,22 +242,26 @@
                       <!-- Star icon, rating, (total review) --> 
                     </div>
                     <h3>Hotel Name</h3>
-                    <p>
-                      <!-- Location pin --> Location
-                    </p>
-                    <p>★★★★☆</p>
+                    <div class="card-location-rating">
+                      <p>
+                        <!-- Location pin --> Location
+                      </p>
+                      <p>★★★★☆</p>
+                    </div>
                     <div class="card-price-book-wrapper">
                       <div class="card-price-wrapper">
-                        <p>Starts from</p>
+                        <p class="even-smaller-label">Starts from</p>
                         <p>IDR </p>
-                        <p>per night/room</p>
+                        <p class="even-smaller-label">per night/room</p>
                       </div>
 
                       <button>Book Now</button>
                     </div>
                   </div>
                 </div>
+              </div>
 
+              <div class="swiper-slide">
                 <div class="hotel-card">
                   <div class="card-image"></div>
                   <div class="card-detail">
@@ -263,22 +269,26 @@
                       <!-- Star icon, rating, (total review) --> 
                     </div>
                     <h3>Hotel Name</h3>
-                    <p>
-                      <!-- Location pin --> Location
-                    </p>
-                    <p>★★★★☆</p>
+                    <div class="card-location-rating">
+                      <p>
+                        <!-- Location pin --> Location
+                      </p>
+                      <p>★★★★☆</p>
+                    </div>
                     <div class="card-price-book-wrapper">
                       <div class="card-price-wrapper">
-                        <p>Starts from</p>
+                        <p class="smaller-label">Starts from</p>
                         <p>IDR </p>
-                        <p>per night/room</p>
+                        <p class="smaller-label">per night/room</p>
                       </div>
 
                       <button>Book Now</button>
                     </div>
                   </div>
                 </div>
+              </div>
 
+              <div class="swiper-slide">
                 <div class="hotel-card">
                   <div class="card-image"></div>
                   <div class="card-detail">
@@ -286,22 +296,26 @@
                       <!-- Star icon, rating, (total review) --> 
                     </div>
                     <h3>Hotel Name</h3>
-                    <p>
-                      <!-- Location pin --> Location
-                    </p>
-                    <p>★★★★☆</p>
+                    <div class="card-location-rating">
+                      <p>
+                        <!-- Location pin --> Location
+                      </p>
+                      <p>★★★★☆</p>
+                    </div>
                     <div class="card-price-book-wrapper">
                       <div class="card-price-wrapper">
-                        <p>Starts from</p>
+                        <p class="smaller-label">Starts from</p>
                         <p>IDR </p>
-                        <p>per night/room</p>
+                        <p class="smaller-label">per night/room</p>
                       </div>
 
                       <button>Book Now</button>
                     </div>
                   </div>
                 </div>
+              </div>
 
+              <div class="swiper-slide">
                 <div class="hotel-card">
                   <div class="card-image"></div>
                   <div class="card-detail">
@@ -309,15 +323,44 @@
                       <!-- Star icon, rating, (total review) --> 
                     </div>
                     <h3>Hotel Name</h3>
-                    <p>
-                      <!-- Location pin --> Location
-                    </p>
-                    <p>★★★★☆</p>
+                    <div class="card-location-rating">
+                      <p>
+                        <!-- Location pin --> Location
+                      </p>
+                      <p>★★★★☆</p>
+                    </div>
                     <div class="card-price-book-wrapper">
                       <div class="card-price-wrapper">
-                        <p>Starts from</p>
+                        <p class="smaller-label">Starts from</p>
                         <p>IDR </p>
-                        <p>per night/room</p>
+                        <p class="smaller-label">per night/room</p>
+                      </div>
+
+                      <button>Book Now</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="swiper-slide">
+                <div class="hotel-card">
+                  <div class="card-image"></div>
+                  <div class="card-detail">
+                    <div class="card-review-rating">
+                      <!-- Star icon, rating, (total review) --> 
+                    </div>
+                    <h3>Hotel Name</h3>
+                    <div class="card-location-rating">
+                      <p>
+                        <!-- Location pin --> Location
+                      </p>
+                      <p>★★★★☆</p>
+                    </div>
+                    <div class="card-price-book-wrapper">
+                      <div class="card-price-wrapper">
+                        <p class="smaller-label">Starts from</p>
+                        <p>IDR </p>
+                        <p class="smaller-label">per night/room</p>
                       </div>
 
                       <button>Book Now</button>
@@ -332,9 +375,9 @@
 
       <section class="top-destinations">
         <div class="section-container">
-          <div class="section--header">
+          <div class="section-header">
             <h2>Top Destination</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione aliquam veniam temporibus aperiam hic, incidunt repellendus nam ab, accusantium eaque maxime a. Sapiente doloremque assumenda adipisci commodi autem, libero rem.</p>
+            <p class="smaller-label">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione aliquam veniam temporibus aperiam hic, incidunt repellendus nam ab, accusantium eaque maxime a. Sapiente doloremque assumenda adipisci commodi autem, libero rem.</p>
           </div>
 
           <div class="destinations-grid">

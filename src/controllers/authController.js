@@ -17,7 +17,8 @@ const registerUser = async (req, res) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const verificationToken = generateVerificationToken();
-    const newUser = await createUser(fullName, email, hashedPassword, verificationToken);
+    const tokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    const newUser = await createUser(fullName, email, hashedPassword, verificationToken, tokenExpires);
     
     await sendVerificationEmail(email, verificationToken);
 

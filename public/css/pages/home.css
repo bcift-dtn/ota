@@ -8,13 +8,13 @@
 }
 
 .search-component {
-  max-width: 55rem;
-  margin: 0 auto;
   margin-top: -7rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
+  max-width: 1200px;
 
   position: relative;
-
-  background-color: white;
   border-radius: 20px;
 }
 
@@ -52,16 +52,17 @@
   background-color: var(--clr-bg);
   z-index: 1;
 
-  box-shadow: 0 0 5px 1px #1F2F4666;
+  box-shadow: var(--primary-box-shadow);
 }
 
 .search-forms {
   position: relative;
   padding: 1rem 1rem 2rem;
 
-  box-shadow: 0 0 6px 1px #1F2F4666;
+  box-shadow: var(--primary-box-shadow);
   border-radius: 0 0 20px 20px;
   z-index: 0;
+  background-color: var(--clr-bg);
 }
 
 .search-input-wrapper,
@@ -131,7 +132,7 @@
 
   position: absolute;
   background-color: var(--clr-bg);
-  box-shadow: 0 0 4px 1px #1F2F4666;
+  box-shadow: var(--primary-box-shadow);
   border-radius: 10px;
 }
 
@@ -240,7 +241,193 @@
   transition: transform 0.3s ease;
 }
 
+/* Exclusive Deal */
+.exclusive-deals,
+.top-hotels,
+.top-destinations {
+  margin: 3rem 1rem;
+}
+
+.exclusive-deals,
+.top-hotels,
+.top-destinations {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
+}
+
+.exclusive-deals .section-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.exclusive-deals .section-header {
+  align-self: center;
+}
+
+.exclusive-deals .deals-swiper,
+.top-hotels .hotels-swiper {
+  overflow-x: hidden;
+  padding: 20px 10px;
+  margin: -20px -10px;
+}
+
+.exclusive-deals .deals-card {
+  min-height: 6rem;
+
+  background-color: rgb(197, 197, 197);
+  border-radius: 20px;
+}
+
+.banner-ads .banner-swiper {
+  overflow-x: hidden;
+}
+
+.banner-ads .promo-banner {
+  min-height: 25vh;
+
+  background-color: rgb(197, 197, 197);
+}
+
+.top-hotels .section-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.top-hotels .section-header {
+  align-self: flex-start;
+  text-align: justify;
+}
+
+.top-hotels .section-header h2 {
+  margin-bottom: 0.5rem;
+}
+
+.hotel-card {
+  display: flex;
+  flex-direction: column;
+
+  height: 17.5rem;
+  
+  box-shadow: var(--primary-box-shadow);
+ 
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hotel-card .card-image{
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  position: absolute;
+  z-index: 1;
+
+  background-color: rgb(197, 197, 197);
+  border-radius: 10px 10px 0 0;
+}
+
+.hotel-card .card-detail {
+  width: 100%;
+  height: 45%;
+  bottom: 0;
+
+  padding: 0.5rem;
+
+  position: absolute;
+  border-radius: 10px;
+  z-index: 2;
+  background-color: var(--clr-bg);
+}
+
+.hotel-card .card-review-rating {
+  width: 5rem;
+  height: 1rem;
+
+  top: 0;
+  right: 5%;
+
+  margin-top: -0.5rem;
+
+  border-radius: 10px;
+  background: white;
+  box-shadow: var(--primary-box-shadow);
+  position: absolute;
+}
+
+.hotel-card .card-location-rating {
+  display: flex;
+  justify-content: space-between;
+
+  margin: 0.5rem 0;
+}
+
+.hotel-card .card-price-book-wrapper {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.card-price-book-wrapper button {
+  padding: 0.1rem 0.5rem;
+
+  border-radius: 5px;
+  border: none;
+  box-shadow: 0 3px 4px 1px #1F2F4666;
+  outline: none;
+  color: white;
+  background-color: var(--clr-primary);
+}
+
+.top-destinations .section-header {
+  text-align: justify;
+  margin-bottom: 0.5rem;
+}
+
+.top-destinations h2 {
+  margin-bottom: 0.5rem;
+}
+
+.top-destinations .destinations-grid {
+  display: flex;
+  gap: 1rem;
+}
+
+.top-destinations .destination-card {
+  flex: 1;
+  min-height: 6rem;
+  padding: 0.2rem;
+  background-color: rgb(197, 197, 197);
+
+  border-radius: 10px;
+
+  position: relative;
+}
+
+.destination-card p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  border: 2px solid var(--clr-primary);
+  border-radius: 10px;
+}
+
 @media (min-width: 860px) {
+  .search-component,
+  .exclusive-deals,
+  .top-hotels,
+  .top-destinations {
+    padding: 0 3rem;
+  }
+  
   .search-form-top,
   .search-form-bottom,
   .from-to-wrapper,

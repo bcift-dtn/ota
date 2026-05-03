@@ -96,32 +96,72 @@ const childPlusBtn = document.querySelector('#childPlusBtn');
 const infantMinBtn = document.querySelector('#infantMinBtn');
 const infantPlusBtn = document.querySelector('#infantPlusBtn');
 
-adultMinBtn.addEventListener('click', e => {
+adultMinBtn.addEventListener('click', () => {
   adults--;
   updatePaxSummary();
 })
 
-adultPlusBtn.addEventListener('click', e => {
+adultPlusBtn.addEventListener('click', () => {
   adults++;
   updatePaxSummary();
 })
 
-childMinBtn.addEventListener('click', e => {
+childMinBtn.addEventListener('click', () => {
   children--;
   updatePaxSummary();
 })
 
-childPlusBtn.addEventListener('click', e => {
+childPlusBtn.addEventListener('click', () => {
   children++;
   updatePaxSummary();
 })
 
-infantMinBtn.addEventListener('click', e => {
+infantMinBtn.addEventListener('click', () => {
   infants--;
   updatePaxSummary();
 })
 
-infantPlusBtn.addEventListener('click', e => {
+infantPlusBtn.addEventListener('click', () => {
   infants++;
   updatePaxSummary();
+})
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Swiper Logic / Slider
+  const dealsSwiper = new Swiper('.deals-swiper', {
+    loop: true,
+    autoplay: { delay: 3000},
+    slidesPerView: 2,
+    spaceBetween: 20,
+    breakpoints: {
+      640: {
+        slidesPerView: 2,
+      },
+      860: {
+        slidesPerView: 3,
+      }
+    }
+  })
+
+  const bannerSwiper = new Swiper('.banner-swiper', {
+    loop: true,
+    autoplay: { delay: 3000},
+    slidesPerView: 1,
+  })
+
+  const hotelsSwiper = new Swiper('.hotels-swiper', {
+    observer: true,
+    observeParents: true,
+    loop: true,
+    slidesPerView: 2,
+    spaceBetween: 20,
+    breakpoints: {
+      640: {
+        slidesPerView: 3,
+      },
+      860: {
+        slidesPerView: 4,
+      }
+    }
+  })
 })

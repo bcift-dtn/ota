@@ -36,6 +36,8 @@
 
   /* Filter */
   --filter-primary-clr: brightness(0) saturate(100%) invert(49%) sepia(8%) saturate(2646%) hue-rotate(144deg) brightness(92%) contrast(96%);;
+
+  --primary-box-shadow: 0 4px 15px rgba(31, 47, 70, 0.15);
 }
 
 *,
@@ -86,6 +88,10 @@ select {
   font-size: var(--fs-2);
 }
 
+.even-smaller-label {
+  font-size: var(--fs-1);
+}
+
 nav a {
   font-size: var(--fs-1);
 }
@@ -120,7 +126,7 @@ a:hover {
   color: green;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 860px) {
   h1 {
     font-size: var(--fs-8);
   }
@@ -130,11 +136,11 @@ a:hover {
   }
 
   h3 {
-    font-size: var(--fs-6);
+    font-size: var(--fs-5);
   }
 
   h4 {
-    font-size: var(--fs-5);
+    font-size: var(--fs-4);
   }
 
   p,
@@ -151,6 +157,10 @@ a:hover {
   }
 
   .smaller-label {
-  font-size: var(--fs-3);
-}
+    font-size: var(--fs-3);
+  }
+
+  .even-smaller-label {
+    font-size: var(--fs-2);
+  }
 }

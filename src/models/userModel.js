@@ -5,13 +5,13 @@ const generateVerificationToken = () => {
   return crypto.randomBytes(32).toString('hex');
 }
 
-const createUser = async (fullName, email, hashedPassword, verificationToken) => {
+const createUser = async (fullName, email, hashedPassword, verificationToken, tokenExpires) => {
   const query = `
-    INSERT INTO ota.users(full_name, email, password, verification_token) 
-    VALUES($1, $2, $3, $4) 
+    INSERT INTO ota.users(full_name, email, password, verification_token, verification_token_expires) 
+    VALUES($1, $2, $3, $4, $5) 
     RETURNING *
   `;
-  const values = [fullName, email, hashedPassword, verificationToken];
+  const values = [fullName, email, hashedPassword, verificationToken, tokenExpires];
 
   try {
     const res = await pool.query(query, values);
@@ -35,7 +35,7 @@ const findUserByEmail = async (email) => {
 const findUserByToken = async (token) => {
   const query = `
     SELECT * FROM ota.users 
-    WHERE verification_token = $1;
+    WHERE verification_token = $1 AND verification_token_expires > NOW();
   `
 
   try {
@@ -49,7 +49,7 @@ const findUserByToken = async (token) => {
 const verifyUserEmail = async (id) => {
   const query = `
     UPDATE ota.users
-    SET is_verified = true, verification_token = NULL
+    SET is_verified = true, verification_token = NULL, verification_token_expires = NULL
     WHERE id = $1
     RETURNING *;
   `
