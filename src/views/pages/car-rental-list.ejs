@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/layout.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/components/search.css">
     <link rel="stylesheet" href="/css/pages/car-rental-list.css">
   </head>
   <body>
@@ -17,6 +18,43 @@
       </section>
 
       <section class="search-component">
+        <div class="search-form" data-form="car-rental">
+          <form action="">
+            <div class="search-form-top">
+              <div class="driver-wrapper">
+                <input type="radio" class="with-driver-radio" id="withDriverRadio" name="driver-needs" value="with-driver" checked>
+                <label for="withDriverRadio">With Driver</label>
+
+                <input type="radio" class="without-driver-radio" id="withoutDriverRadio" name="driver-needs" value="without-driver">
+                <label for="withoutDriverRadio">Without Driver</label>
+              </div>
+            </div>
+
+            <div class="search-form-bottom">
+              <div class="search-input-wrapper">
+                <label for="carRentalLocation">Location</label>
+                <div class="input-icon-wrapper">
+                  <img src="/images/icons/location-pin.svg" alt="Map pin" width="24">
+                  <input type="text" class="car-rental-location" id="carRentalLocation" placeholder="Batam">
+                  <img src="/images/icons/chevron-down.svg" alt="Chevron arrow pointing down" width="19.2">
+                </div>
+              </div>
+
+              <div class="search-date-wrapper">
+                <div class="search-input-wrapper">
+                  <label for="carPickupDate">Car Pickup Date</label>
+                  <input type="date" class="car-pickup-date" id="carPickupDate" name="carPickupDate">
+                </div>
+                <div class="search-input-wrapper">
+                  <label for="carReturnDate">Car Return Date</label>
+                  <input type="date" class="car-return-date" id="carReturnDate" name="carReturnDate">
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="submit-search-btn" id="submitCarRentalSearchBtn">Search</button>
+          </form>
+        </div>
       </section>
 
       <%- include('../partials/breadcrumb', { breadcrumbs }) %>
@@ -26,7 +64,11 @@
           <% products.forEach(product => { %> 
             <div class="product-card-horizontal">
               <div class="product-card-image">
-                <!-- <img src="#" alt=""> -->
+                <% if (product.image_url) { %> 
+                  <img src="<%= product.image_url %>" alt="<%= product.title %>">
+                <% } else { %>
+                  <div class="product-card-image-placeholder"></div>
+                <% } %>
               </div>
               <div class="product-card-info">
                 <h2><%= product.title %></h2>
@@ -47,10 +89,10 @@
                   <div class="product-card-info-right">
                     <div>
                       <p>Start from</p>
-                      <span>
+                      <div class="product-card-price-wrapper">
                         <p class="product-card-price">IDR <%= product.formatted_price %></p>
-                        <p>/day</p>
-                      </span>
+                        <p class="product-card-price-unit">/day</p>
+                      </div>
                     </div>
                     <button>Choose</button>
                   </div>

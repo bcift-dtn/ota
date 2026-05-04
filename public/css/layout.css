@@ -213,6 +213,28 @@ footer li a {
   margin-top: 1rem;
 }
 
+.breadcrumb {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.5rem 1rem;
+  max-width: 1700px;
+  font-size: var(--fs-3);
+}
+
+.breadcrumb a {
+  color: var(--clr-primary);
+  font-size: var(--fs-3);
+}
+
+.breadcrumb-seperator {
+  margin: 0 0.3rem;
+  color: var(--clr-neutral);
+}
+
+.breadcrumb-current {
+  color: var(--clr-neutral);
+}
+
 @media (min-width: 800px) {
   footer {
     padding: 2rem 4rem 1rem;

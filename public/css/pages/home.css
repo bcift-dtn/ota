@@ -102,7 +102,6 @@
 .trip-type-wrapper input,
 .driver-wrapper input{
   accent-color: var(--clr-primary);
-  margin-left: 1rem;
 }
 
 
@@ -436,10 +435,7 @@
     gap: 1rem;
   }
 
-  .search-form-top {
-    justify-content: space-between;
-  }
-
+  .search-form-top,
   .search-form-bottom {
     justify-content: space-between;
   }
@@ -447,6 +443,11 @@
   .search-form select,
   .search-form input[type="text"] {
     min-width: 14.25rem;
+  }
+
+  .trip-type-wrapper .two-way-radio,
+  .driver-wrapper .without-driver-radio {
+    margin-left: 1rem;
   }
 
   .pax-counter {

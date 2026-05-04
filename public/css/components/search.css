@@ -1,0 +1,128 @@
+
+.search-component {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
+  max-width: 1400px;
+}
+
+.search-form {
+  position: relative;
+  padding: 1rem 1rem;
+  box-shadow: var(--primary-box-shadow);
+  border-radius: 10px;
+  background-color: var(--clr-bg);
+  margin: 1rem 0;
+}
+
+.search-form form,
+.search-form-top,
+.search-form-bottom,
+.search-date-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-form form {
+  gap: 1rem;
+}
+
+.search-input-wrapper{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.search-form-top,
+.search-form-bottom,
+.search-date-wrapper {
+  gap: 0.5rem;
+}
+
+.trip-type-wrapper,
+.driver-wrapper {
+  text-align: center;
+}
+
+.trip-type-wrapper input,
+.driver-wrapper input{
+  accent-color: var(--clr-primary);
+}
+
+.search-form input {
+  background: var(--clr-accent);
+  border: none;
+  outline: none;
+  border-radius: 5px;
+
+  padding: 0.4rem 0.5rem;
+}
+
+.search-form input[type="date"]::-webkit-calendar-picker-indicator{
+  background: url(/images/icons/calendar.svg);
+  background-size: contain;
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.search-form .input-icon-wrapper {
+  width: 100%;
+  display: flex;
+  padding: 0 0.5rem;
+
+  background: var(--clr-accent);
+  border-radius: 5px;
+}
+
+.search-form .input-icon-wrapper input {
+  flex: 1;
+}
+
+.submit-search-btn {
+  bottom: 0;
+  padding: 0.5rem 1.5rem;
+
+
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  background-color: var(--clr-primary);
+  color: white;
+  font-weight: 700;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.submit-search-btn:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+@media (min-width: 860px) {
+  .search-component {
+    padding: 0 3rem;
+  }
+
+  .search-form-top,
+  .search-form-bottom,
+  .search-date-wrapper {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .search-form-top,
+  .search-form-bottom {
+    justify-content: space-between;
+  }
+  
+  .search-form select,
+  .search-form input[type="text"] {
+    min-width: 14.25rem;
+  }
+
+  .trip-type-wrapper .two-way-radio,
+  .driver-wrapper .without-driver-radio {
+    margin-left: 1rem;
+  }
+}
