@@ -1,5 +1,5 @@
-/* Navigation Bar */
-nav {
+/* .main-navigation Bar */
+.main-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -20,22 +20,22 @@ nav {
   font-weight: 700;
 }
 
-nav a {
+.main-nav a {
   text-decoration: none;
   color: var(--clr-neutral);
 }
 
-nav a:hover {
+.main-nav a:hover {
   text-decoration: none;
 }
 
-nav ul {
+.main-nav ul {
   display: flex;
   gap: 2rem;
   list-style: none;
 }
 
-nav .nav-login-btn {
+.main-nav .nav-login-btn {
   padding: 0.5rem 1.5rem;
   border: none;
   border-radius: 20px;
@@ -45,11 +45,11 @@ nav .nav-login-btn {
   cursor: pointer;
 }
 
-nav .profile-wrapper {
+.main-nav .profile-wrapper {
   position: relative;
 }
 
-nav .profile-btn {
+.main-nav .profile-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -60,7 +60,7 @@ nav .profile-btn {
   cursor: pointer;
 }
 
-nav .profile-dropdown-container {
+.main-nav .profile-dropdown-container {
   width: 18rem;
   padding: 1rem;
 
@@ -130,8 +130,8 @@ li form {
   font-size: var(--fs-3);
 }
 
-nav i,
-nav svg {
+.main-nav i,
+.main-nav svg {
   filter: var(--filter-primary-clr);
 }
 

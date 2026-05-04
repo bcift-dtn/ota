@@ -57,12 +57,14 @@ const loginUser = async (req, res) => {
         id: user.id,
         fullName: user.full_name,
         email: user.email,
-        role: user.role
+        isUser: user.is_user,
+        isAgent: user.is_agent,
+        isSeller: user.is_seller,
+        isAdmin: user.is_admin
       }
       return res.status(200).json({ success: 'Login success'})
     }
   } catch (err) {
-    console.log(err);
     return res.status(500).json({ error: 'Server error, please try again later.' });
   }
 }
@@ -76,7 +78,7 @@ const logout = async (req, res) => {
       res.redirect('/');
     })
   } catch (err) {
-    console.error(err)
+    return console.error(err);
   }
 }
 
@@ -99,7 +101,7 @@ const verifyEmail = async (req, res) => {
     res.redirect('/');
   } catch (err) {
     console.error(err);
-    res.status(500).send('<h1>Something went wrong.</h1>');
+    return res.status(500).send('<h1>Something went wrong.</h1>');
   }
 }
 

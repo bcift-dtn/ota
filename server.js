@@ -8,7 +8,7 @@ const exSession = require('express-session');
 
 // Routes
 const authRoutes = require('./src/routes/authRoutes');
-
+const productRoutes = require('./src/routes/productRoutes');
 
 // Variable
 const app = express();
@@ -45,6 +45,7 @@ app.get("/", (req, res) => {
 })
 
 app.use('/auth', authRoutes);
+app.use('/products', productRoutes);
 
 // Listen to PORT
 app.listen(PORT, () => {

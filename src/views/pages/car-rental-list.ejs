@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental - OTA</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/pages/car-rental-list.css">
+  </head>
+  <body>
+    <%- include('../partials/navbar') %>
+    <main>
+      <section class="list-hero">
+        <h1>CAR RENTAL</h1>
+      </section>
+
+      <section class="search-component">
+      </section>
+
+      <%- include('../partials/breadcrumb', { breadcrumbs }) %>
+
+      <section class="product-list">
+        <div class="product-list-container">
+          <% products.forEach(product => { %> 
+            <div class="product-card-horizontal">
+              <div class="product-card-image">
+                <!-- <img src="#" alt=""> -->
+              </div>
+              <div class="product-card-info">
+                <h2><%= product.title %></h2>
+                <div class="product-card-info-split">
+                  <div class="product-card-info-left">
+                    <div>
+                      <p><!-- Icon here --> <%= product.transmission.toUpperCase() %></p>
+                      <p><!-- Icon here --> <%= product.seats %></p>
+                    </div>
+
+                    <% if (product.with_driver) { %>
+                      <p><!-- Icon here --> Driver Included</p>
+                    <% } else { %> 
+                      <p><!-- Icon here --> Without Driver</p>
+                    <% } %>
+                  </div>
+
+                  <div class="product-card-info-right">
+                    <div>
+                      <p>Start from</p>
+                      <span>
+                        <p class="product-card-price">IDR <%= product.formatted_price %></p>
+                        <p>/day</p>
+                      </span>
+                    </div>
+                    <button>Choose</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+
+          <% if (products.length === 0) { %>
+            <p>No cars available at the moment.</p>
+          <% } %>
+        </div>
+      </section>
+    </main>
+    
+    <%- include('../partials/footer') %>
+
+    <%- include('../partials/loginModal') %>
+  </body>
+</html>
