@@ -133,6 +133,10 @@ document.addEventListener('DOMContentLoaded', () => {
     autoplay: { delay: 3000},
     slidesPerView: 2,
     spaceBetween: 20,
+    navigation: {
+      nextEl: '.deals-btn-next',
+      prevEl: '.deals-btn-prev',
+    },
     breakpoints: {
       640: {
         slidesPerView: 2,
@@ -140,13 +144,15 @@ document.addEventListener('DOMContentLoaded', () => {
       860: {
         slidesPerView: 3,
       }
-    }
-  })
+    },
+  });
 
   const bannerSwiper = new Swiper('.banner-swiper', {
-    loop: true,
-    autoplay: { delay: 3000},
     slidesPerView: 1,
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    }
   })
 
   const hotelsSwiper = new Swiper('.hotels-swiper', {
@@ -155,6 +161,10 @@ document.addEventListener('DOMContentLoaded', () => {
     loop: true,
     slidesPerView: 2,
     spaceBetween: 20,
+    navigation: {
+      nextEl: '.deals-btn-next',
+      prevEl: '.deals-btn-prev',
+    },
     breakpoints: {
       640: {
         slidesPerView: 3,
