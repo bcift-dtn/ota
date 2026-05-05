@@ -19,35 +19,39 @@
 
       <section class="search-component">
         <div class="search-form" data-form="car-rental">
-          <form action="">
-            <div class="search-form-top">
-              <div class="driver-wrapper">
-                <input type="radio" class="with-driver-radio" id="withDriverRadio" name="driver-needs" value="with-driver" checked>
-                <label for="withDriverRadio">With Driver</label>
-
-                <input type="radio" class="without-driver-radio" id="withoutDriverRadio" name="driver-needs" value="without-driver">
-                <label for="withoutDriverRadio">Without Driver</label>
-              </div>
-            </div>
-
-            <div class="search-form-bottom">
-              <div class="search-input-wrapper">
-                <label for="carRentalLocation">Location</label>
-                <div class="input-icon-wrapper">
-                  <img src="/images/icons/location-pin.svg" alt="Map pin" width="24">
-                  <input type="text" class="car-rental-location" id="carRentalLocation" placeholder="Batam">
-                  <img src="/images/icons/chevron-down.svg" alt="Chevron arrow pointing down" width="19.2">
+          <form action="/products/car-rental" method="GET">
+            <div class="search-component-left">
+              <div class="search-form-top">
+                <div class="driver-wrapper">
+                  <input type="radio" class="with-driver-radio" id="withDriverRadio" name="driver-needs" value="with-driver"
+                    <%= searchParams.driverNeeds === 'with-driver' ? 'checked' : '' %>>
+                  <label for="withDriverRadio">With Driver</label>
+                  <input type="radio" class="without-driver-radio" id="withoutDriverRadio" name="driver-needs" value="without-driver"
+                    <%= searchParams.driverNeeds === 'without-driver' ? 'checked' : '' %>>
+                  <label for="withoutDriverRadio">Without Driver</label>
                 </div>
               </div>
-
-              <div class="search-date-wrapper">
+              <div class="search-form-bottom">
                 <div class="search-input-wrapper">
-                  <label for="carPickupDate">Car Pickup Date</label>
-                  <input type="date" class="car-pickup-date" id="carPickupDate" name="carPickupDate">
+                  <label for="carRentalLocation">Location</label>
+                  <div class="input-icon-wrapper">
+                    <img src="/images/icons/location-pin.svg" alt="Map pin" width="24">
+                    <input type="text" class="car-rental-location" id="carRentalLocation" name="carRentalLocation"
+                      value="<%= searchParams.location %>" placeholder="Batam" required>
+                    <img src="/images/icons/chevron-down.svg" alt="Chevron arrow pointing down" width="19.2">
+                  </div>
                 </div>
-                <div class="search-input-wrapper">
-                  <label for="carReturnDate">Car Return Date</label>
-                  <input type="date" class="car-return-date" id="carReturnDate" name="carReturnDate">
+                <div class="search-date-wrapper">
+                  <div class="search-input-wrapper">
+                    <label for="carPickupDate">Car Pickup Date</label>
+                    <input type="date" class="car-pickup-date" id="carPickupDate" name="carPickupDate"
+                      value="<%= searchParams.pickupDate %>" required>
+                  </div>
+                  <div class="search-input-wrapper">
+                    <label for="carReturnDate">Car Return Date</label>
+                    <input type="date" class="car-return-date" id="carReturnDate" name="carReturnDate"
+                      value="<%= searchParams.returnDate %>" required>
+                  </div>
                 </div>
               </div>
             </div>

@@ -1,6 +1,13 @@
 const { getCarRentalListings } = require('../models/productModel');
 
 const getCarRentals = async (req, res) => {
+  const {
+    'driver-needs': driverNeeds,
+    carRentalLocation,
+    carPickupDate,
+    carReturnDate
+  } = req.query;
+  
   try {
     const carListing = await getCarRentalListings();
     const formattedProdutcs = carListing.map(p => ({
@@ -13,7 +20,13 @@ const getCarRentals = async (req, res) => {
       breadcrumbs: [
         { label: 'Home', url:'/'},
         { label: 'Car Rental', url: '/products/car-rental'}
-      ]
+      ],
+      searchParams: {
+        driverNeeds: driverNeeds || 'with-driver',
+        location: carRentalLocation || '',
+        pickupDate: carPickupDate || '',
+        returnDate: carReturnDate || ''
+      }
     });
 
   } catch(err) {

@@ -14,7 +14,7 @@
   margin-left: auto;
   margin-right: auto;
   padding: 0 1rem;
-  max-width: 1700px;
+  max-width: 1500px;
 }
 
 
@@ -36,9 +36,10 @@
 }
 
 .product-card-image {
-  aspect-ratio: 5 / 2;
+  aspect-ratio: 3 / 1;
   width: 35%;  
   background-color: var(--clr-accent);
+  border-radius: 10px 0 0 10px;
 }
 
 .product-card-image img {
@@ -105,6 +106,10 @@
 }
 
 @media (min-width: 860px) {
+  .product-list {
+    padding: 0 3rem;
+  }
+
   .product-card-info h2 {
     font-size: var(--fs-6);
   }

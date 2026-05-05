@@ -31,7 +31,7 @@
           
           <div class="search-forms">
             <div class="search-form " data-form="ferry">
-              <form action="">
+              <form action="/products/ferry" method="GET">
                 <div class="search-form-top">
                   <div class="trip-type-wrapper">
                     <input type="radio" class="one-way-radio" id="onewayRadio" name="tripType" value="one-way" checked>
@@ -118,7 +118,7 @@
             </div>
 
             <div class="search-form hidden" data-form="car-rental">
-              <form action="">
+              <form action="/products/car-rental" method="GET">
                 <div class="search-form-top">
                   <div class="driver-wrapper">
                     <input type="radio" class="with-driver-radio" id="withDriverRadio" name="driver-needs" value="with-driver" checked>
@@ -134,7 +134,7 @@
                     <label for="carRentalLocation">Location</label>
                     <div class="input-icon-wrapper">
                       <img src="/images/icons/location-pin.svg" alt="Map pin" width="24">
-                      <input type="text" class="car-rental-location" id="carRentalLocation" placeholder="Batam">
+                      <input type="text" class="car-rental-location" id="carRentalLocation" name="carRentalLocation" placeholder="Batam" required>
                       <img src="/images/icons/chevron-down.svg" alt="Chevron arrow pointing down" width="19.2">
                     </div>
                   </div>
@@ -142,11 +142,11 @@
                   <div class="search-date-wrapper">
                     <div class="search-input-wrapper">
                       <label for="carPickupDate">Car Pickup Date</label>
-                      <input type="date" class="car-pickup-date" id="carPickupDate" name="carPickupDate">
+                      <input type="date" class="car-pickup-date" id="carPickupDate" name="carPickupDate" required>
                     </div>
                     <div class="search-input-wrapper">
                       <label for="carReturnDate">Car Return Date</label>
-                      <input type="date" class="car-return-date" id="carReturnDate" name="carReturnDate">
+                      <input type="date" class="car-return-date" id="carReturnDate" name="carReturnDate" required>
                     </div>
                   </div>
                 </div>
@@ -156,7 +156,7 @@
             </div>
 
             <div class="search-form hidden" data-form="activities">
-              <form action="">
+              <form action="/products/activities" method="GET">
                 <div class="search-form-top">
                   <div class="search-input-wrapper">
                     <label for="activitiesLocation">Location</label>
