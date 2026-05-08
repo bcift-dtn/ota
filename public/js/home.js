@@ -162,8 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
     slidesPerView: 2,
     spaceBetween: 20,
     navigation: {
-      nextEl: '.deals-btn-next',
-      prevEl: '.deals-btn-prev',
+      nextEl: '.hotels-btn-next',
+      prevEl: '.hotels-btn-prev',
     },
     breakpoints: {
       640: {

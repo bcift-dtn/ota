@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= product.title %> - OTA</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/layout.css">
+  </head>
+
+  <body>
+    <%- include('../partials/navbar') %>
+    
+    <main>
+      <%- include('../partials/breadcrumb', { breadcrumbs }) %>
+
+      <section class="detail-hero">
+        <div class="detail-image-gallery">
+          <img src="<%= product.images[0]%>" alt="Image of car with brand of <%= product.brand %> model <%=product.model %>" class="detail-main-image">
+          <div class="detail-image-thumbs">
+            <!-- Other image -->
+          </div>
+        </div>
+        <div class="detail-summary">
+          <div class="detail-sumary-left">
+            <h1><%= product.title %></h1>
+            <div class="detail-badges">
+              <p><!-- Icon here --><%= product.transmission.toUpperCase() %></p>
+              <p><!-- Icon here --><%= product.seats%> Seats</p>
+              <p><!-- Icon here --><% if (product.with_driver) { %> Driver Included <% } %></p>
+              <p><!-- Icon here --><%= product.seats%> Seats</p>
+              <p>Operation Hour: <%= product.operating_hours%></p>
+            </div>
+          </div>
+          <p>IDR <%= product.formatted_price%><span>/day</span></p>
+        </div>
+      </section>
+
+      <section class="detail-terms">
+        <h2>Terms & Conditions</h2>
+        <p><%= product.description %></p>
+      </section>
+
+      <section class="detail-remainder">
+        <h2>Remainder</h2>
+      </section>
+
+      <section class="detail-booking">
+        <h2>Booking Detail</h2>
+        <form action="">
+          <div class="booking-pickup-wrapper">
+            <h3>Pickup</h3>
+            <div>
+              <label for="pickupDate">Pickup Date</label>
+              <input type="date" name="pickupDate" id="pickupDate">
+            </div>
+            <div>
+              <label for="pickupTime">Return Date</label>
+              <select name="pickupTime" id="pickupTime">
+                <option value="0000">00:00</option>
+                <option value="0000">00:30</option>
+                <option value="0000">01:00</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="booking-pickup-wrapper">
+            <h3>Return</h3>
+            <div>
+              <label for="returnDate">Return Date</label>
+              <input type="date" name="returnDate" id="returnDate">
+            </div>
+            <div>
+              <label for="returnTime">Return Date</label>
+              <select name="returnTime" id="returnTime">
+                <option value="0000">00:00</option>
+                <option value="0000">00:30</option>
+                <option value="0000">01:00</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <%- include('../partials/footer') %>
+
+    <%- include('../partials/loginModal') %>
+  </body>
+</html>

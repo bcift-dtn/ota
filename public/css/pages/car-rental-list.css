@@ -95,7 +95,7 @@
   font-size: var(--fs-4);
 }
 
-.product-card-info button {
+.product-card-info .choose-btn {
   outline: none;
   border: none;
   background-color: var(--clr-primary);
@@ -103,6 +103,14 @@
   border-radius: 10px;
   padding: 0.5rem 0;
   font-weight: 700;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.product-card-info .choose-btn:hover {
+  text-decoration: none;
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
 }
 
 @media (min-width: 860px) {
