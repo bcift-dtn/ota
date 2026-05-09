@@ -27,18 +27,22 @@
 
 .product-card-horizontal {
   display: flex;
-  flex-direction: row;
-  min-height: 12rem;
+  flex-direction: column;
 
   background-color: white;
   border-radius: 10px;
   box-shadow: var(--primary-box-shadow);
 }
 
+.product-card-top {
+  display: flex;
+
+  min-height: 13rem
+}
+
 .product-card-image {
   aspect-ratio: 3 / 1;
   width: 35%;  
-  background-color: var(--clr-accent);
   border-radius: 10px 0 0 10px;
 }
 
@@ -72,6 +76,16 @@
 .product-card-info-right {
   display: flex;
   flex-direction: column;
+}
+
+.product-card-info-left h2{
+  margin-bottom: 0.5rem;
+  color: var(--clr-special-font);
+}
+
+.product-card-info-right {
+  text-align: end;
+  align-items: flex-end;
   justify-content: space-between;
 }
 
@@ -95,7 +109,13 @@
   font-size: var(--fs-4);
 }
 
-.product-card-info .choose-btn {
+.product-card-info .detail-btn {
+  width: 8rem;
+  align-self: flex-end;
+}
+
+.product-card-info .detail-btn,
+.confirm-selection-btn {
   outline: none;
   border: none;
   background-color: var(--clr-primary);
@@ -105,13 +125,55 @@
   font-weight: 700;
   text-align: center;
   transition: transform 0.3s ease;
+  cursor: pointer;
 }
 
-.product-card-info .choose-btn:hover {
+.product-card-info .detail-btn:hover {
   text-decoration: none;
   transform: scale(1.05);
   transition: transform 0.3s ease;
 }
+
+.package-dropdown {
+  border-top: 0.5px solid #bec8ca;
+  padding: 1rem;
+}
+
+.package-dropdown {
+  animation: dropdownReveal 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.package-dropdown-header {
+  margin-bottom: 1rem;
+}
+
+.package-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.package-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: background-color 0.2s ease;
+}
+
+.package-option:hover {
+  background-color: var(--clr-accent);
+}
+
+.package-option.active {
+  background-color: var(--clr-secondary);
+  border-color: var(--clr-primary);
+}
+
+
 
 @media (min-width: 860px) {
   .product-list {
