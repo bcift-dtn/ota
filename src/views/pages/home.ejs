@@ -1,34 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Travel Agent</title>
 
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/layout.css">
-    <link rel="stylesheet" href="/css/components.css">
-    <link rel="stylesheet" href="/css/pages/home.css">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Travel Agent</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"/>
-  </head>
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages/home.css">
 
-  <body>
-    <!-- Login button will be on navbar right side -->
-    <%- include('../partials/navbar') %>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
+</head>
+
+<body>
+  <!-- Login button will be on navbar right side -->
+  <%- include('../partials/navbar') %>
 
     <main>
       <section class="hero-banner"></section>
 
       <section class="search-component">
         <div class="search-wrapper">
-          <div class="tab-bar">
+          <div class="brand-tab-bar">
             <div class="tab-highlight"></div>
-            <button class="tab-btn" data-service="ferry">FERRY</button>
-            <button class="tab-btn" data-service="car-rental">CAR RENTAL</button>
-            <button class="tab-btn" data-service="activities">ACTIVITIES</button>
+            <button class="brand-tab-btn active" data-brand="majestic" data-service="ferry">
+              <img src="/images/icons/ferry.svg" alt="Ferry icon"> MAJESTIC
+            </button>
+            <button class="brand-tab-btn" data-brand="meyer" data-service="car-rental">
+              <img src="/images/icons/car.svg" alt="Car icon"> MEYER RENTAL
+            </button>
+            <button class="brand-tab-btn" data-brand="ranoh" data-service="activities">
+              <img src="/images/icons/palm-tree.svg" alt="Activities icon"> RANOH ISLAND
+            </button>
           </div>
-          
+
+          <div class="service-tab-bar">
+            <span class="other-services-label even-smaller-label">OTHER SERVICES</span>
+            <button class="service-tab-btn" data-service="ferry">
+              <img src="/images/icons/ferry.svg" alt="Ferry icon"> Ferry
+            </button>
+            <button class="service-tab-btn" data-service="car-rental">
+              <img src="/images/icons/car.svg" alt="Car icon"> Car Rental
+            </button>
+            <button class="service-tab-btn" data-service="activities">
+              <img src="/images/icons/ferris-wheel.svg" alt="Activities icon"> Activities
+            </button>
+          </div>
+
           <div class="search-forms">
             <div class="search-form " data-form="ferry">
               <form action="/products/ferry" method="GET">
@@ -121,10 +141,12 @@
               <form action="/products/car-rental" method="GET">
                 <div class="search-form-top">
                   <div class="driver-wrapper">
-                    <input type="radio" class="with-driver-radio" id="withDriverRadio" name="driver-needs" value="with-driver" checked>
+                    <input type="radio" class="with-driver-radio" id="withDriverRadio" name="driver-needs"
+                      value="with-driver" checked>
                     <label for="withDriverRadio">With Driver</label>
 
-                    <input type="radio" class="without-driver-radio" id="withoutDriverRadio" name="driver-needs" value="without-driver">
+                    <input type="radio" class="without-driver-radio" id="withoutDriverRadio" name="driver-needs"
+                      value="without-driver">
                     <label for="withoutDriverRadio">Without Driver</label>
                   </div>
                 </div>
@@ -134,7 +156,8 @@
                     <label for="carRentalLocation">Location</label>
                     <div class="input-icon-wrapper">
                       <img src="/images/icons/location-pin.svg" alt="Map pin" width="24">
-                      <input type="text" class="car-rental-location" id="carRentalLocation" name="carRentalLocation" placeholder="Batam" required>
+                      <input type="text" class="car-rental-location" id="carRentalLocation" name="carRentalLocation"
+                        placeholder="Batam" required>
                       <img src="/images/icons/chevron-down.svg" alt="Chevron arrow pointing down" width="19.2">
                     </div>
                   </div>
@@ -162,14 +185,16 @@
                     <label for="activitiesLocation">Location</label>
                     <div class="input-icon-wrapper">
                       <img src="/images/icons/location-pin.svg" alt="Map pin" width="24">
-                      <input type="text" class="activities-location" id="activitiesLocation" name="activitiesLocation" placeholder="Batam">
+                      <input type="text" class="activities-location" id="activitiesLocation" name="activitiesLocation"
+                        placeholder="Batam">
                       <img src="/images/icons/chevron-down.svg" alt="Chevron arrow pointing down" width="19.2">
                     </div>
                   </div>
 
                   <div class="search-booking-wrapper">
                     <label for="activitiesBookingDate">Booking Date</label>
-                    <input type="date" class="activities-booking-date" id="activitiesBookingDate" name="activitiesBookingDate">
+                    <input type="date" class="activities-booking-date" id="activitiesBookingDate"
+                      name="activitiesBookingDate">
                   </div>
                 </div>
 
@@ -237,10 +262,10 @@
           <div class="section-header">
             <h2>Top Rated Hotels</h2>
             <p class="smaller-label">
-              Lorem ipsum dolor, sit amet consectetur adipisicing 
-              elit. Excepturi asperiores quia harum expedita, sint 
-              dolorem repudiandae explicabo aliquid debitis, eaque 
-              porro, maiores ipsum quae illum doloremque quasi. 
+              Lorem ipsum dolor, sit amet consectetur adipisicing
+              elit. Excepturi asperiores quia harum expedita, sint
+              dolorem repudiandae explicabo aliquid debitis, eaque
+              porro, maiores ipsum quae illum doloremque quasi.
               Nostrum, vel quasi.
             </p>
           </div>
@@ -252,7 +277,7 @@
                   <div class="card-image"></div>
                   <div class="card-detail">
                     <div class="card-review-rating">
-                      <!-- Star icon, rating, (total review) --> 
+                      <!-- Star icon, rating, (total review) -->
                     </div>
                     <h3>Hotel Name</h3>
                     <div class="card-location-rating">
@@ -279,7 +304,7 @@
                   <div class="card-image"></div>
                   <div class="card-detail">
                     <div class="card-review-rating">
-                      <!-- Star icon, rating, (total review) --> 
+                      <!-- Star icon, rating, (total review) -->
                     </div>
                     <h3>Hotel Name</h3>
                     <div class="card-location-rating">
@@ -306,7 +331,7 @@
                   <div class="card-image"></div>
                   <div class="card-detail">
                     <div class="card-review-rating">
-                      <!-- Star icon, rating, (total review) --> 
+                      <!-- Star icon, rating, (total review) -->
                     </div>
                     <h3>Hotel Name</h3>
                     <div class="card-location-rating">
@@ -333,7 +358,7 @@
                   <div class="card-image"></div>
                   <div class="card-detail">
                     <div class="card-review-rating">
-                      <!-- Star icon, rating, (total review) --> 
+                      <!-- Star icon, rating, (total review) -->
                     </div>
                     <h3>Hotel Name</h3>
                     <div class="card-location-rating">
@@ -360,7 +385,7 @@
                   <div class="card-image"></div>
                   <div class="card-detail">
                     <div class="card-review-rating">
-                      <!-- Star icon, rating, (total review) --> 
+                      <!-- Star icon, rating, (total review) -->
                     </div>
                     <h3>Hotel Name</h3>
                     <div class="card-location-rating">
@@ -393,23 +418,25 @@
         <div class="section-container">
           <div class="section-header">
             <h2>Top Destination</h2>
-            <p class="smaller-label">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione aliquam veniam temporibus aperiam hic, incidunt repellendus nam ab, accusantium eaque maxime a. Sapiente doloremque assumenda adipisci commodi autem, libero rem.</p>
+            <p class="smaller-label">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione aliquam veniam
+              temporibus aperiam hic, incidunt repellendus nam ab, accusantium eaque maxime a. Sapiente doloremque
+              assumenda adipisci commodi autem, libero rem.</p>
           </div>
 
           <div class="destinations-grid">
             <div class="destination-card">
               <!-- Will have image in it -->
-               <p>INDONESIA</p>
+              <p>INDONESIA</p>
             </div>
 
             <div class="destination-card">
               <!-- Will have image in it -->
-               <p>SINGAPORE</p>
+              <p>SINGAPORE</p>
             </div>
 
             <div class="destination-card">
               <!-- Will have image in it -->
-               <p>MALAYSIA</p>
+              <p>MALAYSIA</p>
             </div>
           </div>
         </div>
@@ -420,10 +447,10 @@
           <div class="section-header">
             <h2>Our Brand</h2>
             <p class="smaller-label">
-              Lorem ipsum dolor sit, amet consectetur adipisicing 
-              elit. Exercitationem architecto ratione delectus 
-              provident quos repellat harum, ea rerum nisi neque 
-              consequuntur fuga nulla deserunt, distinctio non 
+              Lorem ipsum dolor sit, amet consectetur adipisicing
+              elit. Exercitationem architecto ratione delectus
+              provident quos repellat harum, ea rerum nisi neque
+              consequuntur fuga nulla deserunt, distinctio non
               corporis quod iure voluptatem.
             </p>
           </div>
@@ -431,25 +458,41 @@
           <div class="brand-swiper swiper">
             <div class="swiper-wrapper">
               <div class="swiper-slide">
-                <img src="/images/logos/majestic-ferry-logo.webp" alt="Logo of our majestic ferry brand">
+                <div class="brand-card">
+                  <img src="/images/logos/majestic-ferry-logo.webp" alt="Logo of our majestic ferry brand">
+                </div>
               </div>
               <div class="swiper-slide">
-                <img src="/images/logos/ranoh-logo.webp" alt="Logo of our ranoh island brand">
+                <div class="brand-card">
+                  <img src="/images/logos/ranoh-logo.webp" alt="Logo of our ranoh island brand">
+                </div>
               </div>
               <div class="swiper-slide">
-                <img src="/images/logos/meyer-rental-logo.webp" alt="Logo of our meyer rental brand">
+                <div class="brand-card">
+                  <img src="/images/logos/meyer-rental-logo.webp" class="bigger-brand"
+                    alt="Logo of our meyer rental brand">
+                </div>
               </div>
               <div class="swiper-slide">
-                <img src="/images/logos/nusa-indah-logo.webp" alt="Logo of our nusa indah brand">
+                <div class="brand-card">
+                  <img src="/images/logos/nusa-indah-logo.webp" alt="Logo of our nusa indah brand">
+                </div>
               </div>
               <div class="swiper-slide">
-                <img src="/images/logos/bcift-logo.webp" alt="Logo of our bcift brand">
+                <div class="brand-card">
+                  <img src="/images/logos/bcift-logo.webp" alt="Logo of our bcift brand">
+                </div>
               </div>
               <div class="swiper-slide">
-                <img src="/images/logos/veranta-cafe-logo.webp" alt="Logo of our veranta cafe brand">
+                <div class="brand-card">
+                  <img src="/images/logos/veranta-cafe-logo.webp" alt="Logo of our veranta cafe brand">
+                </div>
               </div>
               <div class="swiper-slide">
-                <img src="/images/logos/majestic-koi-farm-logo.webp" alt="Logo of our majestic koi farm brand">
+                <div class="brand-card">
+                  <img src="/images/logos/majestic-koi-farm-logo.webp" class="bigger-brand"
+                    alt="Logo of our majestic koi farm brand">
+                </div>
               </div>
             </div>
           </div>
@@ -459,9 +502,10 @@
 
     <%- include('../partials/footer') %>
 
-    <%- include('../partials/loginModal') %>
+      <%- include('../partials/loginModal') %>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
-    <script src="/js/home.js"></script>
-  </body>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+        <script src="/js/home.js"></script>
+</body>
+
 </html>

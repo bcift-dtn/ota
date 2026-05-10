@@ -1,39 +1,65 @@
-const tabs = document.querySelectorAll('.tab-btn');
+const brandTabs = document.querySelectorAll('.brand-tab-btn');
+const serviceTabs = document.querySelectorAll('.service-tab-btn');
 const forms = document.querySelectorAll('.search-form');
 const highlight = document.querySelector('.tab-highlight');
 
-let activeTab = tabs[0];
-
+// move highlight
 function moveHighlightTo(tab) {
   highlight.style.left = tab.offsetLeft + 'px';
   highlight.style.width = tab.offsetWidth + 'px';
 }
 
-moveHighlightTo(activeTab);
+// default highlight position
+moveHighlightTo(brandTabs[0]);
 
-tabs.forEach(btn => {
-  btn.addEventListener('mouseover', e => {
+function clearAllActive() {
+  brandTabs.forEach(t => t.classList.remove('active'));
+  serviceTabs.forEach(t => t.classList.remove('active'));
+}
+
+function showForm(serviceType) {
+  forms.forEach(form => {
+    form.classList.toggle('hidden', form.dataset.form !== serviceType)
+  });
+}
+
+function updateFormAction(serviceType, brand) {
+  const activeForm = document.querySelector(`.search-form[data-form="${serviceType}"] form`);
+
+  if (!activeForm) return;
+
+  const baseAction = activeForm.dataset.baseAction || activeForm.action.split('?')[0];
+
+  activeForm.dataset.baseAction = baseAction;
+  activeForm.action = brand ? `${baseAction}?brand=${brand}` : baseAction;
+}
+
+brandTabs.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    clearAllActive();
+    btn.classList.add('active');
+
+    highlight.style.opacity = '1';
     moveHighlightTo(btn);
-  })
 
-  btn.addEventListener('click', e => {
-    e.preventDefault();
+    const service = btn.dataset.service;
 
-    forms.forEach(form => {
-      form.classList.add('hidden');
-      if (btn.dataset.service === form.dataset.form) {
-        form.classList.remove('hidden');
-
-        activeTab = btn;
-        moveHighlightTo(activeTab);
-      }
-    })
+    showForm(service);
+    updateFormAction(service, btn.dataset.brand);
   })
 })
 
-const tabBar = document.querySelector('.tab-bar');
-  tabBar.addEventListener('mouseleave', e => {
-    moveHighlightTo(activeTab);
+serviceTabs.forEach(btn => {
+  btn.addEventListener('click', () => {
+    clearAllActive();
+    btn.classList.add('active');
+
+    highlight.style.opacity = '0';
+
+    const service = btn.dataset.service;
+    showForm(service);
+    updateFormAction(service, null);
+  })
 })
 
 const tripTypeRadio = document.querySelectorAll('input[name="tripType"]');
@@ -42,7 +68,7 @@ const tripTypeRadio = document.querySelectorAll('input[name="tripType"]');
 tripTypeRadio.forEach(radio => {
   radio.addEventListener('change', e => {
     const returnDateWrapper = document.querySelector('#returnDateWrapper');
-    
+
     if (e.target.value === 'two-way') {
       returnDateWrapper.classList.remove('hidden');
     } else {
@@ -127,10 +153,10 @@ infantPlusBtn.addEventListener('click', () => {
 })
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Swiper Logic / Slider
+  // Swiper Logic / Slider
   const dealsSwiper = new Swiper('.deals-swiper', {
     loop: true,
-    autoplay: { delay: 3000},
+    autoplay: { delay: 3000 },
     slidesPerView: 2,
     spaceBetween: 20,
     navigation: {
@@ -171,6 +197,31 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       860: {
         slidesPerView: 4,
+      }
+    }
+  })
+
+  const brandSwiper = new Swiper('.brand-swiper', {
+    loop: true,
+    slidesPerView: 2,
+    spaceBetween: 20,
+    speed: 4000,
+    autoplay: {
+      delay: 0,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: false,
+    },
+    allowTouchMove: false,
+    freeMode: {
+      enabled: true,
+      momentum: false,
+    },
+    breakpoints: {
+      640: {
+        slidesPerView: 3
+      },
+      860: {
+        slidesPerView: 5
       }
     }
   })
