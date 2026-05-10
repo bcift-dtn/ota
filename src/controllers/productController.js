@@ -69,6 +69,7 @@ const getCarRentalDetail = async (req, res) => {
       normal_price: r.package_price,
       agent_price: r.package_agent_price,
       max_quantity: r.max_quantity,
+      duration_hours: r.duration_hours,
       formatted_price: Number(r.package_price).toLocaleString('id-ID')
     }));
 
@@ -83,8 +84,13 @@ const getCarRentalDetail = async (req, res) => {
       packages: packages || []
     }
 
+    const selectedPackageId = parseInt(req.query.packageId) || null;
+    const selectedPackage = packages.find(p => p.id === selectedPackageId) || packages[0];
+
+
     return res.render('pages/car-rental-detail' , {
       product,
+      selectedPackage,
       breadcrumbs: [
         { label: 'Home', url: '/' },
         { label: 'Car Rental', url: '/products/car-rental' },

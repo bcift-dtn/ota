@@ -32,12 +32,13 @@ const getCarRentalById = async (id) => {
       p.*,
       cd.brand, cd.model, cd.year, cd.transmission,
       cd.seats, cd.with_driver, cd.pickup_location, cd.operating_hours,
+      cd.important_info, cd.terms_conditions, cd.reminder,
       pi.image_url, pi.is_primary, pi.sort_order as image_sort_order,
       pp.id as package_id, pp.name as package_name,
       pp.description as package_description,
       pp.normal_price as package_price,
       pp.agent_price as package_agent_price,
-      pp.max_quantity, pp.sort_order as package_sort_order
+      pp.max_quantity, pp.sort_order as package_sort_order, pp.duration_hours
     FROM ota.products p
     JOIN ota.car_details cd on p.id = cd.product_id
     LEFT JOIN ota.product_images pi ON p.id = pi.product_id

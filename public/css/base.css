@@ -13,6 +13,9 @@
   --clr-special-font: #016671;
   --clr-active-font: #004F58;
 
+  /* Border Color */
+  --clr-border: #BEC8CA;
+
   /* Background Colour */
   --clr-bg: #FFF;
 
@@ -86,6 +89,11 @@ select {
   font-size: var(--fs-3);
 }
 
+.even-bigger-label {
+  font-size: var(--fs-5);
+  font-weight: 700;
+}
+
 .bigger-label {
   font-size: var(--fs-4);
   font-weight: 700;
@@ -97,6 +105,25 @@ select {
 
 .even-smaller-label {
   font-size: var(--fs-1);
+}
+
+.product-heading {
+  margin-bottom: 0.5rem;
+  font-size: var(--fs-5);
+  color: var(--clr-special-font);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.detail-container svg {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  color: var(--clr-special-font);
+  width: 18px;
+  height: 18px;
 }
 
 nav a {
@@ -179,9 +206,12 @@ a:hover {
     font-size: var(--fs-3)
   }
 
+  .even-bigger-label {
+    font-size: var(--fs-6);
+  }
+
   .bigger-label {
     font-size: var(--fs-5);
-    font-weight: 700;
   }
 
   .smaller-label {
@@ -190,5 +220,14 @@ a:hover {
 
   .even-smaller-label {
     font-size: var(--fs-2);
+  }
+
+  .product-heading {
+    font-size: var(--fs-6);
+  }
+
+  .detail-container svg {
+    width: 24px;
+    height: 24px;
   }
 }

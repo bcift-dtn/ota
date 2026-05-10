@@ -80,13 +80,13 @@
                     <div class="product-card-info-left">
                       <h2><%= product.title %></h2>
                       <div>
-                        <p><!-- Icon here --> <%= product.transmission.toUpperCase() %></p>
-                        <p><!-- Icon here --> <%= product.seats %></p>
+                        <p class="smaller-label"><!-- Icon here --> <%= product.transmission.toUpperCase() %></p>
+                        <p class="smaller-label"><!-- Icon here --> <%= product.seats %></p>
                       </div>
                       <% if (product.with_driver) { %>
-                        <p><!-- Icon here --> Driver Included</p>
+                        <p class="smaller-label"><!-- Icon here --> Driver Included</p>
                       <% } else { %>
-                        <p><!-- Icon here --> Without Driver</p>
+                        <p class="smaller-label"><!-- Icon here --> Without Driver</p>
                       <% } %>
                     </div>
                     <div class="product-card-info-right">

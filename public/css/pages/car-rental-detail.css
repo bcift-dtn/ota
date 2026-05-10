@@ -1,0 +1,231 @@
+.detail-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
+  max-width: 1200px;
+  overflow: hidden;
+}
+
+.detail-summary,
+.detail-important-info,
+.detail-terms,
+.detail-reminder,
+.detail-booking {
+  padding: 1rem 1rem;
+}
+
+.detail-badges p {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.detail-top,
+.detail-important-info,
+.detail-terms,
+.detail-reminder,
+.detail-booking {
+  box-shadow: var(--primary-box-shadow);
+  border-radius: 20px;
+}
+
+.detail-booking {
+  margin-bottom: 5rem;
+  position: relative;
+}
+
+.detail-gallery {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; 
+}
+
+.detail-gallery img{
+  width: 100%;
+  max-height: 30rem;
+  object-fit: contain;
+}
+
+.detail-thumbnails { 
+  padding: 1rem 0 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.detail-thumbnails > img {
+  max-width: 14%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.detail-summary-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-badges {
+  display: flex;
+  gap: 1rem;
+  padding: 0 0.5rem;
+}
+
+.detail-badges-left,
+.detail-badges-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.detail-important-info p,
+.detail-terms p,
+.detail-reminder p{
+  white-space: pre-wrap;
+  text-align: justify;
+  vertical-align: middle;
+  padding: 0 0.5rem;
+}
+
+.detail-booking form,
+.booking-pickup-address-wrapper,
+.booking-pickup-date-wrapper,
+.booking-pickup-time-wrapper,
+.booking-quantity-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.booking-pickup-address-wrapper,
+.booking-pickup-date-wrapper,
+.booking-pickup-time-wrapper,
+.booking-quantity-wrapper {
+  gap: 0.2rem;
+}
+
+.detail-booking input,
+.detail-booking select {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  min-height: 2.3rem;
+
+  outline: none;
+  background: none;
+  border: 2px solid var(--clr-primary);
+  border-radius: 5px;
+  accent-color: var(--clr-primary);
+}
+
+.detail-booking input[type="date"]::-webkit-calendar-picker-indicator {
+  background: url(/images/icons/calendar.svg);
+  background-size: contain;
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.detail-booking input[type="time"]::-webkit-calendar-picker-indicator {
+  background: url(/images/icons/clock.svg);
+  background-size: contain;
+  width: 0.8rem;
+  height: 0.8rem;
+  cursor: pointer;
+}
+
+.detail-booking select {
+  appearance: none;
+  -webkit-appearance: none;
+
+  background-image: url('/images/icons/chevron-down.svg');
+  background-repeat: no-repeat;
+  background-position: right 0.3rem center;
+  background-size: 1.2rem;
+  cursor: pointer;
+}
+
+.booking-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  margin-top: 0.5rem;
+}
+
+.rental-duration-note {
+  margin-top: 0.5rem;
+}
+
+.booking-summary {
+  margin: 0.5rem 0;
+  padding: 0.5rem 0;
+  border-top: 1px  dotted var(--clr-border);
+  border-bottom: 1px  dotted var(--clr-border);
+}
+
+.booking-summary-daily-rate {
+  margin-bottom: 0.5rem;
+}
+
+.booking-total-price {
+  padding: 0 0 0.5rem;
+  border-bottom: 1px  dotted var(--clr-border);
+  font-weight: 700;
+}
+
+.booking-total-price #bookingTotalPriceText {
+  color: var(--clr-special-font);
+}
+
+.booking-summary-daily-rate,
+.booking-summary-quantity,
+.booking-total-price {
+  display: flex;
+  justify-content: space-between;
+}
+
+.booking-continue-btn {
+  align-self: center;
+  outline: none;
+  border: none;
+  background-color: var(--clr-primary);
+  color: white;
+  border-radius: 10px;
+  padding: 0.5rem 2rem;
+  margin-bottom: -3rem;
+  font-weight: 700;
+  text-align: center;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+
+  position: absolute;
+  bottom: 0;
+}
+
+@media (min-width: 860px) {
+  .breadcrumb {
+    max-width: 1200px;
+  }
+
+  .detail-container{
+    padding: 0 3rem;
+  }
+
+  .booking-input-wrapper {
+    flex-direction: row;
+  }
+
+  .booking-summary {
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+  }
+  
+  .booking-total-price {
+    padding: 0 0 1rem;
+  }
+}

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/components.css">
     <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/pages/car-rental-detail.css">
   </head>
 
   <body>
@@ -15,77 +16,122 @@
     <main>
       <%- include('../partials/breadcrumb', { breadcrumbs }) %>
 
-      <section class="detail-hero">
-        <div class="detail-image-gallery">
-          <img src="<%= product.images[0]%>" alt="Image of car with brand of <%= product.brand %> model <%=product.model %>" class="detail-main-image">
-          <div class="detail-image-thumbs">
-            <!-- Other image -->
+      <section class="detail-container">
+        <div class="detail-top">
+          <div class="detail-gallery">
+            <img class="detail-main-image" src="<%= product.images[0] %>" alt="Image of <%= product.brand %> <%= product.model %> car">
+            <div class="detail-thumbnails">
+              <% product.images.forEach((img, index) => { %>
+               <img class="detail-thumbnail <%= index === 0 ? 'active-thumb' : '' %>"
+                src="<%= product.images[index] %>"
+                alt="<%= product.title %> image <%= index + 1 %>">
+              <% }) %>
+            </div>
           </div>
-        </div>
-        <div class="detail-summary">
-          <div class="detail-sumary-left">
-            <h1><%= product.title %></h1>
+
+          <div class="detail-summary">
+            <div class="detail-summary-top">
+              <h1 class="product-heading"><i data-lucide="car-front"></i><%= product.title %></h1>
+              <p class="even-bigger-label">IDR <%= selectedPackage.formatted_price %></p>
+            </div>
             <div class="detail-badges">
-              <p><!-- Icon here --><%= product.transmission.toUpperCase() %></p>
-              <p><!-- Icon here --><%= product.seats%> Seats</p>
-              <p><!-- Icon here --><% if (product.with_driver) { %> Driver Included <% } %></p>
-              <p><!-- Icon here --><%= product.seats%> Seats</p>
-              <p>Operation Hour: <%= product.operating_hours%></p>
+              <div class="detail-badges-left">
+                <p><i data-lucide="settings"></i><%=product.transmission %></p>
+                <p><i data-lucide="users-round"></i><%=product.seats %> Seats</p>
+                <% if (product.with_driver) { %>
+                 <p><i data-lucide="user-round"></i>Driver included</p>
+                <% } else { %>
+                 <p><i data-lucide="user-round"></i>Driver not included</p>
+                <% } %>
+              </div>
+              <div class="detail-badges-right">
+                <p><i data-lucide="package"></i><%= selectedPackage.name%></p>
+                <p><i data-lucide="clock"></i><%= product.operating_hours%></p>
+              </div>
             </div>
           </div>
-          <p>IDR <%= product.formatted_starting_price%><span>/day</span></p>
         </div>
-      </section>
 
-      <section class="detail-terms">
-        <h2>Terms & Conditions</h2>
-        <p><%= product.description %></p>
-      </section>
+        <div class="detail-important-info">
+          <h2 class="product-heading"><i data-lucide="circle-alert"></i>Important Info</h2>
+          <p><%= product.important_info%></p>
+        </div>
 
-      <section class="detail-remainder">
-        <h2>Remainder</h2>
-      </section>
+        <div class="detail-terms">
+          <h2 class="product-heading"><i data-lucide="gavel"></i>Terms & Conditions</h2>
+          <p><%= product.terms_conditions%></p>
+        </div>
 
-      <section class="detail-booking">
-        <h2>Booking Detail</h2>
-        <form action="">
-          <div class="booking-pickup-wrapper">
-            <h3>Pickup</h3>
-            <div>
-              <label for="pickupDate">Pickup Date</label>
-              <input type="date" name="pickupDate" id="pickupDate">
-            </div>
-            <div>
-              <label for="pickupTime">Return Date</label>
-              <select name="pickupTime" id="pickupTime">
-                <option value="0000">00:00</option>
-                <option value="0000">00:30</option>
-                <option value="0000">01:00</option>
-              </select>
-            </div>
-          </div>
+        <div class="detail-reminder">
+          <h2 class="product-heading"><i data-lucide="bell"></i>Remainder</h2>
+          <p><%= product.reminder%></p>
+        </div>
 
-          <div class="booking-pickup-wrapper">
-            <h3>Return</h3>
-            <div>
-              <label for="returnDate">Return Date</label>
-              <input type="date" name="returnDate" id="returnDate">
+        <div class="detail-booking">
+          <h2 class="product-heading"><i data-lucide="receipt-text"></i>Booking Information</h2>
+          <form action="#">
+            <div class="booking-pickup-address-wrapper">
+              <label for="pickupLocation">Pickup Address</label>
+              <input type="text" id="pickupLocation" name="pickupLocation" placeholder="Engku Putri No. 1, Batam Center" required>
             </div>
-            <div>
-              <label for="returnTime">Return Date</label>
-              <select name="returnTime" id="returnTime">
-                <option value="0000">00:00</option>
-                <option value="0000">00:30</option>
-                <option value="0000">01:00</option>
-              </select>
+
+            <div class="booking-input-wrapper">
+              <div class="booking-pickup-date-wrapper">
+                <label for="pickupDate">Pickup Date</label>
+                <input type="date" name="pickupDate" id="pickupDate" required> <!-- get pickup date from search component -->
+              </div>
+
+              <div class="booking-pickup-time-wrapper">
+                <label for="pickupTime">Pickup Time</label>
+                <input type="time" name="pickupTime" id="pickupTime" required>
+              </div>
+
+              <div class="booking-quantity-wrapper">
+                <label for="bookingQuantity">Quantity</label>
+                <select class="booking-quantity-select" name="bookingQuantity" id="bookingQuantity">
+                  <% for (let i = 1; i <= selectedPackage.max_quantity; i++) { %>
+                    <option value="<%= i %>"><%= i %></option>
+                  <% } %>
+                </select>
+              </div>
             </div>
-          </div>
-        </form>
+
+            <p class="rental-duration-note smaller-label"></p>
+
+            <div class="booking-summary">
+              <div class="booking-summary-daily-rate">
+                <p>Daily Rate</p>
+                <p id="packagePrice" data-price="<%= selectedPackage.normal_price %>">IDR <%= selectedPackage.formatted_price %></p>
+              </div>
+
+              <div class="booking-summary-quantity">
+                <p>Quantity</p>
+                <p id="bookingcarQuantityText">1 Car</p> <!-- Get value from booking quantity selected -->
+              </div>
+            </div>
+
+            <div class="booking-total-price">
+              <p class="bigger-label">Total Price</p>
+              <p class="bigger-label" id="bookingTotalPriceText">IDR <%= selectedPackage.formatted_price %></p> <!-- total price calculation -->
+            </div>
+
+            <button class="booking-continue-btn" id="bookingContinueBtn">CONTINUE</button>
+          </form>
+        </div>
+
+        
       </section>
     </main>
 
     <%- include('../partials/footer') %>
 
     <%- include('../partials/loginModal') %>
+
+    <script>
+      const packageDurationHours = <%= selectedPackage.duration_hours || 'null' %>;
+      const currentUser = <%- JSON.stringify(user).replace(/</g, '\\u003c')  %>;
+    </script>
+
+    <script src="/js/car-rental-detail.js"></script>
   </body>
 </html>
