@@ -116,7 +116,8 @@ select {
   gap: 0.4rem;
 }
 
-.detail-container svg {
+.detail-container svg,
+.product-card-info-left svg {
   display: flex;
   align-items: center;
   gap: 0.4rem;

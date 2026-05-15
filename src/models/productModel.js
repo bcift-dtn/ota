@@ -2,7 +2,7 @@ const pool = require('../config/db');
 
 // im not using paramter at the moment, but shouldnt we use the
 // data-form from the home search component?
-const getCarRentalListings = async () => {
+const getCarRentalListings = async (limit, offset) => {
   const query = `
     SELECT
       p.*,
@@ -16,11 +16,27 @@ const getCarRentalListings = async () => {
     WHERE p.type = 'car_rental' AND p.is_active = true
     GROUP BY p.id, cd.transmission, cd.seats, cd.with_driver, pi.image_url
     ORDER BY p.priority DESC, p.created_at DESC
-  `
+    LIMIT $1 OFFSET $2
+  `;
+
+  try {
+    const res = await pool.query(query, [limit, offset]);
+    return res.rows;
+  } catch (err) {
+    throw err;
+  }
+}
+
+const getCarRentalCount = async () => {
+  const query = `
+    SELECT COUNT(p.id) as total
+    from ota.products p 
+    where p.type = 'car_rental' AND p.is_active = true
+  `;
 
   try {
     const res = await pool.query(query);
-    return res.rows;
+    return parseInt(res.rows[0].total);
   } catch (err) {
     throw err;
   }
@@ -66,7 +82,7 @@ const getPackagesByProductIds = async (productIds) => {
     WHERE product_id = ANY($1) AND is_active = true
     ORDER BY product_id, sort_order ASC
   `;
-  
+
   try {
     const res = await pool.query(query, [productIds]);
     return res.rows;
@@ -75,4 +91,4 @@ const getPackagesByProductIds = async (productIds) => {
   }
 }
 
-module.exports = { getCarRentalListings, getCarRentalById, getPackagesByProductIds };
+module.exports = { getCarRentalListings, getCarRentalById, getPackagesByProductIds, getCarRentalCount };

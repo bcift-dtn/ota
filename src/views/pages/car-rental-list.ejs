@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Rental - OTA</title>
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/layout.css">
-    <link rel="stylesheet" href="/css/components.css">
-    <link rel="stylesheet" href="/css/components/search.css">
-    <link rel="stylesheet" href="/css/pages/car-rental-list.css">
-  </head>
-  <body>
-    <%- include('../partials/navbar') %>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Car Rental - OTA</title>
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/search.css">
+  <link rel="stylesheet" href="/css/pages/car-rental-list.css">
+</head>
+
+<body>
+  <%- include('../partials/navbar') %>
     <main>
       <section class="list-hero">
         <h1>CAR RENTAL</h1>
@@ -23,11 +25,11 @@
             <div class="search-component-left">
               <div class="search-form-top">
                 <div class="driver-wrapper">
-                  <input type="radio" class="with-driver-radio" id="withDriverRadio" name="driver-needs" value="with-driver"
-                    <%= searchParams.driverNeeds === 'with-driver' ? 'checked' : '' %>>
+                  <input type="radio" class="with-driver-radio" id="withDriverRadio" name="driver-needs"
+                    value="with-driver" <%=searchParams.driverNeeds==='with-driver' ? 'checked' : '' %>>
                   <label for="withDriverRadio">With Driver</label>
-                  <input type="radio" class="without-driver-radio" id="withoutDriverRadio" name="driver-needs" value="without-driver"
-                    <%= searchParams.driverNeeds === 'without-driver' ? 'checked' : '' %>>
+                  <input type="radio" class="without-driver-radio" id="withoutDriverRadio" name="driver-needs"
+                    value="without-driver" <%=searchParams.driverNeeds==='without-driver' ? 'checked' : '' %>>
                   <label for="withoutDriverRadio">Without Driver</label>
                 </div>
               </div>
@@ -63,76 +65,141 @@
 
       <%- include('../partials/breadcrumb', { breadcrumbs }) %>
 
-      <section class="product-list">
-        <div class="product-list-container">
-          <% products.forEach(product => { %> 
-            <div class="product-card-horizontal" data-product-id="<%= product.id %>">
-              <div class="product-card-top">
-                <div class="product-card-image">
-                  <% if (product.image_url) { %>
-                    <img src="<%= product.image_url %>" alt="<%= product.title %>">
-                  <% } else { %>
-                    <div class="product-card-image-placeholder"></div>
-                  <% } %>
-                </div>
-                <div class="product-card-info">
-                  <div class="product-card-info-split">
-                    <div class="product-card-info-left">
-                      <h2><%= product.title %></h2>
-                      <div>
-                        <p class="smaller-label"><!-- Icon here --> <%= product.transmission.toUpperCase() %></p>
-                        <p class="smaller-label"><!-- Icon here --> <%= product.seats %></p>
-                      </div>
-                      <% if (product.with_driver) { %>
-                        <p class="smaller-label"><!-- Icon here --> Driver Included</p>
+        <section class="product-list">
+          <div class="product-list-container">
+            <% products.forEach(product=> { %>
+              <div class="product-card-horizontal" data-product-id="<%= product.id %>">
+                <div class="product-card-top">
+                  <div class="product-card-image">
+                    <% if (product.image_url) { %>
+                      <img src="<%= product.image_url %>" alt="<%= product.title %>">
                       <% } else { %>
-                        <p class="smaller-label"><!-- Icon here --> Without Driver</p>
-                      <% } %>
-                    </div>
-                    <div class="product-card-info-right">
-                      <div>
-                        <p>Start from</p>
-                        <div class="product-card-price-wrapper">
-                          <p class="product-card-price">IDR <%= product.formatted_starting_price %></p>
+                        <div class="product-card-image-placeholder"></div>
+                        <% } %>
+                  </div>
+                  <div class="product-card-info">
+                    <div class="product-card-info-split">
+                      <div class="product-card-info-left">
+                        <h2>
+                          <%= product.title %>
+                        </h2>
+                        <div>
+                          <p class="smaller-label">
+                            <i data-lucide="settings"></i>
+                            <%= product.transmission.toUpperCase() %>
+                          </p>
+                          <p class="smaller-label">
+                            <i data-lucide="users-round"></i>
+                            <%= product.seats %> Seats
+                          </p>
+                          <% if (product.with_driver) { %>
+                            <p class="smaller-label"><i data-lucide="user-round"></i> Driver Included</p>
+                          <% } else { %>
+                            <p class="smaller-label"><i data-lucide="user-round"></i> Without Driver</p>
+                          <% } %>
                         </div>
                       </div>
-                      <button class="detail-btn">Detail</button>
+                      <div class="product-card-info-right">
+                        <div>
+                          <p>Start from</p>
+                          <div class="product-card-price-wrapper">
+                            <p class="product-card-price">IDR <%= product.formatted_starting_price %>
+                            </p>
+                          </div>
+                        </div>
+                        <button class="detail-btn">Detail</button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="package-dropdown hidden">
-                <div class="package-dropdown-header">
-                  <p class="smaller-label">SELECT TRANSFER PACKAGE</p>
-                  <p class="package-error smaller-label warning-text hidden">Please select a package first.</p>
-                </div>
-                <div class="package-list">
-                  <% product.packages.forEach ((package, index) => { %>
-                    <div class="package-option <%= index === 0 ? 'active' : '' %>" data-package-id="<%= package.id %>" data-price="<%= package.normal_price%>">
-                      <div class="package-option-info">
-                        <p class="package-name bigger-label <%= index === 0 ? 'active-text' : '' %>"><%= package.name %></p>
-                        <p class="package-description smaller-label"><%= package.description %></p>
+                <div class="package-dropdown hidden">
+                  <div class="package-dropdown-header">
+                    <p class="smaller-label">SELECT TRANSFER PACKAGE</p>
+                    <p class="package-error smaller-label warning-text hidden">Please select a package first.</p>
+                  </div>
+                  <div class="package-list">
+                    <% product.packages.forEach ((package, index)=> { %>
+                      <div class="package-option <%= index === 0 ? 'active' : '' %>" data-package-id="<%= package.id %>"
+                        data-price="<%= package.normal_price%>">
+                        <div class="package-option-info">
+                          <p class="package-name bigger-label <%= index === 0 ? 'active-text' : '' %>">
+                            <%= package.name %>
+                          </p>
+                          <p class="package-description smaller-label">
+                            <%= package.description %>
+                          </p>
+                        </div>
+                        <p class="package-price bigger-label <%= index === 0 ? 'active-text' : '' %>">IDR <%=
+                            package.formatted_price %>
+                        </p>
                       </div>
-                      <p class="package-price bigger-label <%= index === 0 ? 'active-text' : '' %>">IDR <%= package.formatted_price %></p>
-                    </div>
-                  <% }) %>
-                  <button class="confirm-selection-btn">CONFIRM SELECTION</button>
+                      <% }) %>
+                        <button class="confirm-selection-btn">CONFIRM SELECTION</button>
+                  </div>
                 </div>
               </div>
-            </div>
-          <% }) %>
+              <% }) %>
 
-          <% if (products.length === 0) { %>
-            <p>No cars available at the moment.</p>
-          <% } %>
-        </div>
-      </section>
+              <% if (products.length===0) { %>
+                <div class="empty-state">
+                  <i data-lucide="frown"></i>
+                  <h2>No Cars Found</h2>
+                  <p>Try adjusting your filters or date to see more results.</p>
+                </div>
+              <% } %>
+
+              <% if (totalPages > 1) { %> 
+                <% 
+                  let startPage = 1;
+                  let endPage = totalPages;
+
+                  if (totalPages > 5) {
+                    if (currentPage <= 3) {
+                      startPage = 1;
+                      endPage = 5;
+                    } else if (currentPage >= totalPages - 2) {
+                      startPage = totalPages - 4;
+                      endPage = totalPages; 
+                    } else {
+                      startPage = currentPage - 2;
+                      endPage = currentPage + 2;
+                    }
+                  }
+
+                  let filterQuery = '';
+                  if (searchParams.driverNeeds) filterQuery += `&driver-needs=${searchParams.driverNeeds}`;
+                  if (searchParams.location) filterQuery += `&carRentalLocation=${searchParams.location}`;
+                  if (searchParams.pickupDate) filterQuery += `&carPickupDate=${searchParams.pickupDate}`;
+                  if (searchParams.returnDate) filterQuery += `&carReturnDate=${searchParams.returnDate}`;
+                %>
+
+                <div class="pagination-wrapper">
+                  <% if (currentPage > 1)  { %>
+                    <a href="/products/car-rental?page=1<%= filterQuery %>" class="page-text-btn page-first-btn">First Page</a>
+                    <a href="/products/car-rental?page=<%= currentPage - 1 %><%= filterQuery %>" class="page-icon-btn">&lt;</a>
+                  <% } %>
+
+                  <% for (let i = startPage; i <= endPage; i++) { %> 
+                    <a href="/products/car-rental?page=<%= i %><%= filterQuery %>" class="page-btn <%= currentPage === i ? 'active' : '' %>">
+                      <%= i %>
+                    </a>
+                  <% } %>
+
+                  <% if (currentPage < totalPages) { %> 
+                    <a href="/products/car-rental?page=<%= currentPage + 1 %><%= filterQuery %>" class="page-icon-btn">&gt;</a>
+                    <a href="/products/car-rental?page=<%= totalPages %><%= filterQuery %>" class="page-text-btn page-last-btn">Last Page</a>
+                  <% } %>
+                </div>
+              <% } %>
+          </div>
+        </section>
     </main>
-    
+
     <%- include('../partials/footer') %>
 
-    <%- include('../partials/loginModal') %>
+      <%- include('../partials/loginModal') %>
 
-    <script src="/js/car-rental-list.js"></script>
-  </body>
+        <script src="/js/car-rental-list.js"></script>
+</body>
+
 </html>

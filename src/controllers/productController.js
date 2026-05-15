@@ -1,15 +1,24 @@
-const { getCarRentalListings, getCarRentalById, getPackagesByProductIds } = require('../models/productModel');
+const { getCarRentalListings, getCarRentalById, getPackagesByProductIds, getCarRentalCount } = require('../models/productModel');
 
 const getCarRentals = async (req, res) => {
   const {
     'driver-needs': driverNeeds,
     carRentalLocation,
     carPickupDate,
-    carReturnDate
+    carReturnDate,
   } = req.query;
-  
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = 10;
+  const offset = (page - 1) * limit;
+
+
+
   try {
-    const carListing = await getCarRentalListings();
+    const totalItems = await getCarRentalCount();
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const carListing = await getCarRentalListings(limit, offset);
 
     const productIds = carListing.map(p => p.id);
     const allPackages = await getPackagesByProductIds(productIds);
@@ -25,21 +34,23 @@ const getCarRentals = async (req, res) => {
         }))
     }));
 
-    return res.render('pages/car-rental-list',  { 
+    return res.render('pages/car-rental-list', {
       products: formattedProducts,
       breadcrumbs: [
-        { label: 'Home', url:'/'},
-        { label: 'Car Rental', url: '/products/car-rental'}
+        { label: 'Home', url: '/' },
+        { label: 'Car Rental', url: '/products/car-rental' }
       ],
       searchParams: {
         driverNeeds: driverNeeds || 'with-driver',
         location: carRentalLocation || '',
         pickupDate: carPickupDate || '',
         returnDate: carReturnDate || ''
-      }
+      },
+      currentPage: page,
+      totalPages: totalPages,
     });
 
-  } catch(err) {
+  } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Server error, please try again later.' });
   }
@@ -48,21 +59,21 @@ const getCarRentals = async (req, res) => {
 const getCarRentalDetail = async (req, res) => {
   const carId = parseInt(req.params.id);
 
-  if (isNaN(carId)) return res.status(404).render('pages/404', { message: 'Car not found.'});
+  if (isNaN(carId)) return res.status(404).render('pages/404', { message: 'Car not found.' });
 
   try {
     const rows = await getCarRentalById(carId);
 
-    if (rows.length === 0) return res.status(404).render('pages/404', { message: 'Car not found.'});
+    if (rows.length === 0) return res.status(404).render('pages/404', { message: 'Car not found.' });
 
     const seenPackageIds = new Set();
-    const packages = rows.filter (r => {
+    const packages = rows.filter(r => {
       if (r.package_id && !seenPackageIds.has(r.package_id)) {
         seenPackageIds.add(r.package_id);
         return true;
-      } 
+      }
       return false;
-    }).map (r => ({
+    }).map(r => ({
       id: r.package_id,
       name: r.package_name,
       description: r.package_description,
@@ -88,7 +99,7 @@ const getCarRentalDetail = async (req, res) => {
     const selectedPackage = packages.find(p => p.id === selectedPackageId) || packages[0];
 
 
-    return res.render('pages/car-rental-detail' , {
+    return res.render('pages/car-rental-detail', {
       product,
       selectedPackage,
       breadcrumbs: [
@@ -98,8 +109,8 @@ const getCarRentalDetail = async (req, res) => {
       ]
     })
   } catch (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Server error, please try again later.' });
+    console.error(err);
+    return res.status(500).json({ error: 'Server error, please try again later.' });
   }
 }
 
