@@ -34,6 +34,12 @@
             <button class="brand-tab-btn" data-brand="ranoh" data-service="activities">
               <img src="/images/icons/palm-tree.svg" alt="Activities icon"> RANOH ISLAND
             </button>
+            <button class="brand-tab-btn" data-brand="bicc" data-service="golf">
+              <img src="/images/icons/golf.svg" alt="Golf icon"> BICC
+            </button>
+            <button class="brand-tab-btn" data-brand="nusa-indah" data-service="tour-travel">
+              <img src="/images/icons/ferris-wheel.svg" alt="travel icon"> NUSA INDAH
+            </button>
           </div>
 
           <div class="service-tab-bar">
@@ -46,6 +52,18 @@
             </button>
             <button class="service-tab-btn" data-service="activities">
               <img src="/images/icons/ferris-wheel.svg" alt="Activities icon"> Activities
+            </button>
+            <button class="service-tab-btn" data-service="tour-travel">
+              <img src="/images/icons/travel.svg" alt="Tour and travel icon icon"> Tour & Travel
+            </button>
+            <button class="service-tab-btn" data-service="golf">
+              <img src="/images/icons/golf.svg" alt="Tour and travel icon"> Golf
+            </button>
+            <button class="service-tab-btn" data-service="souvenir">
+              <img src="/images/icons/gift.svg" alt="Souvenir icon"> Souvenir
+            </button>
+            <button class="service-tab-btn" data-service="hotel">
+              <img src="/images/icons/bed.svg" alt="Hotel icon"> Hotel
             </button>
           </div>
 
@@ -186,20 +204,48 @@
                     <div class="input-icon-wrapper">
                       <img src="/images/icons/location-pin.svg" alt="Map pin" width="24">
                       <input type="text" class="activities-location" id="activitiesLocation" name="activitiesLocation"
-                        placeholder="Batam">
+                        placeholder="Batam" required>
                       <img src="/images/icons/chevron-down.svg" alt="Chevron arrow pointing down" width="19.2">
                     </div>
                   </div>
 
                   <div class="search-booking-wrapper">
-                    <label for="activitiesBookingDate">Booking Date</label>
-                    <input type="date" class="activities-booking-date" id="activitiesBookingDate"
-                      name="activitiesBookingDate">
+                    <label for="activitiesCheckInDate">Check-in Date</label>
+                    <input type="date" class="activities-check-in-date" id="activitiesCheckInDate"
+                      name="activitiesCheckInDate" required>
                   </div>
                 </div>
 
                 <button type="submit" class="submit-search-btn" id="submitActivitiesSearchBtn">Search</button>
               </form>
+            </div>
+            
+            <div class="search-form hidden" data-form="golf">
+              <div class="empty-state">
+                <i data-lucide="frown"></i>
+                <h2>Coming soon</h2>
+              </div>
+            </div>
+
+            <div class="search-form hidden" data-form="tour-travel">
+              <div class="empty-state">
+                <i data-lucide="frown"></i>
+                <h2>Coming soon</h2>
+              </div>
+            </div>
+
+            <div class="search-form hidden" data-form="souvenir">
+              <div class="empty-state">
+                <i data-lucide="frown"></i>
+                <h2>Coming soon</h2>
+              </div>
+            </div>
+
+            <div class="search-form hidden" data-form="hotel">
+              <div class="empty-state">
+                <i data-lucide="frown"></i>
+                <h2>Coming soon</h2>
+              </div>
             </div>
           </div>
         </div>

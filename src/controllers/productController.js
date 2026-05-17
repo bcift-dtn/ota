@@ -1,4 +1,5 @@
-const { getCarRentalListings, getCarRentalById, getPackagesByProductIds, getCarRentalCount } = require('../models/productModel');
+const { getCarRentalListings, getCarRentalById, getPackagesByProductIds, getCarRentalCount, 
+  getActivitiesCount, getActivitiesListings, getActivitiesById, getPackageAmenities, getPackagePricingTiers } = require('../models/productModel');
 
 const getCarRentals = async (req, res) => {
   const {
@@ -114,4 +115,134 @@ const getCarRentalDetail = async (req, res) => {
   }
 }
 
-module.exports = { getCarRentals, getCarRentalDetail };
+const getActivities = async (req, res) => {
+  const {
+    activitiesLocation,
+    activitiesCheckInDate
+  } = req.query
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = 10; 
+  const offset = (page - 1) * limit; 
+
+  try {
+    const totalItems = await getActivitiesCount();
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const activitiesListing = await getActivitiesListings(limit, offset);
+
+    const productIds = activitiesListing.map(a => a.id);
+    const allPackages = await getPackagesByProductIds(productIds);
+
+    const formattedProducts = activitiesListing.map(p => ({
+      ...p,
+      formatted_starting_price: Number(p.starting_price).toLocaleString('id-ID'),
+      packages: allPackages
+        .filter(pkg => pkg.product_id === p.id)
+        .map(pkg => ({
+          ...pkg,
+          formatted_price: Number(pkg.normal_price).toLocaleString('id-ID')
+        }))
+    }))
+
+    return res.render('pages/activities-list', {
+      products: formattedProducts,
+      breadcrumbs: [
+        { label: 'Home', url: '/' },
+        { label: 'Activities', url: '/products/activities' }
+      ],
+      searchParams: {
+        activitiesLocation: activitiesLocation || '',
+        activitiesCheckInDate: activitiesCheckInDate || ''
+      },
+      currentPage: page,
+      totalPages: totalPages
+    })
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Server error, please try again later.' });
+  }
+}
+
+const getActivitiesDetail = async (req, res) => {
+  const activityId = parseInt(req.params.id);
+
+  if (isNaN(activityId)) return res.status(404).render('pages/404', { message: 'Activities not found.'});
+
+  try {
+    const rows = await getActivitiesById(activityId)
+
+    if (rows.length === 0) return res.status(404).render('pages/404', { message: 'Activities not found.'})
+
+    const seenPackageIds = new Set();
+    const packages = rows.filter(r => {
+      if (r.package_id && !seenPackageIds.has(r.package_id)) {
+        seenPackageIds.add(r.package_id);
+        return true;
+      }
+      return false;
+    }).map(r => ({
+      id: r.package_id,
+      name: r.package_name,
+      description: r.package_description,
+      normal_price: r.package_price,
+      agent_price: r.package_agent_price,
+      max_quantity: r.max_quantity,
+      duration_hours: r.duration_hours,
+      pricing_type: r.pricing_type,
+      formatted_price: Number(r.package_price).toLocaleString('id-ID')
+    }))
+
+    const packageIds = packages.map(p => p.id);
+
+    const amenities = await getPackageAmenities(packageIds);
+    const pricingTiers = await getPackagePricingTiers(packageIds);
+
+    packages.forEach(pkg => {
+      pkg.amenities = amenities.filter(a => a.package_id === pkg.id);
+      pkg.pricingTiers = pricingTiers.filter(p => p.package_id === pkg.id);
+    })
+    
+    const startingPrice = packages.length > 0 
+      ? Math.min(...packages.map(p => Number(p.normal_price)))
+      : 0;
+
+    const uniqueImages = [];
+    const seenUrls = new Set();
+
+    rows.forEach(r => {
+      if (r.image_url && !seenUrls.has(r.image_url)) {
+        seenUrls.add(r.image_url);
+        uniqueImages.push({
+          url: r.image_url,
+          package_id: r.image_package_id || null
+        });
+      }
+    });
+
+    const product = {
+      ...rows[0],
+      formatted_starting_price: startingPrice.toLocaleString('id-ID'),
+      images: uniqueImages,
+      packages: packages || []
+    }
+
+    const selectedPackageId = parseInt(req.query.packageId) || null;
+    const selectedPackage = packages.find(p => p.id === selectedPackageId) || packages[0];
+
+    return res.render('pages/activities-detail', {
+      product,
+      selectedPackage,
+      breadcrumbs: [
+        { label: 'Home', url: '/' },
+        { label: 'Activities', url: '/products/activities' },
+        { label: product.title, url: '#' }
+      ]
+    })
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Server error, please try again later.' });
+  }
+}
+
+module.exports = { getCarRentals, getCarRentalDetail, getActivities, getActivitiesDetail };

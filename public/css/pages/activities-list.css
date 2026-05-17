@@ -68,18 +68,15 @@
   }
 
   .product-card-image {
-    width: 35rem;
-    padding: 2rem;
+    width: 25rem;
   }
 }
 
 @media (min-width: 1000px) {
   .product-card-image {
     width: 35rem;
-    padding: 1rem;
   }
 }
-
 
 .product-card-info h2 {
   font-size: var(--fs-5);

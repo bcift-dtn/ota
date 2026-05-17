@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= product.title %> - OTA</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/pages/product-detail.css">
+  </head>
+
+  <body>
+    <%- include('../partials/navbar') %>
+    
+    <main>
+      <%- include('../partials/breadcrumb', { breadcrumbs }) %>
+
+      <section class="detail-container">
+        <div class="detail-top">
+          <div class="detail-gallery">
+            <% 
+              const packageImages = product.images.filter(img => 
+                img.package_id === selectedPackage.id || img.package_id === null
+              );
+
+              const mainImage = packageImages.length > 0 ? packageImages[0].url : '/images/placeholder.webp';
+            %> 
+            <img class="detail-main-image" src="<%= mainImage %>" alt="Image of <%= product.brand %> <%= product.model %> car">
+            <div class="detail-thumbnails">
+              <% packageImages.forEach((img, index) => { %>
+               <img class="detail-thumbnail <%= index === 0 ? 'active-thumb' : '' %>"
+                src="<%= img.url %>"
+                alt="<%= product.title %> image <%= index + 1 %>">
+              <% }) %>
+            </div>
+          </div>
+
+          <div class="detail-summary">
+            <div class="detail-summary-top">
+              <h1 class="product-heading"><i data-lucide="car-front"></i><%= product.title %></h1>
+              <p class="even-bigger-label">IDR <%= selectedPackage.formatted_price %></p>
+            </div>
+
+            <div class="detail-badges">
+              <div class="package-amenities">
+                  <% selectedPackage.amenities.forEach(amenity => { %>
+                    <p>
+                    <i data-lucide="<%= amenity.icon_lucide %>"></i><%= amenity.name %>
+                    </p>
+                  <% }) %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-important-info">
+          <h2 class="product-heading"><i data-lucide="circle-alert"></i>Important Info</h2>
+          <p><%= product.important_info%></p>
+        </div>
+
+        <div class="detail-booking">
+          <h2 class="product-heading"><i data-lucide="receipt-text"></i>Booking Information</h2>
+          <form action="#">
+            <div class="booking-input-wrapper">
+              <div class="booking-pickup-date-wrapper">
+                <label for="activitiesCheckInDate" class="label-text">Check In Date</label>
+              <input type="date" class="activities-check-in-date" id="activitiesCheckInDate" name="activitiesCheckInDate"
+                value="" required>
+              </div>
+
+              <div class="booking-pickup-time-wrapper">
+                <label class="label-text" for="pickupTime">Pickup Time</label>
+                <input type="time" name="pickupTime" id="pickupTime" value="12">
+              </div>
+            </div>
+
+            <div class="pax-counter-wrapper">
+              <% if (selectedPackage.pricing_type === 'per_pax') { %>
+                <% selectedPackage.pricingTiers.forEach(pricingTier => { %>
+                    <div class="pax-counter">
+                      <div class="pax-counter-left">
+                        <p class="label-text"><%= pricingTier.tier_title.toUpperCase() %></p> 
+
+                        <% if (pricingTier.normal_price === 0 ) { %> 
+                          <p class="bigger-label">FREE</p> 
+                        <% } else { %> 
+                          <p class="bigger-label">IDR <%= pricingTier.normal_price.toLocaleString('id-ID') %></p> 
+                        <% } %>
+                        
+                        <p class="even-smaller-label"><%= pricingTier.tier_description %></p>
+                      </div>
+              
+                      <div class="pax-counter-right">
+                        <button class="pax-counter-minus">-</button>
+                        <p class="pax-counter-text">0</p>
+                        <button class="pax-counter-plus">+</button>
+                      </div>
+                    </div>
+                <% }) %>
+                <% } else { %>
+                    <div class="quantity-counter">
+                      <p>Quantity</p>
+                      <select name="" id="">
+                        <option value="1">1</option>
+                      </select>
+                    </div>
+                <% } %>
+            </div>
+
+            <div class="booking-summary">
+              <% if (selectedPackage.pricing_type === "per_pax") { %>
+                <div class="booking-summary-quantity">
+                  <p>Quantity</p>
+                  <p id="bookingPaxQuantityText">1 People</p>
+                </div>
+              <% } else { %>
+                <div class="booking-summary-daily-rate">
+                  <p>Daily Rate</p>
+                  <p id="packagePrice" data-price="<%= selectedPackage.normal_price %>">IDR <%= selectedPackage.formatted_price %></p>
+                </div>
+
+                <div class="booking-summary-quantity">
+                  <p>Quantity</p>
+                  <p id="bookingQuantityText">1 Unit</p>
+                </div>
+              <% } %>
+            </div>
+
+            <div class="booking-total-price">
+              <p class="bigger-label">Total Price</p>
+              <p class="bigger-label" id="bookingTotalPriceText">IDR <%= selectedPackage.formatted_price %></p> <!-- total price calculation -->
+            </div>
+
+            <button class="booking-continue-btn" id="bookingContinueBtn">CONTINUE</button>
+          </form>
+        </div>
+
+        
+      </section>
+    </main>
+
+    <%- include('../partials/footer') %>
+
+    <%- include('../partials/loginModal') %>
+
+    <script>
+      const packageDurationHours = <%= selectedPackage.duration_hours || 'null' %>;
+      const currentUser = <%- JSON.stringify(user).replace(/</g, '\\u003c')  %>;
+    </script>
+  </body>
+</html>
