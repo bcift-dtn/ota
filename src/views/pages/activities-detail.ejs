@@ -148,5 +148,7 @@
       const packageDurationHours = <%= selectedPackage.duration_hours || 'null' %>;
       const currentUser = <%- JSON.stringify(user).replace(/</g, '\\u003c')  %>;
     </script>
+
+    <script src="/js/activities-detail.js"></script>
   </body>
 </html>

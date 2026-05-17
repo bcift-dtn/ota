@@ -1,5 +1,5 @@
 const { getCarRentalListings, getCarRentalById, getPackagesByProductIds, getCarRentalCount, 
-  getActivitiesCount, getActivitiesListings, getActivitiesById, getPackageAmenities, getPackagePricingTiers } = require('../models/productModel');
+  getActivitiesCount, getActivitiesListings, getActivitiesById, getProductAmenities, getPackageAmenities, getPackagePricingTiers } = require('../models/productModel');
 
 const getCarRentals = async (req, res) => {
   const {
@@ -134,8 +134,11 @@ const getActivities = async (req, res) => {
     const productIds = activitiesListing.map(a => a.id);
     const allPackages = await getPackagesByProductIds(productIds);
 
+    const amenities = await getProductAmenities(productIds);
+
     const formattedProducts = activitiesListing.map(p => ({
       ...p,
+      amenities: amenities.filter(a => a.product_id === p.id),
       formatted_starting_price: Number(p.starting_price).toLocaleString('id-ID'),
       packages: allPackages
         .filter(pkg => pkg.product_id === p.id)

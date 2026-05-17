@@ -159,6 +159,25 @@ const getActivitiesById = async (id) => {
   }
 }
 
+const getProductAmenities = async (productIds) => {
+  if (!productIds || productIds.length === 0) return [];
+
+  const query = `
+    SELECT 
+      pa.product_id, a.name, a.icon_lucide
+    FROM ota.product_amenities pa
+    JOIN ota.amenities a ON pa.amenity_id = a.id
+    WHERE pa.product_id = ANY($1)
+  `;
+
+  try {
+    const res = await pool.query(query, [productIds])
+    return res.rows
+  } catch (err) {
+    throw err
+  }
+}
+
 const getPackageAmenities = async (packageIds) => {
   if (!packageIds || packageIds.length === 0) return [];
   
@@ -195,4 +214,4 @@ const getPackagePricingTiers = async (packageIds) => {
 }
 
 module.exports = { getCarRentalListings, getCarRentalById, getPackagesByProductIds, getCarRentalCount, 
-  getActivitiesCount, getActivitiesListings, getActivitiesById, getPackageAmenities, getPackagePricingTiers };
+  getActivitiesCount, getActivitiesListings, getActivitiesById, getProductAmenities, getPackageAmenities, getPackagePricingTiers };
