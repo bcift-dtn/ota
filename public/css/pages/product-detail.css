@@ -12,8 +12,7 @@
 
 .detail-summary,
 .detail-important-info,
-.detail-terms,
-.detail-reminder,
+.detail-location-info,
 .detail-booking {
   padding: 1rem 1rem;
 }
@@ -36,8 +35,7 @@
 
 .detail-top,
 .detail-important-info,
-.detail-terms,
-.detail-reminder,
+.detail-location-info,
 .detail-booking {
   box-shadow: var(--primary-box-shadow);
   border-radius: 20px;
@@ -46,6 +44,12 @@
 .detail-booking {
   margin-bottom: 5rem;
   position: relative;
+}
+
+/* Google Map */
+.map-container iframe{
+  border: none;
+  border-radius: 10px;
 }
 
 .detail-gallery {
@@ -100,9 +104,7 @@
   gap: 0.3rem;
 }
 
-.detail-important-info p,
-.detail-terms p,
-.detail-reminder p{
+.detail-important-info p{
   white-space: pre-wrap;
   text-align: justify;
   vertical-align: middle;
@@ -126,8 +128,6 @@
 .quantity-counter {
   gap: 0.2rem;
 }
-
-
 
 .detail-booking input,
 .detail-booking select {

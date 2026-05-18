@@ -9,6 +9,25 @@ document.querySelectorAll('input[type="date"]').forEach(input => {
   input.setAttribute('min', today);
 });
 
+function applyBrandRules(brand) {
+  document.querySelector('.driver-wrapper').classList.remove('hidden');
+  document.querySelector('#withoutDriverRadio').classList.remove('hidden');
+  document.querySelector('label[for="withoutDriverRadio"]').classList.remove('hidden');
+  const activityLocation = document.querySelector('#activitiesLocation');
+  activityLocation.closest('.search-input-wrapper').classList.remove('hidden');
+  activityLocation.setAttribute('required', 'true');
+
+  if (brand === "meyer") {
+    document.querySelector('#withoutDriverRadio').classList.add('hidden');
+    document.querySelector('label[for="withoutDriverRadio"]').classList.add('hidden');
+
+    document.querySelector('#withDriverRadio').checked = true;
+  } else if (brand === "ranoh") {
+    activityLocation.closest('.search-input-wrapper').classList.add('hidden');
+    activityLocation.removeAttribute('required');
+  }
+}
+
 // move highlight
 function moveHighlightTo(tab) {
   highlight.style.left = tab.offsetLeft + 'px';
@@ -38,6 +57,8 @@ function updateFormAction(serviceType, brand) {
 
   activeForm.dataset.baseAction = baseAction;
   activeForm.action = brand ? `${baseAction}?brand=${brand}` : baseAction;
+
+  applyBrandRules(brand);
 }
 
 brandTabs.forEach(btn => {
