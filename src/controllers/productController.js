@@ -1,5 +1,6 @@
 const { getCarRentalListings, getCarRentalById, getPackagesByProductIds, getCarRentalCount, 
-  getActivitiesCount, getActivitiesListings, getActivitiesById, getProductAmenities, getPackageAmenities, getPackagePricingTiers } = require('../models/productModel');
+  getActivitiesCount, getActivitiesListings, getActivitiesById, getProductAmenities, getPackageAmenities, 
+  getPackagePricingTiers, getPackageTimeSlots } = require('../models/productModel');
 
 const getCarRentals = async (req, res) => {
   const {
@@ -82,6 +83,7 @@ const getCarRentalDetail = async (req, res) => {
       agent_price: r.package_agent_price,
       max_quantity: r.max_quantity,
       duration_hours: r.duration_hours,
+      important_info: r.package_important_info,
       formatted_price: Number(r.package_price).toLocaleString('id-ID')
     }));
 
@@ -98,11 +100,12 @@ const getCarRentalDetail = async (req, res) => {
 
     const selectedPackageId = parseInt(req.query.packageId) || null;
     const selectedPackage = packages.find(p => p.id === selectedPackageId) || packages[0];
-
+    const searchPickupDate = req.query.pickupDate || '';
 
     return res.render('pages/car-rental-detail', {
       product,
       selectedPackage,
+      searchPickupDate,
       breadcrumbs: [
         { label: 'Home', url: '/' },
         { label: 'Car Rental', url: '/products/car-rental' },
@@ -193,6 +196,7 @@ const getActivitiesDetail = async (req, res) => {
       max_quantity: r.max_quantity,
       duration_hours: r.duration_hours,
       pricing_type: r.pricing_type,
+      important_info: r.package_important_info,
       formatted_price: Number(r.package_price).toLocaleString('id-ID')
     }))
 
@@ -200,10 +204,12 @@ const getActivitiesDetail = async (req, res) => {
 
     const amenities = await getPackageAmenities(packageIds);
     const pricingTiers = await getPackagePricingTiers(packageIds);
+    const timeSlots = await getPackageTimeSlots(packageIds);
 
     packages.forEach(pkg => {
       pkg.amenities = amenities.filter(a => a.package_id === pkg.id);
       pkg.pricingTiers = pricingTiers.filter(p => p.package_id === pkg.id);
+      pkg.timeSlots = timeSlots.filter(t => t.package_id === pkg.id);
     })
     
     const startingPrice = packages.length > 0 

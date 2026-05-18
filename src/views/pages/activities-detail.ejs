@@ -38,7 +38,7 @@
 
           <div class="detail-summary">
             <div class="detail-summary-top">
-              <h1 class="product-heading"><i data-lucide="car-front"></i><%= product.title %></h1>
+              <h1 class="product-heading"><i data-lucide="ferris-wheel"></i><%= product.title %></h1>
               <p class="even-bigger-label">IDR <%= selectedPackage.formatted_price %></p>
             </div>
 
@@ -56,7 +56,7 @@
 
         <div class="detail-important-info">
           <h2 class="product-heading"><i data-lucide="circle-alert"></i>Important Info</h2>
-          <p><%= product.important_info%></p>
+          <p><%= selectedPackage.important_info%></p>
         </div>
 
         <div class="detail-booking">
@@ -70,15 +70,23 @@
               </div>
 
               <div class="booking-pickup-time-wrapper">
-                <label class="label-text" for="pickupTime">Pickup Time</label>
-                <input type="time" name="pickupTime" id="pickupTime" value="12">
+                <label class="label-text" for="slotTime">Slot Time</label>
+                <select name="slotTime" id="slotTime" class="slot-time-selector">
+                  <% if (selectedPackage.timeSlots && selectedPackage.timeSlots.length > 0) { %>
+                    <% selectedPackage.timeSlots.forEach(slot => { %>
+                      <option value="<%= slot.time_string %>"><%= slot.time_string %></option>
+                    <% }) %>
+                  <% } else { %>
+                    <option value="Anytime" disabled>No slots available</option>
+                  <% } %>
+                </select>
               </div>
             </div>
 
             <div class="pax-counter-wrapper">
               <% if (selectedPackage.pricing_type === 'per_pax') { %>
                 <% selectedPackage.pricingTiers.forEach(pricingTier => { %>
-                    <div class="pax-counter">
+                    <div class="pax-counter" data-price="<%= pricingTier.normal_price %>">
                       <div class="pax-counter-left">
                         <p class="label-text"><%= pricingTier.tier_title.toUpperCase() %></p> 
 
@@ -100,9 +108,11 @@
                 <% }) %>
                 <% } else { %>
                     <div class="quantity-counter">
-                      <p>Quantity</p>
-                      <select name="" id="">
-                        <option value="1">1</option>
+                      <p class="label-text">Quantity</p>
+                      <select name="bookingQuantity" id="bookingQuantity">
+                        <% for (let i = 1; i <= selectedPackage.max_quantity; i++) { %>
+                          <option value="<%= i %>"><%= i %></option>
+                        <% } %>
                       </select>
                     </div>
                 <% } %>

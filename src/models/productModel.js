@@ -48,11 +48,11 @@ const getCarRentalById = async (id) => {
       p.*,
       cd.brand, cd.model, cd.year, cd.transmission,
       cd.seats, cd.with_driver, cd.pickup_location, cd.operating_hours,
-      cd.important_info, cd.terms_conditions, cd.reminder,
       pi.image_url, pi.is_primary, pi.sort_order as image_sort_order,
       pp.id as package_id, pp.name as package_name,
       pp.description as package_description,
       pp.normal_price as package_price,
+      pp.important_info as package_important_info,
       pp.agent_price as package_agent_price,
       pp.max_quantity, pp.sort_order as package_sort_order, pp.duration_hours
     FROM ota.products p
@@ -139,6 +139,7 @@ const getActivitiesById = async (id) => {
       ad.duration_hours, ad.max_pax, ad.with_driver,
       pi.image_url, pi.is_primary, pi.sort_order as image_sort_order, pi.package_id as image_package_id,
       pp.id as package_id, pp.name as package_name,
+      pp.important_info as package_important_info,
       pp.description as package_description,
       pp.normal_price as package_price,
       pp.agent_price as package_agent_price,
@@ -213,5 +214,21 @@ const getPackagePricingTiers = async (packageIds) => {
   }
 }
 
+const getPackageTimeSlots = async (packageIds) => {
+  if (!packageIds || packageIds.length === 0) return [];
+
+  const query = `
+    SELECT * FROM ota.package_time_slots
+    WHERE package_id = ANY($1)
+  `;
+
+  try {
+    const res = await pool.query(query, [packageIds]);
+    return res.rows;
+  } catch (err) {
+    throw err;
+  }
+} 
+
 module.exports = { getCarRentalListings, getCarRentalById, getPackagesByProductIds, getCarRentalCount, 
-  getActivitiesCount, getActivitiesListings, getActivitiesById, getProductAmenities, getPackageAmenities, getPackagePricingTiers };
+  getActivitiesCount, getActivitiesListings, getActivitiesById, getProductAmenities, getPackageAmenities, getPackagePricingTiers, getPackageTimeSlots };

@@ -113,7 +113,8 @@
 .booking-pickup-address-wrapper,
 .booking-pickup-date-wrapper,
 .booking-pickup-time-wrapper,
-.booking-quantity-wrapper {
+.booking-quantity-wrapper,
+.quantity-counter {
   display: flex;
   flex-direction: column;
 }
@@ -121,7 +122,8 @@
 .booking-pickup-address-wrapper,
 .booking-pickup-date-wrapper,
 .booking-pickup-time-wrapper,
-.booking-quantity-wrapper {
+.booking-quantity-wrapper,
+.quantity-counter {
   gap: 0.2rem;
 }
 
@@ -145,10 +147,6 @@
   display: flex;
   gap: 0.3rem;
   flex-direction: column;
-}
-
-.activities-check-in-date {
-
 }
 
 .detail-booking input[type="date"]::-webkit-calendar-picker-indicator {
@@ -176,6 +174,10 @@
   background-position: right 0.3rem center;
   background-size: 1.2rem;
   cursor: pointer;
+}
+
+.detail-booking .slot-time-selector{
+  width: 7rem;
 }
 
 .booking-input-wrapper {

@@ -1,3 +1,10 @@
+const today = new Date().toISOString().split('T')[0];
+
+document.querySelectorAll('input[type="date"]').forEach(input => {
+  input.setAttribute('min', today);
+});
+
+
 // Change main image preview
 document.querySelectorAll('.detail-thumbnail').forEach(thumb => {
   thumb.addEventListener('click', () => {

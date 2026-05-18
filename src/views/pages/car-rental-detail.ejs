@@ -53,17 +53,7 @@
 
         <div class="detail-important-info">
           <h2 class="product-heading"><i data-lucide="circle-alert"></i>Important Info</h2>
-          <p><%= product.important_info%></p>
-        </div>
-
-        <div class="detail-terms">
-          <h2 class="product-heading"><i data-lucide="gavel"></i>Terms & Conditions</h2>
-          <p><%= product.terms_conditions%></p>
-        </div>
-
-        <div class="detail-reminder">
-          <h2 class="product-heading"><i data-lucide="bell"></i>Remainder</h2>
-          <p><%= product.reminder%></p>
+          <p><%= selectedPackage.important_info%></p>
         </div>
 
         <div class="detail-booking">
@@ -77,7 +67,7 @@
             <div class="booking-input-wrapper">
               <div class="booking-pickup-date-wrapper">
                 <label for="pickupDate">Pickup Date</label>
-                <input type="date" name="pickupDate" id="pickupDate" required> <!-- get pickup date from search component -->
+                <input type="date" name="pickupDate" id="pickupDate" value="<%= searchPickupDate %>" required>
               </div>
 
               <div class="booking-pickup-time-wrapper">

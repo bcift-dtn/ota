@@ -1,3 +1,10 @@
+const today = new Date().toISOString().split('T')[0];
+
+document.querySelectorAll('input[type="date"]').forEach(input => {
+  input.setAttribute('min', today);
+});
+
+
 document.querySelectorAll('.detail-btn').forEach(btn => {
   btn.addEventListener('click', e => {
     const parent = btn.closest('.product-card-horizontal');
@@ -42,7 +49,8 @@ document.querySelectorAll('.confirm-selection-btn').forEach(btn => {
     }
 
     const packageId = activeOption.getAttribute('data-package-id');
+    const pickupDate = document.querySelector('#carPickupDate').value;
 
-    window.location.href = `/products/car-rental/${productId}?packageId=${packageId}`;
+    window.location.href = `/products/car-rental/${productId}?packageId=${packageId}&pickupDate=${pickupDate}`;
   })
 })

@@ -3,6 +3,12 @@ const serviceTabs = document.querySelectorAll('.service-tab-btn');
 const forms = document.querySelectorAll('.search-form');
 const highlight = document.querySelector('.tab-highlight');
 
+const today = new Date().toISOString().split('T')[0];
+
+document.querySelectorAll('input[type="date"]').forEach(input => {
+  input.setAttribute('min', today);
+});
+
 // move highlight
 function moveHighlightTo(tab) {
   highlight.style.left = tab.offsetLeft + 'px';
