@@ -64,11 +64,6 @@
   object-fit: contain;
 }
 
-.detail-main-image {
-  background-color: var(--clr-secondary);
-}
-
-
 .detail-thumbnails { 
   max-height: 6.4rem;
   padding: 1rem 0 0;
@@ -109,6 +104,7 @@
   text-align: justify;
   vertical-align: middle;
   padding: 0 0.5rem;
+  line-height: 1.7rem;
 }
 
 .detail-booking form,
@@ -176,17 +172,12 @@
   cursor: pointer;
 }
 
-.detail-booking .slot-time-selector{
-  width: 7rem;
-}
-
 .booking-input-wrapper {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 
   margin: 1rem 0 1rem;
-  color: var(--clr-label-font);
 }
 
 .pax-counter-wrapper {
@@ -293,5 +284,9 @@
   
   .booking-total-price {
     padding: 0 0 1rem;
+  }
+
+  .detail-booking .slot-time-selector{
+    width: 7rem;
   }
 }

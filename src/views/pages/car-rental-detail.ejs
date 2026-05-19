@@ -60,23 +60,23 @@
           <h2 class="product-heading"><i data-lucide="receipt-text"></i>Booking Information</h2>
           <form action="#">
             <div class="booking-pickup-address-wrapper">
-              <label for="pickupLocation">Pickup Address</label>
+              <label for="pickupLocation" class="label-text">Pickup Address</label>
               <input type="text" id="pickupLocation" name="pickupLocation" placeholder="Engku Putri No. 1, Batam Center" required>
             </div>
 
             <div class="booking-input-wrapper">
               <div class="booking-pickup-date-wrapper">
-                <label for="pickupDate">Pickup Date</label>
+                <label for="pickupDate" class="label-text">Pickup Date</label>
                 <input type="date" name="pickupDate" id="pickupDate" value="<%= searchPickupDate %>" required>
               </div>
 
               <div class="booking-pickup-time-wrapper">
-                <label for="pickupTime">Pickup Time</label>
+                <label for="pickupTime" class="label-text">Pickup Time</label>
                 <input type="time" name="pickupTime" id="pickupTime" required>
               </div>
 
               <div class="booking-quantity-wrapper">
-                <label for="bookingQuantity">Quantity</label>
+                <label for="bookingQuantity" class="label-text">Quantity</label>
                 <select class="booking-quantity-select" name="bookingQuantity" id="bookingQuantity">
                   <% for (let i = 1; i <= selectedPackage.max_quantity; i++) { %>
                     <option value="<%= i %>"><%= i %></option>

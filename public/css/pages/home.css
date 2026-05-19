@@ -168,7 +168,8 @@
 .search-form-top,
 .search-form-bottom,
 .from-to-wrapper,
-.search-date-wrapper {
+.search-date-wrapper,
+.search-booking-wrapper {
   gap: 0.5rem;
 }
 

@@ -114,7 +114,7 @@ select {
 }
 
 .product-heading {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
   font-size: var(--fs-5);
   color: var(--clr-special-font);
   display: flex;

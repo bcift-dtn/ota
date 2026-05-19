@@ -27,15 +27,15 @@
                 <div class="driver-wrapper">
                   <input type="radio" class="with-driver-radio" id="withDriverRadio" name="driver-needs"
                     value="with-driver" <%=searchParams.driverNeeds==='with-driver' ? 'checked' : '' %>>
-                  <label for="withDriverRadio">With Driver</label>
+                  <label for="withDriverRadio" class="label-text">With Driver</label>
                   <input type="radio" class="without-driver-radio" id="withoutDriverRadio" name="driver-needs"
                     value="without-driver" <%=searchParams.driverNeeds==='without-driver' ? 'checked' : '' %>>
-                  <label for="withoutDriverRadio">Without Driver</label>
+                  <label for="withoutDriverRadio" class="label-text">Without Driver</label>
                 </div>
               </div>
               <div class="search-form-bottom">
                 <div class="search-input-wrapper">
-                  <label for="carRentalLocation">Location</label>
+                  <label for="carRentalLocation" class="label-text">Location</label>
                   <div class="input-icon-wrapper">
                     <img src="/images/icons/location-pin.svg" alt="Map pin" width="24">
                     <input type="text" class="car-rental-location" id="carRentalLocation" name="carRentalLocation"
@@ -45,12 +45,12 @@
                 </div>
                 <div class="search-date-wrapper">
                   <div class="search-input-wrapper">
-                    <label for="carPickupDate">Car Pickup Date</label>
+                    <label for="carPickupDate" class="label-text">Car Pickup Date</label>
                     <input type="date" class="car-pickup-date" id="carPickupDate" name="carPickupDate"
                       value="<%= searchParams.pickupDate %>" required>
                   </div>
                   <div class="search-input-wrapper">
-                    <label for="carReturnDate">Car Return Date</label>
+                    <label for="carReturnDate" class="label-text">Car Return Date</label>
                     <input type="date" class="car-return-date" id="carReturnDate" name="carReturnDate"
                       value="<%= searchParams.returnDate %>" required>
                   </div>
