@@ -1,6 +1,6 @@
 const { getCarRentalListings, getCarRentalById, getPackagesByProductIds, getCarRentalCount, 
   getActivitiesCount, getActivitiesListings, getActivitiesById, getProductAmenities, getPackageAmenities, 
-  getPackagePricingTiers, getPackageTimeSlots } = require('../models/productModel');
+  getPackagePricingTiers, getPackageTimeSlots, getProductAddons } = require('../models/productModel');
 
 const getCarRentals = async (req, res) => {
   const {
@@ -205,11 +205,13 @@ const getActivitiesDetail = async (req, res) => {
     const amenities = await getPackageAmenities(packageIds);
     const pricingTiers = await getPackagePricingTiers(packageIds);
     const timeSlots = await getPackageTimeSlots(packageIds);
+    const addons = await getProductAddons(activityId, packageIds);
 
     packages.forEach(pkg => {
       pkg.amenities = amenities.filter(a => a.package_id === pkg.id);
       pkg.pricingTiers = pricingTiers.filter(p => p.package_id === pkg.id);
       pkg.timeSlots = timeSlots.filter(t => t.package_id === pkg.id);
+      pkg.addons = addons.filter(a => a.package_id === null || a.package_id === pkg.id);
     })
     
     const startingPrice = packages.length > 0 

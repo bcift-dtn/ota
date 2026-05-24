@@ -78,6 +78,98 @@ if (quantitySelect && packagePriceEl) {
   });
 }
 
+const addonsToggleBtn = document.getElementById('addonsToggleBtn');
+const addonsContent = document.getElementById('addonsContent');
+const addonsChevron = document.querySelector('.addons-chevron');
+const addonCheckboxes = document.querySelectorAll('.addon-checkbox');
+
+if (addonsToggleBtn) {
+  addonsToggleBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    addonsContent.classList.toggle('hidden');
+    addonsChevron.classList.toggle('open');
+  });
+}
+
+addonCheckboxes.forEach(checkbox => {
+  const itemRow = checkbox.closest('.addon-item');
+  const controlsDiv = itemRow.querySelector('.addon-controls');
+  const minusBtn = itemRow.querySelector('.addon-minus');
+  const plusBtn = itemRow.querySelector('.addon-plus');
+  const qtyValEl = itemRow.querySelector('.addon-qty-val');
+
+  checkbox.addEventListener('change', () => {
+    if (checkbox.checked) {
+      controlsDiv.classList.remove('hidden');
+    } else {
+      controlsDiv.classList.add('hidden');
+    }
+    calculateGrandTotal();
+  });
+
+  if (minusBtn && plusBtn) {
+    const minPax = parseInt(checkbox.getAttribute('data-min'));
+    const maxPax = parseInt(checkbox.getAttribute('data-max'));
+    
+    minusBtn.addEventListener('click', e => {
+      e.preventDefault();
+      let count = parseInt(qtyValEl.textContent);
+      if (count > minPax) {
+        qtyValEl.textContent = count - 1;
+        calculateGrandTotal();
+      }
+    })
+
+    plusBtn.addEventListener('click', e => {
+      e.preventDefault();
+      let count = parseInt(qtyValEl.textContent);
+      if (count < maxPax) {
+        qtyValEl.textContent = count + 1;
+        calculateGrandTotal();
+      }
+    });
+  }
+
+  if (qtyValEl && qtyValEl.tagName === 'SELECT') {
+    qtyValEl.addEventListener('change', calculateGrandTotal);
+  }
+});
+
+function calculateGrandTotal() {
+  let baseTotal = 0;
+
+  if (paxCounters.length > 0) {
+    paxCounters.forEach(counter => {
+      const price = parseInt(counter.getAttribute('data-price'));
+      const qty = parseInt(counter.querySelector('.pax-counter-text').textContent);
+      baseTotal += price * qty;
+    });
+  } else if (quantitySelect && packagePriceEl) {
+    const basePrice = parseInt(packagePriceEl.getAttribute('data-price'));
+    const qty = parseInt(quantitySelect.value);
+    baseTotal = basePrice * qty;
+  }
+
+  let addonsTotal = 0;
+  addonCheckboxes.forEach(checkbox => {
+    if (checkbox.checked) {
+      const addonPrice = parseInt(checkbox.getAttribute('data-price'));
+      const itemRow = checkbox.closest('.addon-item');
+      const qtyValEl = itemRow.querySelector('.addon-qty-val');
+
+      let addonQty = 1;
+      if (qtyValEl) {
+        addonQty = qtyValEl.tagName === 'SELECT' ? parseInt(qtyValEl.value) : parseInt(qtyValEl.textContent);
+      }
+
+      addonsTotal += (addonPrice * addonQty);
+    }
+  });
+
+  const grandTotal = baseTotal + addonsTotal;
+  bookingTotalPriceText.textContent = `IDR ${grandTotal.toLocaleString('id-ID')}`;
+}
+
 document.querySelector('#bookingContinueBtn').addEventListener('click', e => {
   e.preventDefault();
 

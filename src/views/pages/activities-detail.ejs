@@ -133,6 +133,57 @@
                 <% } %>
             </div>
 
+            <% if (selectedPackage.addons && selectedPackage.addons.length > 0) { %>
+              <div class="booking-addons-collapsible">
+                <button type="button" class="addons-toggle-btn" id="addonsToggleBtn">
+                  <span class="label-text">Available Add-ons</span>
+                  <i data-lucide="chevron-down" class="addons-chevron"></i>
+                </button>
+
+                <div class="addons-content hidden" id="addonsContent">
+                  <% selectedPackage.addons.forEach(addon => { %>
+                    <div class="addon-item">
+                      <label class="addon-label">
+                        <input type="checkbox" class="addon-checkbox" 
+                          data-price="<%= addon.price %>" 
+                          data-min="<%= addon.min_pax || 1 %>"
+                          data-max="<%= addon.max_pax || 99 %>"
+                          value="<%= addon.id %>">
+                        
+                        <div class="addon-info">
+                          <span class="addon-name label-text"><%= addon.name %></span>
+                          <span class="addon-price bigger-label label-text">+IDR <%= Number(addon.price).toLocaleString('id-ID') %> </span>
+                          <% if (addon.description) { %>
+                            <p class="even-smaller-label addon-desc label-text"><%= addon.description %></p>
+                          <% } %>
+                        </div>
+                      </label>
+
+                      <div class="addon-controls hidden">
+                        <% if (addon.pricing_type === 'per_pax') { %>
+                         <div class="pax-counter-right addon-pax-counter">
+                          <button type="button" class="pax-counter-minus addon-minus">-</button>
+                          <p class="pax-counter-text addon-qty-val"><%= addon.min_pax || 1 %></p>
+                          <button type="button" class="pax-counter-plus addon-plus">+</button>
+                         </div>
+                        <% } else { %>
+                          <div class="quantity-counter addon-unit-selector">
+                            <select name="" id="" class="addon-qty-val">
+                              <% const maxQty = addon.max_quantity || 5; %>
+                              <% for (let i = 1; i <= maxQty; i++) { %>
+                                <option value="<%= i %>"><%= i %></option>
+                              <% } %>
+                            </select>
+                          </div>
+                        <% } %>
+                      </div>
+                    </div>
+                  <% }) %>
+                </div>
+
+              </div>
+            <% } %>
+
             <div class="booking-summary">
               <% if (selectedPackage.pricing_type === "per_pax") { %>
                 <div class="booking-summary-quantity">
@@ -160,8 +211,6 @@
             <button class="booking-continue-btn" id="bookingContinueBtn">CONTINUE</button>
           </form>
         </div>
-
-        
       </section>
     </main>
 

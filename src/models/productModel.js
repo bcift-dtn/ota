@@ -230,5 +230,24 @@ const getPackageTimeSlots = async (packageIds) => {
   }
 } 
 
+const getProductAddons = async (productId, packageIds) => {
+  if (!productId) return [];
+
+  const query = `
+    SELECT * FROM ota.product_addons
+    WHERE product_id = $1
+    AND is_active = true
+    AND (package_id IS NULL OR package_id = ANY($2))
+    ORDER BY id ASC
+  `;
+
+  try {
+    const res = await pool.query(query, [productId, packageIds || []]);
+    return res.rows;
+  } catch (err) {
+    throw err;
+  }
+}
+
 module.exports = { getCarRentalListings, getCarRentalById, getPackagesByProductIds, getCarRentalCount, 
-  getActivitiesCount, getActivitiesListings, getActivitiesById, getProductAmenities, getPackageAmenities, getPackagePricingTiers, getPackageTimeSlots };
+  getActivitiesCount, getActivitiesListings, getActivitiesById, getProductAmenities, getPackageAmenities, getPackagePricingTiers, getPackageTimeSlots, getProductAddons };
