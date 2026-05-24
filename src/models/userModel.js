@@ -5,6 +5,41 @@ const generateVerificationToken = () => {
   return crypto.randomBytes(32).toString('hex');
 }
 
+const findOrCreateGoogleUser = async (googleId, email, fullName) => {
+  try {
+    const existingGoogle = await pool.query(`
+      SELECT * FROM ota.users
+      WHERE google_id = $1
+    `, [googleId]);
+    
+    if (existingGoogle.rows[0]) return existingGoogle.rows[0];
+    
+    const existingEmail = await pool.query(`
+      SELECT * FROM ota.users
+      WHERE email = $1  
+    `, [email]);
+
+    if (existingEmail.rows[0]) {
+      const linked = await pool.query(`
+        UPDATE ota.users
+        SET google_id = $1, auth_provider = 'google'
+        WHERE id = $2 RETURNING *
+      `, [googleId, existingEmail.rows[0].id]);
+
+      return linked.rows[0];
+    }
+
+    const newUser = await pool.query(`
+      INSERT INTO ota.users (full_name, email, google_id, auth_provider, is_verified)
+      VALUES ($1, $2, $3, 'google', true) RETURNING *  
+    `, [fullName, email, googleId]);
+    
+    return newUser.rows[0];
+  } catch (err) {
+    throw err;
+  }
+}
+
 const createUser = async (fullName, email, hashedPassword, verificationToken, tokenExpires) => {
   const query = `
     INSERT INTO ota.users(full_name, email, password, verification_token, verification_token_expires) 
@@ -62,4 +97,4 @@ const verifyUserEmail = async (id) => {
   }
 }
 
-module.exports = { createUser, findUserByEmail, generateVerificationToken, findUserByToken, verifyUserEmail };
+module.exports = { createUser, findUserByEmail, generateVerificationToken, findUserByToken, verifyUserEmail, findOrCreateGoogleUser };

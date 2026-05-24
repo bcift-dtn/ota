@@ -19,7 +19,7 @@
   display: flex;
   flex-direction: column;
 
-  width: 18rem;
+  width: 20rem;
   padding: 1rem 1.5rem;
 
   border-radius: 20px;
@@ -91,24 +91,92 @@
   filter: brightness(0) saturate(100%) invert(49%) sepia(8%) saturate(2646%) hue-rotate(144deg) brightness(92%) contrast(96%);;
 }
 
-.login-modal .submit-login-btn {
-  align-self: center;
+.login-options-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
 
-  padding: 0.5rem 1rem;
-  margin: 0.5rem 0rem 1rem;
+.forgot-password-link {
+  color: var(--clr-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-modal .submit-login-btn {
+  padding: 0.8rem 1rem;
 
   background-color: var(--clr-primary);
   color: white;
-  font-weight: 800;
+  font-weight: 600;
 
   border: none;
-  border-radius: 10px;
+  border-radius: 30px;
 
   cursor: pointer;
 }
 
+.modal-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1rem 0;
+  color: #737373;
+}
+
+.modal-divider::before,
+.modal-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #737373;
+}
+
+.modal-divider::before { margin-right: 1rem; }
+.modal-divider::after { margin-left: 1rem; }
+
+.oauth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.oauth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: transparent;
+  border: 1px solid var(--clr-border);
+  text-decoration: none;
+}
+
+.oauth-btn:hover {
+  text-decoration: none;
+}
+
+.oauth-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.google-btn {
+  color: #1b1b1b
+}
+
+.apple-btn {
+  background-color: #1B1B1B;
+  color: white;
+  border-color: #1B1B1B;
+}
+
 .login-modal .modal-optional-option {
-  margin-bottom: 0.5rem;
+  margin: 2rem 0 1.5rem;
 
   text-align: center;
   font-size: var(--fs-3);
@@ -128,8 +196,8 @@
   animation: modalZoomIn 0.4s cubic-bezier(0.24, -0.07, 0, 1.66) forwards;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 860px) {
   .login-modal {
-    width: 20rem;
+    width: 23rem;
   }
 }

@@ -14,6 +14,12 @@ const productRoutes = require('./src/routes/productRoutes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Passport for google login
+const passport = require('passport');
+require('./src/config/passport');
+
+app.use(passport.initialize());
+
 // EJS View Engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
