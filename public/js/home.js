@@ -1,13 +1,26 @@
 const brandTabs = document.querySelectorAll('.brand-tab-btn');
 const serviceTabs = document.querySelectorAll('.service-tab-btn');
 const forms = document.querySelectorAll('.search-form');
-const highlight = document.querySelector('.tab-highlight');
 
 const today = new Date().toISOString().split('T')[0];
 
 document.querySelectorAll('input[type="date"]').forEach(input => {
   input.setAttribute('min', today);
 });
+
+function swapHeroImage(serviceName) {
+  document.querySelectorAll('.hero-layer').forEach(layer => {
+    layer.classList.remove('active');
+  });
+
+  const targetLayer = document.getElementById(`hero-${serviceName}`);
+
+  if (targetLayer) {
+    targetLayer.classList.add('active');
+  } else {
+    document.getElementById('hero-ferry').classList.add('active');
+  }
+}
 
 function applyBrandRules(brand) {
   document.querySelector('.driver-wrapper').classList.remove('hidden');
@@ -27,15 +40,6 @@ function applyBrandRules(brand) {
     activityLocation.removeAttribute('required');
   }
 }
-
-// move highlight
-function moveHighlightTo(tab) {
-  highlight.style.left = tab.offsetLeft + 'px';
-  highlight.style.width = tab.offsetWidth + 'px';
-}
-
-// default highlight position
-moveHighlightTo(brandTabs[0]);
 
 function clearAllActive() {
   brandTabs.forEach(t => t.classList.remove('active'));
@@ -66,12 +70,10 @@ brandTabs.forEach(btn => {
     clearAllActive();
     btn.classList.add('active');
 
-    highlight.style.opacity = '1';
-    moveHighlightTo(btn);
-
     const service = btn.dataset.service;
 
     showForm(service);
+    swapHeroImage(service);
     updateFormAction(service, btn.dataset.brand);
   })
 })
@@ -81,10 +83,9 @@ serviceTabs.forEach(btn => {
     clearAllActive();
     btn.classList.add('active');
 
-    highlight.style.opacity = '0';
-
     const service = btn.dataset.service;
     showForm(service);
+    swapHeroImage(service);
     updateFormAction(service, null);
   })
 })

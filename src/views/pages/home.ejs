@@ -19,26 +19,31 @@
   <%- include('../partials/navbar') %>
 
     <main>
-      <section class="hero-banner"></section>
-
+      <section class="hero-banner">
+        <div class="hero-layer hero-ferry active" id="hero-ferry"></div>
+        <div class="hero-layer hero-car" id="hero-car-rental"></div>
+        <div class="hero-layer hero-activities" id="hero-activities"></div>
+        <div class="hero-layer hero-tour" id="hero-tour-travel"></div>
+        <div class="hero-layer hero-golf" id="hero-golf"></div>
+      </section>
       <section class="search-component">
         <div class="search-wrapper">
           <div class="brand-tab-bar">
-            <div class="tab-highlight"></div>
+            <span class="smaller-label label-text"><em>EXCLUSIVE BRANDS</em></span>
             <button class="brand-tab-btn active" data-brand="majestic" data-service="ferry">
-              <img src="/images/icons/ferry.svg" alt="Ferry icon"> MAJESTIC
+              <img class="brand-tab-btn-img majestic" src="/images/logos/majestic-ferry-logo.webp" alt="Ferry icon">
             </button>
             <button class="brand-tab-btn" data-brand="meyer" data-service="car-rental">
-              <img src="/images/icons/car.svg" alt="Car icon"> MEYER RENTAL
+              <img class="brand-tab-btn-img meyer" src="/images/logos/meyer-rental-logo2.webp" alt="Car icon">
             </button>
             <button class="brand-tab-btn" data-brand="ranoh" data-service="activities">
-              <img src="/images/icons/palm-tree.svg" alt="Activities icon"> RANOH ISLAND
+              <img class="brand-tab-btn-img ranoh" src="/images/logos/ranoh-logo.webp" alt="Activities icon">
             </button>
             <button class="brand-tab-btn" data-brand="bicc" data-service="golf">
-              <img src="/images/icons/golf.svg" alt="Golf icon"> BICC
+              <img class="brand-tab-btn-img bicc" src="/images/logos/bicc-logo.webp" alt="Golf icon">
             </button>
             <button class="brand-tab-btn" data-brand="nusa-indah" data-service="tour-travel">
-              <img src="/images/icons/ferris-wheel.svg" alt="travel icon"> NUSA INDAH
+              <img class="brand-tab-btn-img nusa-indah" src="/images/logos/nusa-indah-logo.webp" alt="travel icon">
             </button>
           </div>
 
