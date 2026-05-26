@@ -697,7 +697,10 @@
   transition: transform 0.3s ease;
 }
 
-.brand-row-2 .brand-card img,
+.brand-row-2 .brand-card img {
+  max-height: 5.5rem;
+}
+
 .brand-row-4 .brand-card img {
   max-height: 5rem;
 }
