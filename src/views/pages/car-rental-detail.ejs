@@ -36,8 +36,8 @@
             </div>
             <div class="detail-badges">
               <div class="detail-badges-left">
-                <p><i data-lucide="settings"></i><%=product.duration_hours %></p>
-                <p><i data-lucide="users-round"></i><%=product.max_pax %> Seats</p>
+                <p><i data-lucide="settings"></i><%=product.transmission %></p>
+                <p><i data-lucide="users-round"></i><%=product.seats %> Seats</p>
                 <% if (product.with_driver) { %>
                  <p><i data-lucide="user-round"></i>Driver included</p>
                 <% } else { %>
@@ -53,7 +53,15 @@
 
         <div class="detail-important-info">
           <h2 class="product-heading"><i data-lucide="circle-alert"></i>Important Info</h2>
-          <p><%= selectedPackage.important_info%></p>
+          <div class="section-list-content">
+              <ul>
+                <% selectedPackage.important_info.split('\n').forEach(line => { %> 
+                  <% if (line.trim().length > 0) { %>
+                    <li><%= line.replace(/^[-•*]\s*/, '').trim() %></li>
+                  <% } %>
+                <% }) %> 
+              </ul>
+            </div>
         </div>
 
         <div class="detail-booking">
