@@ -166,7 +166,7 @@
 
   min-height: 3.2em;
   border-bottom: 1px dashed var(--clr-primary);
-  background-color: #006671;
+  background-color: var(--clr-primary);
 
   padding: 0rem 1rem;
   overflow-x: auto;
@@ -196,6 +196,7 @@
   cursor: pointer;
   color: white;
   position: relative;
+  font-size: var(--fs-3);
 }
 
 .service-tab-btn.active {
@@ -340,8 +341,6 @@
   padding: 0.6rem 0.5rem;
 }
 
-
-
 .search-form input[type="date"]::-webkit-calendar-picker-indicator {
   background: url(/images/icons/calendar.svg);
   background-size: contain;
@@ -365,6 +364,11 @@
   background-position: left 0.3rem center, right 0.3rem center;
   background-size: 1.5rem, 1.2rem;
   cursor: pointer;
+}
+
+.search-form select,
+.search-form input {
+  color: var(--clr-label-font);
 }
 
 .search-form .input-icon-wrapper {

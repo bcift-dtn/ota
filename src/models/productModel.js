@@ -143,7 +143,8 @@ const getActivitiesById = async (id) => {
       pp.description as package_description,
       pp.normal_price as package_price,
       pp.agent_price as package_agent_price,
-      pp.max_quantity, pp.sort_order as package_sort_order, pp.duration_hours, pp.pricing_type
+      pp.max_quantity, pp.sort_order as package_sort_order, pp.duration_hours, pp.pricing_type,
+      pp.itinerary as package_itinerary
     FROM ota.products p
     JOIN ota.activity_details ad ON p.id = ad.product_id
     LEFT JOIN ota.product_images pi ON p.id = pi.product_id
@@ -204,6 +205,7 @@ const getPackagePricingTiers = async (packageIds) => {
   const query = `
     SELECT * FROM ota.package_pricing_tiers
     WHERE package_id = ANY($1)
+    ORDER BY id ASC
   `;
 
   try {

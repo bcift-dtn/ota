@@ -56,8 +56,31 @@
 
         <div class="detail-important-info">
           <h2 class="product-heading"><i data-lucide="circle-alert"></i>Important Info</h2>
-          <p><%= selectedPackage.important_info%></p>
+          <div class="section-list-content">
+              <ul>
+                <% selectedPackage.important_info.split('\n').forEach(line => { %> 
+                  <% if (line.trim().length > 0) { %>
+                    <li><%= line.replace(/^[-•*]\s*/, '').trim() %></li>
+                  <% } %>
+                <% }) %> 
+              </ul>
+            </div>
         </div>
+
+        <% if (selectedPackage.itinerary) { %>
+          <div class="detail-itinerary detail-important-info">
+            <h2 class="product-heading"><i data-lucide="clock"></i>Itinerary</h2>
+            <div class="section-list-content">
+              <ul>
+                <% selectedPackage.itinerary.split('\n').forEach(line => { %> 
+                  <% if (line.trim().length > 0) { %>
+                    <li><%= line.replace(/^[-•*]\s*/, '').trim() %></li>
+                  <% } %>
+                <% }) %> 
+              </ul>
+            </div>
+          </div>
+        <% } %>
 
         <div class="detail-location-info">
           <h2 class="product-heading"><i data-lucide="map-pinned"></i>Location Information</h2>
@@ -96,40 +119,62 @@
                   <% } %>
                 </select>
               </div>
+
+              <% if (selectedPackage.pricing_type === 'per_unit') { %>
+                <div class="quantity-counter">
+                  <p class="label-text">Quantity</p>
+                  <select name="bookingQuantity" id="bookingQuantity">
+                    <% for (let i = 1; i <= selectedPackage.max_quantity; i++) { %>
+                      <option value="<%= i %>"><%= i %></option>
+                    <% } %>
+                  </select>
+                </div>
+              <% } %>
             </div>
 
             <div class="pax-counter-wrapper">
               <% if (selectedPackage.pricing_type === 'per_pax') { %>
                 <% selectedPackage.pricingTiers.forEach(pricingTier => { %>
-                    <div class="pax-counter" data-price="<%= pricingTier.normal_price %>">
-                      <div class="pax-counter-left">
-                        <p class="label-text"><%= pricingTier.tier_title.toUpperCase() %></p> 
+                  <% const minPax = pricingTier.tier_title.toLowerCase() === 'adult' ? 1 : 0 %>
+                  <div class="pax-counter" data-price="<%= pricingTier.normal_price %>" data-min="<%= minPax %>">
+                    <div class="pax-counter-left">
+                      <p class="label-text"><%= pricingTier.tier_title.toUpperCase() %></p> 
 
-                        <% if (pricingTier.normal_price === 0 ) { %> 
-                          <p class="bigger-label">FREE</p> 
-                        <% } else { %> 
-                          <p class="bigger-label">IDR <%= pricingTier.normal_price.toLocaleString('id-ID') %></p> 
-                        <% } %>
-                        
-                        <p class="even-smaller-label"><%= pricingTier.tier_description %></p>
-                      </div>
-              
-                      <div class="pax-counter-right">
-                        <button class="pax-counter-minus">-</button>
-                        <p class="pax-counter-text">0</p>
-                        <button class="pax-counter-plus">+</button>
-                      </div>
+                      <% if (pricingTier.normal_price === 0 ) { %> 
+                        <p class="bigger-label">FREE</p> 
+                      <% } else { %> 
+                        <p class="bigger-label">IDR <%= pricingTier.normal_price.toLocaleString('id-ID') %></p> 
+                      <% } %>
+                      
+                      <p class="even-smaller-label"><%= pricingTier.tier_description %></p>
                     </div>
+            
+                    <div class="pax-counter-right">
+                      <button class="pax-counter-minus">-</button>
+                      <p class="pax-counter-text"><%= minPax %></p>
+                      <button class="pax-counter-plus">+</button>
+                    </div>
+                  </div>
                 <% }) %>
                 <% } else { %>
-                    <div class="quantity-counter">
-                      <p class="label-text">Quantity</p>
-                      <select name="bookingQuantity" id="bookingQuantity">
-                        <% for (let i = 1; i <= selectedPackage.max_quantity; i++) { %>
-                          <option value="<%= i %>"><%= i %></option>
-                        <% } %>
-                      </select>
-                    </div>
+                    <% if (selectedPackage.pricingTiers && selectedPackage.pricingTiers.length > 0) { %>
+                      <div class="informational-pax-wrapper">
+                        <% selectedPackage.pricingTiers.forEach(pricingTier => { %>
+                          <% const minPax = pricingTier.tier_title.toLowerCase() === 'adult' ? 1 : 0; %>
+                          <div class="pax-counter informational-pax" data-price="0" data-min="<%= minPax %>">
+                            <div class="pax-counter-left">
+                              <p class="label-text"><%= pricingTier.tier_title.toUpperCase() %></p>
+                              <p class="even-smaller-label"><%= pricingTier.tier_description %></p>
+                            </div>
+                            <div class="pax-counter-right">
+                              <button class="pax-counter-minus">-</button>
+                              <p class="pax-counter-text"><%= minPax %></p>
+                              <button class="pax-counter-plus">+</button>
+                            </div>
+                          </div>
+                        <% }) %> 
+                      </div>
+                    <% } %>
                 <% } %>
             </div>
 
@@ -187,7 +232,7 @@
             <div class="booking-summary">
               <% if (selectedPackage.pricing_type === "per_pax") { %>
                 <div class="booking-summary-quantity">
-                  <p>Quantity</p>
+                  <p>Total Pax</p>
                   <p id="bookingPaxQuantityText">1 People</p>
                 </div>
               <% } else { %>
@@ -195,6 +240,13 @@
                   <p>Daily Rate</p>
                   <p id="packagePrice" data-price="<%= selectedPackage.normal_price %>">IDR <%= selectedPackage.formatted_price %></p>
                 </div>
+
+                <% if (selectedPackage.pricingTiers && selectedPackage.pricingTiers.length > 0) { %>
+                  <div class="booking-summary-quantity">
+                    <p>Total Pax</p>
+                    <p id="bookingPaxQuantityText">0 People</p> 
+                  </div>
+                <% } %>
 
                 <div class="booking-summary-quantity">
                   <p>Quantity</p>

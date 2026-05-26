@@ -88,6 +88,7 @@ a,
 button, 
 select {
   font-size: var(--fs-3);
+  font-family: "Plus Jakarta Sans";
 }
 
 .even-bigger-label {

@@ -237,6 +237,38 @@ footer li a {
   color: var(--clr-neutral);
 }
 
+/* Product List Hero Banner */
+.list-hero-banner {
+  width: 100%;
+  max-height: 25vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.list-hero-banner img{
+  width: 100%;
+  height: 25vh;
+  object-fit: cover;
+  position: relative;
+}
+
+.list-hero-banner img {
+  object-position: center 60%;
+}
+
+.list-hero-banner h1{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  color: var(--clr-neutral);
+}
+
+.hero-car-list h1 {
+  color: white;
+}
+
 @media (min-width: 800px) {
   footer {
     padding: 2rem 4rem 1rem;

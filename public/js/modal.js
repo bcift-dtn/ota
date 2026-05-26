@@ -44,14 +44,13 @@ loginModalForm.addEventListener('submit', async (e) => {
 
   const email = loginEmailInput.value.trim();
   const password = loginPasswordInput.value;
-
-  console.log(email, password)
+  const rememberMe = document.querySelector('#rememberMe').checked;
 
   try {
     const response = await fetch('/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password})
+      body: JSON.stringify({ email, password, rememberMe})
     });
 
     const data = await response.json();
@@ -97,3 +96,15 @@ document.querySelectorAll('.toggle-password').forEach(btn => {
     lucide.createIcons();
   })
 })
+
+const googleBtn = document.querySelector('.google-btn');
+
+if (googleBtn) {
+  googleBtn.addEventListener('click', e => {
+    e.preventDefault();
+
+    const rememberMe = document.querySelector('#rememberMe').checked;
+
+    window.location.href = `/auth/google?rememberMe=${rememberMe}`;
+  })
+}

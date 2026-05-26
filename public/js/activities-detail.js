@@ -27,13 +27,15 @@ if (paxCounters.length > 0) {
     const minusBtn = counter.querySelector('.pax-counter-minus');
     const plusBtn = counter.querySelector('.pax-counter-plus');
     const textEl = counter.querySelector('.pax-counter-text');
+
+    const minAllowed = parseInt(counter.getAttribute('data-min')) || 0;
     
     minusBtn.addEventListener('click', (e) => {
       e.preventDefault(); 
       let count = parseInt(textEl.textContent);
-      if (count > 0) {
+      if (count > minAllowed) {
         textEl.textContent = count - 1;
-        updateTotalPaxPrice();
+        calculateGrandTotal();
       }
     });
 
@@ -41,7 +43,7 @@ if (paxCounters.length > 0) {
       e.preventDefault();
       let count = parseInt(textEl.textContent);
       textEl.textContent = count + 1;
-      updateTotalPaxPrice();
+      calculateGrandTotal();
     });
   });
 
@@ -69,12 +71,11 @@ if (quantitySelect && packagePriceEl) {
   
   quantitySelect.addEventListener('change', () => {
     const qty = parseInt(quantitySelect.value);
-    const total = basePrice * qty;
-    
-    bookingTotalPriceText.textContent = `IDR ${total.toLocaleString('id-ID')}`;
     if (bookingQuantityText) {
       bookingQuantityText.textContent = `${qty} Unit${qty > 1 ? 's' : ''}`;
     }
+
+    calculateGrandTotal();
   });
 }
 
@@ -137,17 +138,28 @@ addonCheckboxes.forEach(checkbox => {
 
 function calculateGrandTotal() {
   let baseTotal = 0;
+  let totalPax = 0;
 
+  // Base Price Calculation
+  if (quantitySelect && packagePriceEl) {
+    const basePrice = parseInt(packagePriceEl.getAttribute('data-price'));
+    const qty = parseInt(quantitySelect.value);
+    baseTotal += (basePrice * qty);
+
+  } 
+  
   if (paxCounters.length > 0) {
     paxCounters.forEach(counter => {
       const price = parseInt(counter.getAttribute('data-price'));
-      const qty = parseInt(counter.querySelector('.pax-counter-text').textContent);
-      baseTotal += price * qty;
+      const qty = parseInt(counter.querySelector('.pax-counter-text').textContent)
+
+      baseTotal += (price * qty);
+      totalPax += qty;
     });
-  } else if (quantitySelect && packagePriceEl) {
-    const basePrice = parseInt(packagePriceEl.getAttribute('data-price'));
-    const qty = parseInt(quantitySelect.value);
-    baseTotal = basePrice * qty;
+
+    if (bookingPaxQuantityText) {
+      bookingPaxQuantityText.textContent = `${totalPax} People`;
+    }
   }
 
   let addonsTotal = 0;
@@ -169,6 +181,8 @@ function calculateGrandTotal() {
   const grandTotal = baseTotal + addonsTotal;
   bookingTotalPriceText.textContent = `IDR ${grandTotal.toLocaleString('id-ID')}`;
 }
+
+calculateGrandTotal();
 
 document.querySelector('#bookingContinueBtn').addEventListener('click', e => {
   e.preventDefault();

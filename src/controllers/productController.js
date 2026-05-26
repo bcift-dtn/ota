@@ -197,6 +197,7 @@ const getActivitiesDetail = async (req, res) => {
       duration_hours: r.duration_hours,
       pricing_type: r.pricing_type,
       important_info: r.package_important_info,
+      itinerary: r.package_itinerary,
       formatted_price: Number(r.package_price).toLocaleString('id-ID')
     }))
 

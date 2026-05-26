@@ -17,7 +17,15 @@ router.post('/logout', logout);
 
 router.get('/verify-email', verifyEmail)
 
-router.get('/google', passport.authenticate('google', {scope: ['profile', 'email']}));
+router.get('/google', 
+  (req, res, next) => {
+    if (req.query.rememberMe === 'true') {
+      req.session.pendingRememberMe = true;
+    }
+    next();
+  },
+  passport.authenticate('google', {scope: ['profile', 'email']})
+);
 
 router.get('/google/callback', 
   passport.authenticate('google', {
@@ -34,6 +42,14 @@ router.get('/google/callback',
       isSeller: req.user.is_seller,
       isAdmin: req.user.is_admin,
     };
+
+    if (req.session.pendingRememberMe) {
+      req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30;
+
+      delete req.session.pendingRememberMe;
+    } else {
+      req.session.cookie.expires = false;
+    }
 
     res.redirect('/');
   }

@@ -35,7 +35,7 @@ const registerUser = async (req, res) => {
 }
 
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, rememberMe } = req.body;
   
   try {
     const user = await findUserByEmail(email);
@@ -61,7 +61,14 @@ const loginUser = async (req, res) => {
         isAgent: user.is_agent,
         isSeller: user.is_seller,
         isAdmin: user.is_admin
+      };
+
+      if (rememberMe) {
+        req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30;
+      } else {
+        req.session.cookie.expires = false;
       }
+
       return res.status(200).json({ success: 'Login success'})
     }
   } catch (err) {
