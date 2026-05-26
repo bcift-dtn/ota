@@ -366,11 +366,6 @@
   cursor: pointer;
 }
 
-.search-form select,
-.search-form input {
-  color: var(--clr-label-font);
-}
-
 .search-form .input-icon-wrapper {
   width: 100%;
   display: flex;

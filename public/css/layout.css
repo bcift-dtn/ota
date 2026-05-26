@@ -213,6 +213,16 @@ footer li a {
   margin-top: 1rem;
 }
 
+/* Search Component Global */
+.search-form .pax-summary-btn,
+.search-form select,
+.search-form input {
+  color: var(--clr-label-font);
+  font-size: var(--fs-3);
+}
+
+/* Breadcrumb */
+
 .breadcrumb {
   margin-top: 2rem;
   margin-bottom: 1rem;
