@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="/css/pages/home.css">
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
@@ -48,7 +49,6 @@
           </div>
 
           <div class="service-tab-bar">
-            <span class="other-services-label even-smaller-label">OTHER SERVICES</span>
             <button class="service-tab-btn" data-service="ferry">
               <img src="/images/icons/ferry.svg" alt="Ferry icon"> Ferry
             </button>
@@ -147,11 +147,11 @@
                   <div class="search-date-wrapper">
                     <div class="search-input-wrapper">
                       <label for="departureDate" class="label-text">Departure Date</label>
-                      <input type="date" class="departure-date" id="departureDate" name="departureDate">
+                      <input type="date" class="departure-date date-input" id="departureDate" name="departureDate" placeholder="Select date...">
                     </div>
                     <div class="search-input-wrapper hidden" id="returnDateWrapper">
                       <label for="returnDate" class="label-text">Return Date</label>
-                      <input type="date" class="return-date" id="returnDate" name="returnDate">
+                      <input type="date" class="return-date date-input" id="returnDate" name="returnDate" placeholder="Select date...">
                     </div>
                   </div>
                 </div>
@@ -188,11 +188,11 @@
                   <div class="search-date-wrapper">
                     <div class="search-input-wrapper">
                       <label for="carPickupDate" class="label-text">Car Pickup Date</label>
-                      <input type="date" class="car-pickup-date" id="carPickupDate" name="carPickupDate" required>
+                      <input type="date" class="car-pickup-date date-input" id="carPickupDate" name="carPickupDate" placeholder="Select date..." required>
                     </div>
                     <div class="search-input-wrapper">
                       <label for="carReturnDate" class="label-text">Car Return Date</label>
-                      <input type="date" class="car-return-date" id="carReturnDate" name="carReturnDate" required>
+                      <input type="date" class="car-return-date date-input" id="carReturnDate" name="carReturnDate" placeholder="Select date..." required>
                     </div>
                   </div>
                 </div>
@@ -216,8 +216,8 @@
 
                   <div class="search-booking-wrapper">
                     <label for="activitiesCheckInDate" class="label-text">Check-in Date</label>
-                    <input type="date" class="activities-check-in-date" id="activitiesCheckInDate"
-                      name="activitiesCheckInDate" required>
+                    <input type="date" class="activities-check-in-date date-input" id="activitiesCheckInDate"
+                      name="activitiesCheckInDate" placeholder="Select date..." required>
                   </div>
                 </div>
 
@@ -549,6 +549,7 @@
       <%- include('../partials/loginModal') %>
 
         <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script src="/js/home.js"></script>
 </body>
 

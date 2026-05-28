@@ -754,6 +754,10 @@
     min-width: 14.25rem;
   }
 
+  .search-form div .date-input {
+    min-width: 0rem;
+  }
+
   .trip-type-wrapper .two-way-radio,
   .driver-wrapper .without-driver-radio {
     margin-left: 1rem;

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/components.css">
     <link rel="stylesheet" href="/css/layout.css">
     <link rel="stylesheet" href="/css/pages/product-detail.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   </head>
 
   <body>
@@ -75,12 +76,12 @@
             <div class="booking-input-wrapper">
               <div class="booking-pickup-date-wrapper">
                 <label for="pickupDate" class="label-text">Pickup Date</label>
-                <input type="date" name="pickupDate" id="pickupDate" value="<%= searchPickupDate %>" required>
+                <input type="date" name="pickupDate" id="pickupDate" class="date-input" value="<%= searchPickupDate %>" placeholder="Select date..." required>
               </div>
 
               <div class="booking-pickup-time-wrapper">
                 <label for="pickupTime" class="label-text">Pickup Time</label>
-                <input type="time" name="pickupTime" id="pickupTime" required>
+                <input type="time" name="pickupTime" id="pickupTime" class="date-input" placeholder="Select date..." required>
               </div>
 
               <div class="booking-quantity-wrapper">
@@ -129,6 +130,7 @@
       const currentUser = <%- JSON.stringify(user).replace(/</g, '\\u003c')  %>;
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="/js/car-rental-detail.js"></script>
   </body>
 </html>

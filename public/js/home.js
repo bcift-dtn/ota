@@ -2,10 +2,13 @@ const brandTabs = document.querySelectorAll('.brand-tab-btn');
 const serviceTabs = document.querySelectorAll('.service-tab-btn');
 const forms = document.querySelectorAll('.search-form');
 
-const today = new Date().toISOString().split('T')[0];
-
-document.querySelectorAll('input[type="date"]').forEach(input => {
-  input.setAttribute('min', today);
+flatpickr('input[type="date"]', {
+  altInput: true,
+  altFormat: "j F Y",
+  dateFormat: "d/m/Y",
+  minDate: "today",
+  disableMobile: "true",
+  allowInput:true,
 });
 
 function swapHeroImage(serviceName) {

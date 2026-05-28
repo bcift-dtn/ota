@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/components.css">
     <link rel="stylesheet" href="/css/layout.css">
     <link rel="stylesheet" href="/css/pages/product-detail.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   </head>
 
   <body>
@@ -103,8 +104,8 @@
             <div class="booking-input-wrapper">
               <div class="booking-pickup-date-wrapper">
                 <label for="activitiesCheckInDate" class="label-text">Check In Date</label>
-              <input type="date" class="activities-check-in-date" id="activitiesCheckInDate" name="activitiesCheckInDate"
-                value="" required>
+              <input type="date" class="activities-check-in-date date-input" id="activitiesCheckInDate" name="activitiesCheckInDate"
+                value="" placeholder="Select date..." required>
               </div>
 
               <div class="booking-pickup-time-wrapper">
@@ -275,6 +276,7 @@
       const currentUser = <%- JSON.stringify(user).replace(/</g, '\\u003c')  %>;
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="/js/activities-detail.js"></script>
   </body>
 </html>

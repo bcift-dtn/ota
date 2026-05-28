@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/css/components.css">
   <link rel="stylesheet" href="/css/components/search.css">
   <link rel="stylesheet" href="/css/pages/car-rental-list.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
@@ -47,13 +48,13 @@
                 <div class="search-date-wrapper">
                   <div class="search-input-wrapper">
                     <label for="carPickupDate" class="label-text">Car Pickup Date</label>
-                    <input type="date" class="car-pickup-date" id="carPickupDate" name="carPickupDate"
-                      value="<%= searchParams.pickupDate %>" required>
+                    <input type="date" class="car-pickup-date date-input" id="carPickupDate" name="carPickupDate"
+                      value="<%= searchParams.pickupDate %>" placeholder="Select date..." required>
                   </div>
                   <div class="search-input-wrapper">
                     <label for="carReturnDate" class="label-text">Car Return Date</label>
-                    <input type="date" class="car-return-date" id="carReturnDate" name="carReturnDate"
-                      value="<%= searchParams.returnDate %>" required>
+                    <input type="date" class="car-return-date date-input" id="carReturnDate" name="carReturnDate"
+                      value="<%= searchParams.returnDate %>" placeholder="Select date..." required>
                   </div>
                 </div>
               </div>
@@ -200,7 +201,9 @@
 
       <%- include('../partials/loginModal') %>
 
-        <script src="/js/car-rental-list.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="/js/car-rental-list.js"></script>
+    
 </body>
 
 </html>

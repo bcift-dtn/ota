@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/css/components.css">
   <link rel="stylesheet" href="/css/components/search.css">
   <link rel="stylesheet" href="/css/pages/activities-list.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
@@ -26,8 +27,8 @@
             <div class="search-component-left">
               <div class="search-input-wrapper">
                 <label for="activitiesCheckInDate" class="label-text">Check In Date</label>
-                <input type="date" class="activities-check-in-date" id="activitiesCheckInDate" name="activitiesCheckInDate"
-                  value="<%= searchParams.activitiesCheckInDate %>" required>
+                <input type="date" class="activities-check-in-date date-input" id="activitiesCheckInDate" name="activitiesCheckInDate"
+                  value="<%= searchParams.activitiesCheckInDate %>" placeholder="Select date..." required>
               </div>
             </div>
 
@@ -160,6 +161,7 @@
 
     <%- include('../partials/loginModal') %>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="/js/activities-list.js"></script>
 </body>
 
