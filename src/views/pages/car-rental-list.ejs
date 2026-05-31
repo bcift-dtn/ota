@@ -86,18 +86,17 @@
                           <%= product.title %>
                         </h2>
                         <div>
-                          <p class="smaller-label">
-                            <i data-lucide="settings"></i>
-                            <%= product.transmission.toUpperCase() %>
-                          </p>
-                          <p class="smaller-label">
-                            <i data-lucide="users-round"></i>
-                            <%= product.seats %> Seats
-                          </p>
+                          <% product.amenities.forEach(amenity => { %> 
+                            <p class="smaller-label label-text">
+                              <i data-lucide="<%= amenity.icon_lucide %>"></i>
+                              <%= amenity.name %>
+                            </p>
+                          <% }) %> 
+                          
                           <% if (product.with_driver) { %>
-                            <p class="smaller-label"><i data-lucide="user-round"></i> Driver Included</p>
+                            <p class="smaller-label label-text"><i data-lucide="user-round"></i>Driver included</p>
                           <% } else { %>
-                            <p class="smaller-label"><i data-lucide="user-round"></i> Without Driver</p>
+                            <p class="smaller-label label-text"><i data-lucide="user-round"></i>Driver not included</p>
                           <% } %>
                         </div>
                       </div>

@@ -70,8 +70,6 @@ const getCarRentalDetail = async (req, res) => {
 
     if (rows.length === 0) return res.status(404).render('pages/404', { message: 'Car not found.' });
 
-    const amenities = await getProductAmenities(carId);
-
     const seenPackageIds = new Set();
     const packages = rows.filter(r => {
       if (r.package_id && !seenPackageIds.has(r.package_id)) {
@@ -91,13 +89,20 @@ const getCarRentalDetail = async (req, res) => {
       formatted_price: Number(r.package_price).toLocaleString('id-ID')
     }));
 
+    const productAmenities = await getProductAmenities([carId]);
+    const packageIds = packages.map(p => p.id);
+    const packageAmenities = await getPackageAmenities(packageIds);
+    packages.forEach(pkg => {
+      pkg.amenities = packageAmenities.filter(a => a.package_id === pkg.id);
+    });
+
     const startingPrice = packages.length > 0
       ? Math.min(...packages.map(p => Number(p.normal_price)))
       : 0;
 
     const product = {
       ...rows[0],
-      amenities: amenities,
+      amenities: productAmenities,
       formatted_starting_price: startingPrice.toLocaleString('id-ID'),
       images: [...new Set(rows.map(r => r.image_url).filter(Boolean))],
       packages: packages || []
@@ -208,13 +213,14 @@ const getActivitiesDetail = async (req, res) => {
 
     const packageIds = packages.map(p => p.id);
 
-    const amenities = await getPackageAmenities(packageIds);
+    const productAmenities = await getProductAmenities([activityId]);
+    const packageAmenities = await getPackageAmenities(packageIds);
     const pricingTiers = await getPackagePricingTiers(packageIds);
     const timeSlots = await getPackageTimeSlots(packageIds);
     const addons = await getProductAddons(activityId, packageIds);
 
     packages.forEach(pkg => {
-      pkg.amenities = amenities.filter(a => a.package_id === pkg.id);
+      pkg.amenities = packageAmenities.filter(a => a.package_id === pkg.id);
       pkg.pricingTiers = pricingTiers.filter(p => p.package_id === pkg.id);
       pkg.timeSlots = timeSlots.filter(t => t.package_id === pkg.id);
       pkg.addons = addons.filter(a => a.package_id === null || a.package_id === pkg.id);
@@ -239,6 +245,7 @@ const getActivitiesDetail = async (req, res) => {
 
     const product = {
       ...rows[0],
+      amenities: productAmenities,
       formatted_starting_price: startingPrice.toLocaleString('id-ID'),
       images: uniqueImages,
       packages: packages || []

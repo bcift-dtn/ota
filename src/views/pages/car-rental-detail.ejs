@@ -32,21 +32,23 @@
 
           <div class="detail-summary">
             <div class="detail-summary-top">
-              <h1 class="product-heading"><i data-lucide="car-front"></i><%= product.title %></h1>
+              <h1 class="product-heading"><%= product.title %></h1>
               <p class="even-bigger-label">IDR <%= selectedPackage.formatted_price %></p>
             </div>
             <div class="detail-badges">
-              <div class="detail-badges-left">
-                <p><i data-lucide="settings"></i><%=product.transmission %></p>
-                <p><i data-lucide="users-round"></i><%=product.seats %> Seats</p>
-                <% if (product.with_driver) { %>
-                 <p><i data-lucide="user-round"></i>Driver included</p>
-                <% } else { %>
-                 <p><i data-lucide="user-round"></i>Driver not included</p>
-                <% } %>
-              </div>
-              <div class="detail-badges-right">
-                <p><i data-lucide="package"></i><%= selectedPackage.name%></p>
+              <div class="package-amenities abit-smaller-label">
+                <p class="abit-smaller-label"><i data-lucide="package"></i><%= selectedPackage.name%></p>                
+                <% product.amenities.forEach(amenity => { %>
+                  <p class="abit-smaller-label"><i data-lucide="<%= amenity.icon_lucide %>"></i><%= amenity.name %></p>
+                <% }) %>  
+
+                <% selectedPackage.amenities.forEach(amenity => { %>
+                  <p class="package-amenity-item abit-smaller-label">
+                    <i data-lucide="<%= amenity.icon_lucide %>"></i><%= amenity.name %>
+                  </p>
+                <% }) %>
+                
+                <p class="abit-smaller-label"><i data-lucide="user-round"></i><%= product.with_driver ? 'Driver included' : 'Driver not included' %></p>
               </div>
             </div>
           </div>
@@ -54,7 +56,7 @@
 
         <div class="detail-important-info">
           <h2 class="product-heading"><i data-lucide="circle-alert"></i>Important Info</h2>
-          <div class="section-list-content">
+          <div class="section-list-content abit-smaller-label">
               <ul>
                 <% selectedPackage.important_info.split('\n').forEach(line => { %> 
                   <% if (line.trim().length > 0) { %>

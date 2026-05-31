@@ -27,6 +27,7 @@
   --fs-1: 0.6rem;
   --fs-2: 0.7rem;
   --fs-3: 0.8rem;
+  --fs-3-5: 0.9rem;
   --fs-4: 1rem;
   --fs-5: 1.1rem;
   --fs-6: 1.5rem;
@@ -99,6 +100,10 @@ select {
 .bigger-label {
   font-size: var(--fs-4);
   font-weight: 700;
+}
+
+.abit-smaller-label {
+  font-size: var(--fs-3-5);
 }
 
 .smaller-label {

@@ -45,8 +45,12 @@ if (paxCounters.length > 0) {
     plusBtn.addEventListener('click', (e) => {
       e.preventDefault();
       let count = parseInt(textEl.textContent);
-      textEl.textContent = count + 1;
-      calculateGrandTotal();
+      const maxAllowed = parseInt(counter.getAttribute('data-max') || 99);
+
+      if (count < maxAllowed) {
+        textEl.textContent = count + 1;
+        calculateGrandTotal();
+      }
     });
   });
 
@@ -105,6 +109,13 @@ addonCheckboxes.forEach(checkbox => {
   checkbox.addEventListener('change', () => {
     if (checkbox.checked) {
       controlsDiv.classList.remove('hidden');
+
+      const minPax = parseInt(checkbox.getAttribute('data-min')) || 1;
+      if (qtyValEl && qtyValEl.tagName !== 'SELECT') {
+        if (parseInt(qtyValEl.textContent) < minPax) {
+          qtyValEl.textContent = minPax;
+        }
+      }
     } else {
       controlsDiv.classList.add('hidden');
     }
@@ -127,7 +138,9 @@ addonCheckboxes.forEach(checkbox => {
     plusBtn.addEventListener('click', e => {
       e.preventDefault();
       let count = parseInt(qtyValEl.textContent);
-      if (count < maxPax) {
+      let dynamicMax = parseInt(checkbox.getAttribute('data-current-max')) || maxPax;
+
+      if (count < dynamicMax) {
         qtyValEl.textContent = count + 1;
         calculateGrandTotal();
       }
@@ -157,7 +170,40 @@ function calculateGrandTotal() {
       const qty = parseInt(counter.querySelector('.pax-counter-text').textContent)
 
       baseTotal += (price * qty);
-      totalPax += qty;
+      
+      if (!counter.classList.contains('core-addon')) {
+        totalPax += qty;
+      }
+    });
+
+    addonCheckboxes.forEach(checkbox => {
+      const minPax = parseInt(checkbox.getAttribute('data-min')) || 1;
+      const maxPax = parseInt(checkbox.getAttribute('data-max')) || 10;
+      const pricingType = checkbox.getAttribute('data-pricing-type');
+
+      if (totalPax < minPax) {
+        checkbox.disabled = true;
+        checkbox.checked = false;
+        checkbox.closest('.addon-item').querySelector('.addon-controls').classList.add('hidden');
+      } else {
+        checkbox.disabled = false;
+      }
+
+      if (pricingType === 'per_pax') {
+        const maxAllowed = Math.min(totalPax, maxPax);
+        checkbox.setAttribute('ddata-current-max', maxAllowed);
+
+        const qtyValEl = checkbox.closest('.addon-item').querySelector('.addon-qty-val');
+
+        if (qtyValEl && qtyValEl.tagName !== 'SELECT') {
+          if (parseInt(qtyValEl.textContent) > maxAllowed) {
+            qtyValEl.textContent = maxAllowed;
+          }
+        }
+      } else {
+        checkbox.setAttribute('data-current-max', maxPax);
+      }
+
     });
 
     if (bookingPaxQuantityText) {

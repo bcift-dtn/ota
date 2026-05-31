@@ -39,15 +39,21 @@
 
           <div class="detail-summary">
             <div class="detail-summary-top">
-              <h1 class="product-heading"><i data-lucide="ferris-wheel"></i><%= product.title %></h1>
+              <h1 class="product-heading"><%= product.title %></h1>
               <p class="even-bigger-label">IDR <%= selectedPackage.formatted_price %></p>
             </div>
 
             <div class="detail-badges">
               <div class="package-amenities">
+                  <% product.amenities.forEach(amenity => { %>
+                    <p class="abit-smaller-label">
+                      <i data-lucide="<%= amenity.icon_lucide %>"></i><%= amenity.name %>
+                    </p>
+                  <% }) %>
+
                   <% selectedPackage.amenities.forEach(amenity => { %>
-                    <p>
-                    <i data-lucide="<%= amenity.icon_lucide %>"></i><%= amenity.name %>
+                    <p class="abit-smaller-label">
+                      <i data-lucide="<%= amenity.icon_lucide %>"></i><%= amenity.name %>
                     </p>
                   <% }) %>
               </div>
@@ -57,7 +63,7 @@
 
         <div class="detail-important-info">
           <h2 class="product-heading"><i data-lucide="circle-alert"></i>Important Info</h2>
-          <div class="section-list-content">
+          <div class="section-list-content abit-smaller-label">
               <ul>
                 <% selectedPackage.important_info.split('\n').forEach(line => { %> 
                   <% if (line.trim().length > 0) { %>
@@ -71,7 +77,7 @@
         <% if (selectedPackage.itinerary) { %>
           <div class="detail-itinerary detail-important-info">
             <h2 class="product-heading"><i data-lucide="clock"></i>Itinerary</h2>
-            <div class="section-list-content">
+            <div class="section-list-content abit-smaller-label">
               <ul>
                 <% selectedPackage.itinerary.split('\n').forEach(line => { %> 
                   <% if (line.trim().length > 0) { %>
@@ -179,7 +185,28 @@
                 <% } %>
             </div>
 
-            <% if (selectedPackage.addons && selectedPackage.addons.length > 0) { %>
+            <% const coreAddons = selectedPackage.addons ? selectedPackage.addons.filter(a => a.display_category === 'core') : []; %>
+            <% const generalAddons = selectedPackage.addons ? selectedPackage.addons.filter(a => a.display_category === 'general') : []; %>
+
+            <% if (coreAddons.length > 0) { %>
+             <div class="core-addons-wrapper">
+              <% coreAddons.forEach(addon => { %> 
+                <div class="pax-counter core-addon" data-price="<%= addon.price %>" data-max="<%= addon.max_quantity || 10 %>" data-min="0">
+                  <div class="pax-counter-left">
+                    <p class="label-text"><%= addon.name.toUpperCase() %></p>
+                    <p class="bigger-label">IDR <%= Number(addon.price).toLocaleString('id-ID') %></p>
+                  </div>
+                  <div class="pax-counter-right">
+                    <button type="button" class="pax-counter-minus addon-minus">-</button>
+                    <p class="pax-counter-text addon-qty-val">0</p>
+                    <button type="button" class="pax-counter-plus addon-plus">+</button>
+                  </div>
+                </div>
+              <% }) %>
+             </div>
+            <% } %>
+
+            <% if (generalAddons.length > 0) { %>
               <div class="booking-addons-collapsible">
                 <button type="button" class="addons-toggle-btn" id="addonsToggleBtn">
                   <span class="label-text">Available Add-ons</span>
@@ -193,7 +220,8 @@
                         <input type="checkbox" class="addon-checkbox" 
                           data-price="<%= addon.price %>" 
                           data-min="<%= addon.min_pax || 1 %>"
-                          data-max="<%= addon.max_pax || 99 %>"
+                          data-max="<%= addon.max_pax || addon.max_quantity || 10 %>"
+                          data-pricing-type="<%= addon.pricing_type %>"
                           value="<%= addon.id %>">
                         
                         <div class="addon-info">
