@@ -24,9 +24,11 @@ const getCarRentals = async (req, res) => {
 
     const productIds = carListing.map(p => p.id);
     const allPackages = await getPackagesByProductIds(productIds);
+    const amenities = await getProductAmenities(productIds);
 
     const formattedProducts = carListing.map(p => ({
       ...p,
+      amenities: amenities.filter(a => a.product_id === p.id),
       formatted_starting_price: Number(p.starting_price).toLocaleString('id-ID'),
       packages: allPackages
         .filter(pkg => pkg.product_id === p.id)
@@ -68,6 +70,8 @@ const getCarRentalDetail = async (req, res) => {
 
     if (rows.length === 0) return res.status(404).render('pages/404', { message: 'Car not found.' });
 
+    const amenities = await getProductAmenities(carId);
+
     const seenPackageIds = new Set();
     const packages = rows.filter(r => {
       if (r.package_id && !seenPackageIds.has(r.package_id)) {
@@ -93,6 +97,7 @@ const getCarRentalDetail = async (req, res) => {
 
     const product = {
       ...rows[0],
+      amenities: amenities,
       formatted_starting_price: startingPrice.toLocaleString('id-ID'),
       images: [...new Set(rows.map(r => r.image_url).filter(Boolean))],
       packages: packages || []

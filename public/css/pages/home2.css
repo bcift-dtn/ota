@@ -85,25 +85,8 @@
 }
 
 .brand-tab-bar span {
-  display: flex;
-  align-items: center;
-
-  height: 5.5rem;
   color: var(--clr-primary);
   flex-shrink: 0;
-  padding-right: 1.5rem;
-  position: relative; 
-}
-
-.brand-tab-bar span::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 40%;
-  width: 1px;
-  background-color: #777E90;
 }
 
 .brand-tab-btn {
@@ -167,7 +150,7 @@
 }
 
 .brand-tab-btn-img.meyer {
-  width: 6.5rem;
+  width: 7.5rem;
   padding-top: 0rem;
 }
 
@@ -178,6 +161,7 @@
 
 .service-tab-bar {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 2rem;
 
@@ -796,7 +780,7 @@
   }
 
   .brand-tab-btn-img.meyer {
-    width: 8rem;
+    width: 9rem;
     padding-top: 0.5rem;
   }
 

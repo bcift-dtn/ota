@@ -9,20 +9,32 @@
   padding: var(--spacing-vertical-1) var(--spacing-horizontal-1);
   
 
-  position: sticky;
+  position: fixed;
+  width: 100%;
   top: 0;
   z-index: 100;
 
-  background-color: var(--clr-bg);
-  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
+  background-color: transparent;
+  box-shadow: none;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  /* box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25); */;
   
   font-size: var(--fs-4);
   font-weight: 700;
 }
 
+.main-nav.scrolled {
+  background-color: var(--clr-bg);
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
 .main-nav a {
   text-decoration: none;
-  color: var(--clr-neutral);
+  color: white;
+}
+
+.main-nav.scrolled a {
+  color: var(--clr-primary);
 }
 
 .main-nav a:hover {
@@ -149,7 +161,6 @@ li form {
   animation: profileSlideDown 0.3s cubic-bezier(0.24, -0.07, 0.78, 1.18) forwards;
 }
 
-
 /* Footer */
 footer {
   width: 100%;
@@ -250,14 +261,14 @@ footer li a {
 /* Product List Hero Banner */
 .list-hero-banner {
   width: 100%;
-  max-height: 25vh;
+  max-height: 30vh;
   overflow: hidden;
   position: relative;
 }
 
 .list-hero-banner img{
   width: 100%;
-  height: 25vh;
+  height: 30vh;
   object-fit: cover;
   position: relative;
 }
@@ -277,6 +288,20 @@ footer li a {
 
 .hero-car-list h1 {
   color: white;
+}
+
+.hero-banner::after,
+.list-hero-banner::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8rem;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
+  z-index: 5;
+  pointer-events: none;
+
 }
 
 @media (min-width: 800px) {
