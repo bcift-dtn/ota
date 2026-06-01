@@ -191,7 +191,7 @@ function calculateGrandTotal() {
 
       if (pricingType === 'per_pax') {
         const maxAllowed = Math.min(totalPax, maxPax);
-        checkbox.setAttribute('ddata-current-max', maxAllowed);
+        checkbox.setAttribute('data-current-max', maxAllowed);
 
         const qtyValEl = checkbox.closest('.addon-item').querySelector('.addon-qty-val');
 
@@ -233,11 +233,49 @@ function calculateGrandTotal() {
 
 calculateGrandTotal();
 
-document.querySelector('#bookingContinueBtn').addEventListener('click', e => {
+document.querySelector('#bookingContinueBtn').addEventListener('click', async e => {
   e.preventDefault();
 
+  const currentProductId = document.querySelector('#currentProductId').value;
+  const currentPackageId = document.querySelector('#currentPackageId').value;
+  const currentProductType = document.querySelector('#currentProductType').value;
+
   if (!currentUser) {
+    const draftData = {
+      productId: currentProductId,
+      packageId: currentPackageId,
+      productType: currentProductType,
+      totalPax: bookingPaxQuantityText ? parseInt(bookingPaxQuantityText.textContent) : 1,
+      grandTotal: bookingTotalPriceText.textContent
+    };
+
+    sessionStorage.setItem('pendingCheckoutDraft', JSON.stringify(draftData));
+
     document.querySelector('#modalOverlay').classList.remove('hidden');
     return;
+  }
+
+  const draftData = {
+    productId: currentProductId,
+    packageId: currentPackageId,
+    productType: currentProductType,
+    totalPax: bookingPaxQuantityText ? parseInt(bookingPaxQuantityText.textContent) : 1,
+    grandTotal: bookingTotalPriceText.textContent
+  };
+
+  try {
+    const response = await fetch('/products/checkout/draft', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(draftData)
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      window.location.href = '/products/checkout';
+    }
+  } catch (err) {
+    console.error("Error saving draft:", err);
+    alert("Something went wrong. Please try again.");
   }
 });

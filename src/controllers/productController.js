@@ -269,4 +269,36 @@ const getActivitiesDetail = async (req, res) => {
   }
 }
 
-module.exports = { getCarRentals, getCarRentalDetail, getActivities, getActivitiesDetail };
+const getCheckoutPage = async (req, res) => {
+  const draftOrder = req.session.draftOrder;
+
+  if (!draftOrder) return res.redirect('/');
+
+  try {
+    let rows = [];
+
+    if (draftOrder.productType === 'activities') {
+      rows = await getActivitiesById(draftOrder.productId);
+    } else if (draftOrder.productType === 'car_rental') {
+      rows = await getCarRentalById(draftOrder.productId);
+    }
+    
+    if (rows.length === 0) return res.redirect('/');
+    
+    const selectedPackage = rows.find(r => r.package_id === parseInt(draftOrder.packageId));
+
+    const platformFee = parseInt(process.env.PLATFORM_FEE) || 5000;
+
+    return res.render('pages/checkout', {
+      draftOrder,
+      product: rows[0],
+      selectedPackage,
+      platformFee,
+    })
+  } catch (err) {
+    console.error('Checkout Error:', err);
+    return res.redirect('/');
+  }
+}
+
+module.exports = { getCarRentals, getCarRentalDetail, getActivities, getActivitiesDetail, getCheckoutPage };

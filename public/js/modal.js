@@ -61,7 +61,20 @@ loginModalForm.addEventListener('submit', async (e) => {
     submitLoginBtn.disabled = false;
     submitLoginBtn.textContent = 'Sign In';
 
-    window.location.reload();
+    const pendingDraft = sessionStorage.getItem('pendingCheckoutDraft');
+    
+    if (pendingDraft) {
+      await fetch('/products/checkout/draft', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: pendingDraft
+      });
+      sessionStorage.removeItem('pendingCheckoutDraft');
+      window.location.href = '/products/checkout';
+    } else {
+      window.location.reload();
+    }
+
   } catch (err) {
     console.log('Fetch failed: ', err);
     

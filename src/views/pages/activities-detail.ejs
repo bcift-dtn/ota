@@ -15,6 +15,10 @@
     <%- include('../partials/navbar') %>
     
     <main>
+      <section class="list-hero-banner hero-activities-list">
+        <img src="/images/hero-banners/ranoh-hero.webp" alt="Activities Hero Banner">
+        <h1>ACTIVITIES</h1>
+      </section>
       <%- include('../partials/breadcrumb', { breadcrumbs }) %>
 
       <section class="detail-container">
@@ -298,6 +302,10 @@
     <%- include('../partials/footer') %>
 
     <%- include('../partials/loginModal') %>
+
+    <input type="hidden" id="currentProductType" value="<%= product.type %>">
+    <input type="hidden" id="currentProductId" value="<%= product.id %>">
+    <input type="hidden" id="currentPackageId" value="<%= selectedPackage.id %>">
 
     <script>
       const packageDurationHours = <%= selectedPackage.duration_hours || 'null' %>;
