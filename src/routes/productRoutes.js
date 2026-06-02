@@ -23,6 +23,6 @@ router.get('/activities/:id', getActivitiesDetail);
 
 router.get('/checkout', getCheckoutPage);
 
-router.get('/products/home2', (req, res) => res.render('pages/home2'))
+router.get('/home2', (req, res) => res.render('pages/home2'))
 
 module.exports = router;

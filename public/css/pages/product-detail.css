@@ -27,8 +27,6 @@
 
 .section-list-content li {
   line-height: 1.5;
-  font-weight: 600;
-  color: var(--clr-label-font);
   text-align: justify;
 }
 

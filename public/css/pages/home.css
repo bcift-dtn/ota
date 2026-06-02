@@ -17,7 +17,7 @@
   height: 100%;
 
   background-size: cover;
-  background-position: center 65%;
+  background-position: center 100%;
   background-repeat: no-repeat;
 
   opacity: 0;
@@ -807,5 +807,15 @@
 
   .brand-tab-btn-img.ranoh {
     width: 7rem;
+  }
+  
+  .hero-layer {
+    background-position: center 85%;
+  }
+}
+
+@media (min-width: 1600px) {
+  .hero-layer {
+    background-position: center 81%;
   }
 }
