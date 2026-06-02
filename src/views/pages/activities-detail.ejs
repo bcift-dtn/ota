@@ -147,7 +147,8 @@
               <% if (selectedPackage.pricing_type === 'per_pax') { %>
                 <% selectedPackage.pricingTiers.forEach(pricingTier => { %>
                   <% const minPax = pricingTier.tier_title.toLowerCase() === 'adult' ? 1 : 0 %>
-                  <div class="pax-counter" data-price="<%= pricingTier.normal_price %>" data-min="<%= minPax %>">
+                  <% const isInfant = pricingTier.tier_title.toLowerCase() === 'infant' ? 'true' : 'false'; %>
+                  <div class="pax-counter" data-price="<%= pricingTier.normal_price %>" data-min="<%= minPax %>" data-is-infant="<%= isInfant %>">
                     <div class="pax-counter-left">
                       <p class="label-text"><%= pricingTier.tier_title.toUpperCase() %></p> 
 
@@ -172,7 +173,8 @@
                       <div class="informational-pax-wrapper">
                         <% selectedPackage.pricingTiers.forEach(pricingTier => { %>
                           <% const minPax = pricingTier.tier_title.toLowerCase() === 'adult' ? 1 : 0; %>
-                          <div class="pax-counter informational-pax" data-price="0" data-min="<%= minPax %>">
+                          <% const isInfant = pricingTier.tier_title.toLowerCase() === 'infant' ? 'true' : 'false'; %>
+                          <div class="pax-counter informational-pax" data-price="0" data-min="<%= minPax %>" data-is-infant="<%= isInfant %>">
                             <div class="pax-counter-left">
                               <p class="label-text"><%= pricingTier.tier_title.toUpperCase() %></p>
                               <p class="even-smaller-label"><%= pricingTier.tier_description %></p>
@@ -306,6 +308,7 @@
     <input type="hidden" id="currentProductType" value="<%= product.type %>">
     <input type="hidden" id="currentProductId" value="<%= product.id %>">
     <input type="hidden" id="currentPackageId" value="<%= selectedPackage.id %>">
+    <input type="hidden" id="maxPaxPerUnit" value="<%= selectedPackage.max_pax_per_unit || 10 %>">
 
     <script>
       const packageDurationHours = <%= selectedPackage.duration_hours || 'null' %>;

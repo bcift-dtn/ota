@@ -204,6 +204,7 @@ const getActivitiesDetail = async (req, res) => {
       normal_price: r.package_price,
       agent_price: r.package_agent_price,
       max_quantity: r.max_quantity,
+      max_pax_per_unit: r.max_pax_per_unit,
       duration_hours: r.duration_hours,
       pricing_type: r.pricing_type,
       important_info: r.package_important_info,
