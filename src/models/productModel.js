@@ -54,6 +54,7 @@ const getCarRentalById = async (id) => {
       pp.normal_price as package_price,
       pp.important_info as package_important_info,
       pp.agent_price as package_agent_price,
+      pp.is_refundable, pp.is_reschedulable,
       pp.max_quantity, pp.max_pax_per_unit, pp.sort_order as package_sort_order, pp.duration_hours
     FROM ota.products p
     JOIN ota.car_details cd on p.id = cd.product_id
@@ -143,6 +144,7 @@ const getActivitiesById = async (id) => {
       pp.description as package_description,
       pp.normal_price as package_price,
       pp.agent_price as package_agent_price,
+      pp.is_refundable, pp.is_reschedulable,
       pp.max_quantity, pp.max_pax_per_unit, pp.sort_order as package_sort_order, pp.duration_hours, pp.pricing_type,
       pp.itinerary as package_itinerary
     FROM ota.products p

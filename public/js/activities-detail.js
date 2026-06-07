@@ -262,29 +262,73 @@ document.querySelector('#bookingContinueBtn').addEventListener('click', async e 
   const currentProductId = document.querySelector('#currentProductId').value;
   const currentPackageId = document.querySelector('#currentPackageId').value;
   const currentProductType = document.querySelector('#currentProductType').value;
+  const visitDateInput = document.querySelector('#activitiesCheckInDate');
+  const slotTimeInput = document.querySelector('#slotTime');
+  const quantityInput = document.querySelector('#bookingQuantity');
 
-  if (!currentUser) {
-    const draftData = {
-      productId: currentProductId,
-      packageId: currentPackageId,
-      productType: currentProductType,
-      totalPax: bookingPaxQuantityText ? parseInt(bookingPaxQuantityText.textContent) : 1,
-      grandTotal: bookingTotalPriceText.textContent
-    };
+  const visitDate = visitDateInput ? visitDateInput.value : '';
+  const slotTime = slotTimeInput ? slotTimeInput.value : null;
+  const bookingQuantity = quantityInput ? parseInt(quantityInput.value) : 1;
+  const totalPax = bookingPaxQuantityText ? parseInt(bookingPaxQuantityText.textContent) : 1;
 
-    sessionStorage.setItem('pendingCheckoutDraft', JSON.stringify(draftData));
-
-    document.querySelector('#modalOverlay').classList.remove('hidden');
+  if (!visitDate) {
+    alert("Please select a Check-In Date before continuing.");
     return;
   }
+
+  const selectedAddons = [];
+
+  document.querySelectorAll('.core-addon').forEach(addon => {
+    const qty = parseInt(addon.querySelector('.addon-qty-val').textContent);
+    if (qty > 0) {
+      selectedAddons.push({
+        price: addon.getAttribute('data-price'),
+        quantity: qty
+      })
+    }
+  })
+
+  document.querySelectorAll('.addon-checkbox:checked').forEach(checkbox => {
+    const addonContainer = checkbox.closest('.addon-item');
+    const qty = parseInt(addonContainer.querySelector('.addon-qty-val').textContent);
+    selectedAddons.push({
+      price: checkbox.getAttribute('data-price'),
+      quantity: qty
+    })
+  })
+
+  const paxBreakdown = [];
+
+  document.querySelectorAll('.pax-counter:not(.core-addon):not(.informational-pax)').forEach(counter => {
+    const tierTitle = counter.querySelector('.label-text').textContent.trim().toLowerCase();
+    const qty = parseInt(counter.querySelector('.pax-counter-text').textContent);
+
+    if (qty > 0) {
+      paxBreakdown.push({
+        tier: tierTitle,
+        quantity: qty
+      });
+    }
+  });
 
   const draftData = {
     productId: currentProductId,
     packageId: currentPackageId,
     productType: currentProductType,
-    totalPax: bookingPaxQuantityText ? parseInt(bookingPaxQuantityText.textContent) : 1,
-    grandTotal: bookingTotalPriceText.textContent
-  };
+    visitDate: visitDate,
+    slotTime: slotTime,
+    bookingQuantity: bookingQuantity,
+    totalPax: totalPax,
+    paxBreakdown: paxBreakdown,
+    grandTotal: bookingTotalPriceText.textContent,
+    addons: selectedAddons
+  }
+
+  if (!currentUser) {
+    sessionStorage.setItem('pendingCheckoutDraft', JSON.stringify(draftData));
+    document.querySelector('#modalOverlay').classList.remove('hidden');
+    return;
+  }
 
   try {
     const response = await fetch('/products/checkout/draft', {
@@ -294,6 +338,7 @@ document.querySelector('#bookingContinueBtn').addEventListener('click', async e 
     });
 
     const result = await response.json();
+
     if (result.success) {
       window.location.href = '/products/checkout';
     }

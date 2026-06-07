@@ -92,6 +92,10 @@ select {
   font-family: "Plus Jakarta Sans";
 }
 
+textarea {
+  resize: none;
+}
+
 .even-bigger-label {
   font-size: var(--fs-5);
   font-weight: 700;

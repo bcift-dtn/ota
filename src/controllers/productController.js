@@ -86,6 +86,8 @@ const getCarRentalDetail = async (req, res) => {
       max_quantity: r.max_quantity,
       duration_hours: r.duration_hours,
       important_info: r.package_important_info,
+      is_refundable: r.is_refundable,
+      is_reschedulable: r.is_reschedulable,
       formatted_price: Number(r.package_price).toLocaleString('id-ID')
     }));
 
@@ -209,6 +211,8 @@ const getActivitiesDetail = async (req, res) => {
       pricing_type: r.pricing_type,
       important_info: r.package_important_info,
       itinerary: r.package_itinerary,
+      is_refundable: r.is_refundable,
+      is_reschedulable: r.is_reschedulable,
       formatted_price: Number(r.package_price).toLocaleString('id-ID')
     }))
 
@@ -285,16 +289,44 @@ const getCheckoutPage = async (req, res) => {
     }
     
     if (rows.length === 0) return res.redirect('/');
-    
-    const selectedPackage = rows.find(r => r.package_id === parseInt(draftOrder.packageId));
 
+    const selectedPackage = rows.find(r => r.package_id === parseInt(draftOrder.packageId));
+    
+    let filteredBasePrice = 0;
+
+    if (selectedPackage.pricing_type === 'per_unit') {
+      filteredBasePrice = Number(selectedPackage.package_price) * Number(draftOrder.bookingQuantity);
+
+    } else if (selectedPackage.pricing_type === 'per_pax') {
+      const dbTiers = await getPackagePricingTiers([selectedPackage.package_id]);
+
+      if (draftOrder.paxBreakdown) {
+          draftOrder.paxBreakdown.forEach(draftTier => {
+          const matchingDbTier = dbTiers.find(db => db.tier_title.toLowerCase() === draftTier.tier);
+          
+          if (matchingDbTier) {
+            filteredBasePrice += (Number(matchingDbTier.normal_price) * Number(draftTier.quantity));
+          }
+        });
+      }
+    }
+    
     const platformFee = parseInt(process.env.PLATFORM_FEE) || 5000;
+    const taxRate = parseFloat(process.env.TAX_RATE) || 0.11;
+
+    const taxAmount = filteredBasePrice * taxRate;
+
+    const filteredGrandTotal = filteredBasePrice + taxAmount + platformFee;
 
     return res.render('pages/checkout', {
       draftOrder,
       product: rows[0],
       selectedPackage,
       platformFee,
+      taxRate,
+      taxAmount,
+      filteredBasePrice,
+      filteredGrandTotal
     })
   } catch (err) {
     console.error('Checkout Error:', err);
