@@ -1,17 +1,35 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const rateLimit = require('express-rate-limit');
 
 const { registerUser, loginUser, logout, verifyEmail } = require('../controllers/authController');
 const redirectIfAuthenticated = require('../middlewares/redirectIfAuthenticated');
+
+// Limit attempt
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: 'Too many login attempts. Please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  message: 'Too many registration attempts. Please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+})
 
 router.get('/register', redirectIfAuthenticated, (req, res) => {
   res.render('pages/register');
 })
 
-router.post('/register', registerUser);
+router.post('/register', registerLimiter, registerUser);
 
-router.post('/login', loginUser);
+router.post('/login', loginLimiter, loginUser);
 
 router.post('/logout', logout);
 

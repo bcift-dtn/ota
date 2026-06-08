@@ -292,9 +292,6 @@ footer li a {
   object-fit: cover;
   position: relative;
   opacity: 0.35;
-}
-
-.list-hero-banner img {
   object-position: center 60%;
 }
 

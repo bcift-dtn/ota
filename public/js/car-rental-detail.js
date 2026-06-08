@@ -12,9 +12,11 @@ flatpickr('input[type="date"]', {
 document.querySelectorAll('.detail-thumbnail').forEach(thumb => {
   thumb.addEventListener('click', () => {
     const mainImage = document.querySelector('.detail-main-image');
-    mainImage.src = thumb.src
-  })
-})
+    mainImage.src = thumb.src;
+    document.querySelectorAll('.detail-thumbnail').forEach(t => t.classList.remove('active-thumb'));
+    thumb.classList.add('active-thumb');
+  });
+});
 
 const packagePrice = Number(document.querySelector('#packagePrice').dataset.price);
 const bookingQuantitySelect = document.querySelector('#bookingQuantity');

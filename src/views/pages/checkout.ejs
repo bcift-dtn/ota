@@ -98,7 +98,7 @@
                 <img src="<%= product.image_url %>" alt="Product Image" class="summary-img">
               <% } %>
               <h2><%= product.title %></h2>
-              <p class="summary-package-name"><%= selectedPackage.package_name %></p>
+              <p class="summary-package-name"><%= selectedPackage.package_name || selectedPackage.name %></p>
               <div class="summary-details">
                 <div class="summary-details-row">
                   <span><i data-lucide="calendar"></i> Date:</span>

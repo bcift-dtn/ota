@@ -5,6 +5,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const exSession = require('express-session');
+const helmet = require("helmet")
 
 // Routes
 const authRoutes = require('./src/routes/authRoutes');
@@ -12,6 +13,7 @@ const productRoutes = require('./src/routes/productRoutes');
 
 // Variable
 const app = express();
+app.use(helmet());
 const PORT = process.env.PORT || 3000;
 
 // Passport for google login
@@ -33,7 +35,7 @@ app.use(exSession({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false,
+    secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
   }
 }));
