@@ -23,6 +23,7 @@ app.use(helmet({
       imgSrc:      ["'self'", "data:", "blob:"],
       frameSrc:    ["'self'", "https://www.google.com"],
       connectSrc:  ["'self'", "https://cdn.jsdelivr.net", "https://unpkg.com"],
+      upgradeInsecureRequests: null,
     }
   }
 }));
