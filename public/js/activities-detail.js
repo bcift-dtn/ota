@@ -46,53 +46,39 @@ if (paxCounters.length > 0) {
       e.preventDefault();
       let count = parseInt(textEl.textContent);
       const maxAllowed = parseInt(counter.getAttribute('data-max')) || 99;
+      const bookingQty = quantitySelect ? parseInt(quantitySelect.value) : 1;
       
       // If it's an infant or Extra Bed, it doesn't count towards the Max Pax limit
-      if (counter.getAttribute('data-is-infant') === 'true' || counter.classList.contains('core-addon')) {
-         if (count < maxAllowed) {
-            textEl.textContent = count + 1;
-            calculateGrandTotal();
-         }
+      if (counter.getAttribute('data-is-infant') === 'true') {
+        const maxInfants = 2 * bookingQty;
+
+        if (count < maxInfants && count < maxAllowed) {
+          textEl.textContent = count + 1;
+          calculateGrandTotal();
+        }
+      } else if (counter.classList.contains('core-addon')) {
+        if (count < maxAllowed) {
+          textEl.textContent = count + 1;
+          calculateGrandTotal();
+        }
       } else {
-         // It's an Adult or Child! Let's calculate the current total non-infant passengers
-         let currentTotalHumans = 0;
-         paxCounters.forEach(c => {
-           if (c.getAttribute('data-is-infant') !== 'true' && !c.classList.contains('core-addon')) {
-             currentTotalHumans += parseInt(c.querySelector('.pax-counter-text').textContent);
-           }
-         });
-         
-         // Calculate the dynamic limit (e.g. 1 Villa * 4 people = 4)
-         const bookingQty = quantitySelect ? parseInt(quantitySelect.value) : 1;
-         const maxPaxPerUnit = parseInt(document.querySelector('#maxPaxPerUnit').value) || 999;
-         const totalMaxPax = maxPaxPerUnit * bookingQty;
-         
-         if (currentTotalHumans < totalMaxPax && count < maxAllowed) {
-            textEl.textContent = count + 1;
-            calculateGrandTotal();
-         } else if (currentTotalHumans >= totalMaxPax) {
-            alert(`Maximum capacity is ${totalMaxPax} people.`);
-         }
+        let currentTotalHumans = 0;
+        paxCounters.forEach(c => {
+          if (c.getAttribute('data-is-infant') !== 'true' && !c.classList.contains('core-addon')) {
+            currentTotalHumans += parseInt(c.querySelector('.pax-counter-text').textContent);
+          }
+        });
+
+        const maxPaxPerUnit = parseInt(document.querySelector('#maxPaxPerUnit').value);
+        const totalMaxPax = maxPaxPerUnit * bookingQty;
+
+        if (currentTotalHumans < totalMaxPax && count < maxAllowed) {
+          textEl.textContent = count + 1;
+          calculateGrandTotal();
+        }
       }
     });
   });
-
-  function updateTotalPaxPrice() {
-    let total = 0;
-    let totalPax = 0;
-    
-    paxCounters.forEach(counter => {
-      const price = parseInt(counter.getAttribute('data-price'));
-      const qty = parseInt(counter.querySelector('.pax-counter-text').textContent);
-      total += price * qty;
-      totalPax += qty;
-    });
-
-    bookingTotalPriceText.textContent = `IDR ${total.toLocaleString('id-ID')}`;
-    if (bookingPaxQuantityText) {
-      bookingPaxQuantityText.textContent = `${totalPax} People`;
-    }
-  }
 }
 
 const quantitySelect = document.querySelector('#bookingQuantity');
@@ -256,6 +242,7 @@ function calculateGrandTotal() {
 
 calculateGrandTotal();
 
+
 document.querySelector('#bookingContinueBtn').addEventListener('click', async e => {
   e.preventDefault();
 
@@ -282,7 +269,7 @@ document.querySelector('#bookingContinueBtn').addEventListener('click', async e 
     const qty = parseInt(addon.querySelector('.addon-qty-val').textContent);
     if (qty > 0) {
       selectedAddons.push({
-        price: addon.getAttribute('data-price'),
+        id: addon.getAttribute('data-id'),
         quantity: qty
       })
     }
@@ -292,7 +279,7 @@ document.querySelector('#bookingContinueBtn').addEventListener('click', async e 
     const addonContainer = checkbox.closest('.addon-item');
     const qty = parseInt(addonContainer.querySelector('.addon-qty-val').textContent);
     selectedAddons.push({
-      price: checkbox.getAttribute('data-price'),
+      id: checkbox.getAttribute('data-id'),
       quantity: qty
     })
   })

@@ -98,20 +98,31 @@
                 <img src="<%= product.image_url %>" alt="Product Image" class="summary-img">
               <% } %>
               <h2><%= product.title %></h2>
-              <p class="summary-package-name"><%= selectedPackage.name %></p>
+              <p class="summary-package-name"><%= selectedPackage.package_name %></p>
               <div class="summary-details">
                 <div class="summary-details-row">
-                  <span><i data-lucide="calendar"></i> Visit Date:</span>
+                  <span><i data-lucide="calendar"></i> Date:</span>
                   <span><%= draftOrder.visitDate %></span>
                 </div>
                 <div class="summary-details-row">
                   <span><i data-lucide="clock"></i> Time Slot:</span>
                   <span><%= draftOrder.slotTime %></span>
                 </div>
-                <div class="summary-details-row">
-                  <span><i data-lucide="users"></i> Total Visitors:</span>
-                  <span><%= draftOrder.totalPax %> Person(s)</span>
-                </div>
+                <% if (draftOrder.productType === 'car_rental') { %>
+                  <div class="summary-details-row">
+                    <span><i data-lucide="map-pin"></i>Pickup:</span>
+                    <span><%= draftOrder.pickupLocation %></span>
+                  </div>
+                  <div class="summary-details-row">
+                    <span><i data-lucide="users"></i> Quantity:</span>
+                    <span><%= draftOrder.bookingQuantity %> Car(s)</span>
+                  </div>
+                <% } else { %>
+                  <div class="summary-details-row">
+                    <span><i data-lucide="users"></i> Total Visitors:</span>
+                    <span><%= draftOrder.totalPax %> Person(s)</span>
+                  </div>
+                <% } %>
               </div>
               <div class="summary-price-breakdown">
                 <div class="price-row smaller-label">
@@ -156,6 +167,16 @@
     <%- include('../partials/footer') %>
 
     <%- include('../partials/loginModal') %>
+
+    <script>
+      const loggedInUser = {
+        fullName: "<%= user.fullName || '' %>",
+        email: "<%= user.email || '' %>",
+        phone: "<%= user.phone || '' %>"
+      }
+    </script>
+
+    <script src="/js/checkout.js"></script>
 </body>
 
 </html>

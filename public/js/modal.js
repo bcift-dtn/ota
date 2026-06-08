@@ -1,3 +1,26 @@
+// If on detail page redirect to checkout after login instead of home.
+document.addEventListener('DOMContentLoaded', async () => {
+  const pendingDraft = sessionStorage.getItem('pendingCheckoutDraft');
+
+  const isLoggedIn = document.querySelector('.profile-btn') !== null;
+
+  if (pendingDraft && isLoggedIn) {
+    try {
+      await fetch('/products/checkout/draft', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: pendingDraft
+      });
+      
+      sessionStorage.removeItem('pendingCheckoutDraft');
+      
+      window.location.href = '/products/checkout';
+    } catch (err) {
+      console.error('Failed to recover draft after Google Login', err);
+    }
+  }
+})
+
 const navLoginBtn = document.querySelector('#navLoginBtn')
 const modalOverlay = document.querySelector('#modalOverlay');
 

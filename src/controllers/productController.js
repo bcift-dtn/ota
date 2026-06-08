@@ -310,6 +310,23 @@ const getCheckoutPage = async (req, res) => {
         });
       }
     }
+
+    // Calculate Addons Price
+    let filteredAddonsPrice = 0;
+
+    if (draftOrder.addons && draftOrder.addons.length > 0) {
+      const dbAddons = await getProductAddons(draftOrder.productId,[selectedPackage.package_id]);
+
+      draftOrder.addons.forEach(draftAddon => {
+        const matchingDbAddon = dbAddons.find(db => db.id === parseInt(draftAddon.id));
+
+        if (matchingDbAddon) {
+          filteredAddonsPrice += Number(matchingDbAddon.price) * Number(draftAddon.quantity);
+        }
+      });
+    }
+
+    filteredBasePrice += filteredAddonsPrice;
     
     const platformFee = parseInt(process.env.PLATFORM_FEE) || 5000;
     const taxRate = parseFloat(process.env.TAX_RATE) || 0.11;

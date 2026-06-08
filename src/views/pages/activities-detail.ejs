@@ -111,6 +111,7 @@
         <div class="detail-booking">
           <h2 class="product-heading"><i data-lucide="receipt-text"></i>Booking Information</h2>
           <form action="#">
+            <input type="hidden" id="maxPaxPerUnit" value="<%= selectedPackage.max_pax_per_unit || 999 %>">
             <div class="booking-input-wrapper">
               <div class="booking-pickup-date-wrapper">
                 <label for="activitiesCheckInDate" class="label-text">Check In Date</label>
@@ -197,7 +198,7 @@
             <% if (coreAddons.length > 0) { %>
              <div class="core-addons-wrapper">
               <% coreAddons.forEach(addon => { %> 
-                <div class="pax-counter core-addon" data-price="<%= addon.price %>" data-max="<%= addon.max_quantity || 10 %>" data-min="0">
+                <div class="pax-counter core-addon" data-id="<%= addon.id%>" data-price="<%= addon.price %>" data-max="<%= addon.max_quantity || 10 %>" data-min="0">
                   <div class="pax-counter-left">
                     <p class="label-text"><%= addon.name.toUpperCase() %></p>
                     <p class="bigger-label">IDR <%= Number(addon.price).toLocaleString('id-ID') %></p>
@@ -224,6 +225,7 @@
                     <div class="addon-item">
                       <label class="addon-label">
                         <input type="checkbox" class="addon-checkbox" 
+                          data-id="<%= addon.id %>"
                           data-price="<%= addon.price %>" 
                           data-min="<%= addon.min_pax || 1 %>"
                           data-max="<%= addon.max_pax || addon.max_quantity || 10 %>"

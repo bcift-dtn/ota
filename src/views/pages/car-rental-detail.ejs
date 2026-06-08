@@ -74,6 +74,9 @@
         <div class="detail-booking">
           <h2 class="product-heading"><i data-lucide="receipt-text"></i>Booking Information</h2>
           <form action="#">
+            <input type="hidden" id="currentProductId" value="<%= product.id %>">
+            <input type="hidden" id="currentPackageId" value="<%= selectedPackage.id %>">
+            <input type="hidden" id="currentProductType" value="<%= product.type %>">
             <div class="booking-pickup-address-wrapper">
               <label for="pickupLocation" class="label-text">Pickup Address</label>
               <input type="text" id="pickupLocation" name="pickupLocation" placeholder="Engku Putri No. 1, Batam Center" required>
