@@ -691,6 +691,12 @@
   flex-wrap: wrap;
   gap: 1.5rem;
   width: 100%;
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+.brand-row-2 {
+  max-width: 100%;
 }
 
 .brand-row .brand-card {

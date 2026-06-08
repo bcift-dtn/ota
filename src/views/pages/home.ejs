@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Travel Agent</title>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Online Travel Agent</title>
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages/home.css" />
 
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/layout.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/pages/home.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+  </head>
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-</head>
-
-<body>
-  <!-- Login button will be on navbar right side -->
-  <%- include('../partials/navbar') %>
+  <body>
+    <!-- Login button will be on navbar right side -->
+    <%- include('../partials/navbar') %>
 
     <main>
       <section class="hero-banner">
@@ -30,61 +35,122 @@
       <section class="search-component">
         <div class="search-wrapper">
           <div class="brand-tab-bar">
-            <span class="smaller-label label-text"><em>EXCLUSIVE BRANDS</em></span>
-            <button class="brand-tab-btn active" data-brand="majestic" data-service="ferry">
-              <img class="brand-tab-btn-img majestic" src="/images/logos/mff-logo-blue.webp" alt="Ferry icon">
+            <span class="smaller-label label-text"
+              ><em>EXCLUSIVE BRANDS</em></span
+            >
+            <button
+              class="brand-tab-btn active"
+              data-brand="majestic"
+              data-service="ferry"
+            >
+              <img
+                class="brand-tab-btn-img majestic"
+                src="/images/logos/mff-logo-blue.webp"
+                alt="Ferry icon"
+              />
             </button>
-            <button class="brand-tab-btn" data-brand="meyer" data-service="car-rental">
-              <img class="brand-tab-btn-img meyer" src="/images/logos/meyer-rental-logo-short.webp" alt="Car icon">
+            <button
+              class="brand-tab-btn"
+              data-brand="meyer"
+              data-service="car-rental"
+            >
+              <img
+                class="brand-tab-btn-img meyer"
+                src="/images/logos/meyer-rental-logo-short.webp"
+                alt="Car icon"
+              />
             </button>
-            <button class="brand-tab-btn" data-brand="ranoh" data-service="activities">
-              <img class="brand-tab-btn-img ranoh" src="/images/logos/ranoh-island-logo.webp" alt="Activities icon">
+            <button
+              class="brand-tab-btn"
+              data-brand="ranoh"
+              data-service="activities"
+            >
+              <img
+                class="brand-tab-btn-img ranoh"
+                src="/images/logos/ranoh-island-logo.webp"
+                alt="Activities icon"
+              />
             </button>
             <button class="brand-tab-btn" data-brand="bicc" data-service="golf">
-              <img class="brand-tab-btn-img bicc" src="/images/logos/bicc-logo.webp" alt="Golf icon">
+              <img
+                class="brand-tab-btn-img bicc"
+                src="/images/logos/bicc-logo.webp"
+                alt="Golf icon"
+              />
             </button>
-            <button class="brand-tab-btn" data-brand="nusa-indah" data-service="tour-travel">
-              <img class="brand-tab-btn-img nusa-indah" src="/images/logos/nusa-indah-logo.webp" alt="travel icon">
+            <button
+              class="brand-tab-btn"
+              data-brand="nusa-indah"
+              data-service="tour-travel"
+            >
+              <img
+                class="brand-tab-btn-img nusa-indah"
+                src="/images/logos/nusa-indah-logo.webp"
+                alt="travel icon"
+              />
             </button>
           </div>
 
           <div class="service-tab-bar">
             <button class="service-tab-btn" data-service="ferry">
-              <img src="/images/icons/ferry.svg" alt="Ferry icon"> Ferry
+              <img src="/images/icons/ferry.svg" alt="Ferry icon" /> Ferry
             </button>
             <button class="service-tab-btn" data-service="car-rental">
-              <img src="/images/icons/car.svg" alt="Car icon"> Car Rental
+              <img src="/images/icons/car.svg" alt="Car icon" /> Car Rental
             </button>
             <button class="service-tab-btn" data-service="activities">
-              <img src="/images/icons/ferris-wheel.svg" alt="Activities icon"> Activities
+              <img src="/images/icons/ferris-wheel.svg" alt="Activities icon" />
+              Activities
             </button>
             <button class="service-tab-btn" data-service="tour-travel">
-              <img src="/images/icons/travel.svg" alt="Tour and travel icon icon"> Tour & Travel
+              <img
+                src="/images/icons/travel.svg"
+                alt="Tour and travel icon icon"
+              />
+              Tour & Travel
             </button>
             <button class="service-tab-btn" data-service="golf">
-              <img src="/images/icons/golf.svg" alt="Tour and travel icon"> Golf
+              <img src="/images/icons/golf.svg" alt="Tour and travel icon" />
+              Golf
             </button>
             <button class="service-tab-btn" data-service="souvenir">
-              <img src="/images/icons/gift.svg" alt="Souvenir icon"> Souvenir
+              <img src="/images/icons/gift.svg" alt="Souvenir icon" /> Souvenir
             </button>
             <button class="service-tab-btn" data-service="hotel">
-              <img src="/images/icons/bed.svg" alt="Hotel icon"> Hotel
+              <img src="/images/icons/bed.svg" alt="Hotel icon" /> Hotel
             </button>
           </div>
 
           <div class="search-forms">
-            <div class="search-form " data-form="ferry">
+            <div class="search-form" data-form="ferry">
               <form action="/products/ferry" method="GET">
                 <div class="search-form-top">
                   <div class="trip-type-wrapper">
-                    <input type="radio" class="one-way-radio" id="onewayRadio" name="tripType" value="one-way" checked>
+                    <input
+                      type="radio"
+                      class="one-way-radio"
+                      id="onewayRadio"
+                      name="tripType"
+                      value="one-way"
+                      checked
+                    />
                     <label for="onewayRadio" class="label-text">One way</label>
-                    <input type="radio" class="two-way-radio" id="twowayRadio" name="tripType" value="two-way">
+                    <input
+                      type="radio"
+                      class="two-way-radio"
+                      id="twowayRadio"
+                      name="tripType"
+                      value="two-way"
+                    />
                     <label for="twowayRadio" class="label-text">Two way</label>
                   </div>
 
                   <div class="pax-counter-wrapper">
-                    <button type="button" class="pax-summary-btn label-text" id="paxSummaryBtn">
+                    <button
+                      type="button"
+                      class="pax-summary-btn label-text"
+                      id="paxSummaryBtn"
+                    >
                       1 Adult, 0 Child, 0 Infant
                     </button>
                     <div class="pax-counter hidden">
@@ -93,27 +159,63 @@
                           <p>Adult</p>
                           <p class="smaller-label">Age x - x</p>
                         </div>
-                        <button type="button" class="pax-counter-btn" id="adultMinBtn">-</button>
+                        <button
+                          type="button"
+                          class="pax-counter-btn"
+                          id="adultMinBtn"
+                        >
+                          -
+                        </button>
                         <p class="pax-counter-text" id="adultCounterText">1</p>
-                        <button type="button" class="pax-counter-btn" id="adultPlusBtn">+</button>
+                        <button
+                          type="button"
+                          class="pax-counter-btn"
+                          id="adultPlusBtn"
+                        >
+                          +
+                        </button>
                       </div>
                       <div class="child-pax">
                         <div>
                           <p>Child</p>
                           <p class="smaller-label">Age x - x</p>
                         </div>
-                        <button type="button" class="pax-counter-btn" id="childMinBtn">-</button>
+                        <button
+                          type="button"
+                          class="pax-counter-btn"
+                          id="childMinBtn"
+                        >
+                          -
+                        </button>
                         <p class="pax-counter-text" id="childCounterText">0</p>
-                        <button type="button" class="pax-counter-btn" id="childPlusBtn">+</button>
+                        <button
+                          type="button"
+                          class="pax-counter-btn"
+                          id="childPlusBtn"
+                        >
+                          +
+                        </button>
                       </div>
                       <div class="infant-pax">
                         <div>
                           <p>Infant</p>
                           <p class="smaller-label">Age x - x</p>
                         </div>
-                        <button type="button" class="pax-counter-btn" id="infantMinBtn">-</button>
+                        <button
+                          type="button"
+                          class="pax-counter-btn"
+                          id="infantMinBtn"
+                        >
+                          -
+                        </button>
                         <p class="pax-counter-text" id="infantCounterText">0</p>
-                        <button type="button" class="pax-counter-btn" id="infantPlusBtn">+</button>
+                        <button
+                          type="button"
+                          class="pax-counter-btn"
+                          id="infantPlusBtn"
+                        >
+                          +
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -125,7 +227,9 @@
                       <label for="fromPort" class="label-text">From</label>
                       <div class="input-icon-wrapper">
                         <select name="fromPort" class="fromPort" id="fromPort">
-                          <option value="batam-center-terminal">Batam Center Terminal</option>
+                          <option value="batam-center-terminal">
+                            Batam Center Terminal
+                          </option>
                           <option value="harbourfront">Harbourfront</option>
                           <option value="tanah-merah">Tanah Merah</option>
                         </select>
@@ -136,7 +240,9 @@
                       <label for="toPort" class="label-text">To</label>
                       <div class="input-icon-wrapper">
                         <select name="toPort" class="toPort" id="toPort">
-                          <option value="batam-center-terminal">Batam Center Terminal</option>
+                          <option value="batam-center-terminal">
+                            Batam Center Terminal
+                          </option>
                           <option value="harbourfront">Harbourfront</option>
                           <option value="tanah-merah">Tanah Merah</option>
                         </select>
@@ -146,17 +252,42 @@
 
                   <div class="search-date-wrapper">
                     <div class="search-input-wrapper">
-                      <label for="departureDate" class="label-text">Departure Date</label>
-                      <input type="date" class="departure-date date-input" id="departureDate" name="departureDate" placeholder="Select date...">
+                      <label for="departureDate" class="label-text"
+                        >Departure Date</label
+                      >
+                      <input
+                        type="date"
+                        class="departure-date date-input"
+                        id="departureDate"
+                        name="departureDate"
+                        placeholder="Select date..."
+                      />
                     </div>
-                    <div class="search-input-wrapper hidden" id="returnDateWrapper">
-                      <label for="returnDate" class="label-text">Return Date</label>
-                      <input type="date" class="return-date date-input" id="returnDate" name="returnDate" placeholder="Select date...">
+                    <div
+                      class="search-input-wrapper hidden"
+                      id="returnDateWrapper"
+                    >
+                      <label for="returnDate" class="label-text"
+                        >Return Date</label
+                      >
+                      <input
+                        type="date"
+                        class="return-date date-input"
+                        id="returnDate"
+                        name="returnDate"
+                        placeholder="Select date..."
+                      />
                     </div>
                   </div>
                 </div>
 
-                <button type="submit" class="submit-search-btn" id="submitFerrySearchBtn">Search</button>
+                <button
+                  type="submit"
+                  class="submit-search-btn"
+                  id="submitFerrySearchBtn"
+                >
+                  Search
+                </button>
               </form>
             </div>
 
@@ -164,40 +295,96 @@
               <form action="/products/car-rental" method="GET">
                 <div class="search-form-top">
                   <div class="driver-wrapper">
-                    <input type="radio" class="with-driver-radio" id="withDriverRadio" name="driver-needs"
-                      value="with-driver" checked>
-                    <label for="withDriverRadio" class="label-text">With Driver</label>
+                    <input
+                      type="radio"
+                      class="with-driver-radio"
+                      id="withDriverRadio"
+                      name="driver-needs"
+                      value="with-driver"
+                      checked
+                    />
+                    <label for="withDriverRadio" class="label-text"
+                      >With Driver</label
+                    >
 
-                    <input type="radio" class="without-driver-radio" id="withoutDriverRadio" name="driver-needs"
-                      value="without-driver">
-                    <label for="withoutDriverRadio" class="label-text">Without Driver</label>
+                    <input
+                      type="radio"
+                      class="without-driver-radio"
+                      id="withoutDriverRadio"
+                      name="driver-needs"
+                      value="without-driver"
+                    />
+                    <label for="withoutDriverRadio" class="label-text"
+                      >Without Driver</label
+                    >
                   </div>
                 </div>
 
                 <div class="search-form-bottom">
                   <div class="search-input-wrapper">
-                    <label for="carRentalLocation" class="label-text">Location</label>
+                    <label for="carRentalLocation" class="label-text"
+                      >Location</label
+                    >
                     <div class="input-icon-wrapper">
-                      <img src="/images/icons/location-pin.svg" alt="Map pin" width="24">
-                      <input type="text" class="car-rental-location" id="carRentalLocation" name="carRentalLocation"
-                        placeholder="Batam" required list="locationSuggestions">
-                      <img src="/images/icons/chevron-down.svg" alt="Chevron arrow pointing down" width="19.2">
+                      <img
+                        src="/images/icons/location-pin.svg"
+                        alt="Map pin"
+                        width="24"
+                      />
+                      <input
+                        type="text"
+                        class="car-rental-location"
+                        id="carRentalLocation"
+                        name="carRentalLocation"
+                        placeholder="Batam"
+                        required
+                        list="locationSuggestions"
+                      />
+                      <img
+                        src="/images/icons/chevron-down.svg"
+                        alt="Chevron arrow pointing down"
+                        width="19.2"
+                      />
                     </div>
                   </div>
 
                   <div class="search-date-wrapper">
                     <div class="search-input-wrapper">
-                      <label for="carPickupDate" class="label-text">Car Pickup Date</label>
-                      <input type="date" class="car-pickup-date date-input" id="carPickupDate" name="carPickupDate" placeholder="Select date..." required>
+                      <label for="carPickupDate" class="label-text"
+                        >Car Pickup Date</label
+                      >
+                      <input
+                        type="date"
+                        class="car-pickup-date date-input"
+                        id="carPickupDate"
+                        name="carPickupDate"
+                        placeholder="Select date..."
+                        required
+                      />
                     </div>
                     <div class="search-input-wrapper">
-                      <label for="carReturnDate" class="label-text">Car Return Date</label>
-                      <input type="date" class="car-return-date date-input" id="carReturnDate" name="carReturnDate" placeholder="Select date..." required>
+                      <label for="carReturnDate" class="label-text"
+                        >Car Return Date</label
+                      >
+                      <input
+                        type="date"
+                        class="car-return-date date-input"
+                        id="carReturnDate"
+                        name="carReturnDate"
+                        placeholder="Select date..."
+                        required
+                      />
                     </div>
                   </div>
                 </div>
 
-                <button type="submit" class="submit-search-btn" id="submitCarRentalSearchBtn">Search</button>
+                <button
+                  type="submit"
+                  class="submit-search-btn"
+                  id="submitCarRentalSearchBtn"
+                >
+                  Search
+                </button>
               </form>
             </div>
 
@@ -205,26 +392,56 @@
               <form action="/products/activities" method="GET">
                 <div class="search-form-top">
                   <div class="search-input-wrapper">
-                    <label for="activitiesLocation" class="label-text">Location</label>
+                    <label for="activitiesLocation" class="label-text"
+                      >Location</label
+                    >
                     <div class="input-icon-wrapper">
-                      <img src="/images/icons/location-pin.svg" alt="Map pin" width="24">
-                      <input type="text" class="activities-location" id="activitiesLocation" name="activitiesLocation"
-                        placeholder="Batam" required>
-                      <img src="/images/icons/chevron-down.svg" alt="Chevron arrow pointing down" width="19.2">
+                      <img
+                        src="/images/icons/location-pin.svg"
+                        alt="Map pin"
+                        width="24"
+                      />
+                      <input
+                        type="text"
+                        class="activities-location"
+                        id="activitiesLocation"
+                        name="activitiesLocation"
+                        placeholder="Batam"
+                        required
+                      />
+                      <img
+                        src="/images/icons/chevron-down.svg"
+                        alt="Chevron arrow pointing down"
+                        width="19.2"
+                      />
                     </div>
                   </div>
 
                   <div class="search-booking-wrapper">
-                    <label for="activitiesCheckInDate" class="label-text">Check-in Date</label>
-                    <input type="date" class="activities-check-in-date date-input" id="activitiesCheckInDate"
-                      name="activitiesCheckInDate" placeholder="Select date..." required>
+                    <label for="activitiesCheckInDate" class="label-text"
+                      >Check-in Date</label
+                    >
+                    <input
+                      type="date"
+                      class="activities-check-in-date date-input"
+                      id="activitiesCheckInDate"
+                      name="activitiesCheckInDate"
+                      placeholder="Select date..."
+                      required
+                    />
                   </div>
                 </div>
 
-                <button type="submit" class="submit-search-btn" id="submitActivitiesSearchBtn">Search</button>
+                <button
+                  type="submit"
+                  class="submit-search-btn"
+                  id="submitActivitiesSearchBtn"
+                >
+                  Search
+                </button>
               </form>
             </div>
-            
+
             <div class="search-form hidden" data-form="golf">
               <div class="empty-state">
                 <h2>Coming soon</h2>
@@ -262,23 +479,35 @@
             <div class="swiper-wrapper">
               <div class="swiper-slide">
                 <div class="deals-card">
-                  <img src="/images/promotions/promo1.webp" alt="promotion card">
+                  <img
+                    src="/images/promotions/promo1.webp"
+                    alt="promotion card"
+                  />
                 </div>
               </div>
               <div class="swiper-slide">
                 <div class="deals-card">
-                  <img src="/images/promotions/promo2.webp" alt="promotion card">
+                  <img
+                    src="/images/promotions/promo2.webp"
+                    alt="promotion card"
+                  />
                 </div>
               </div>
               <div class="swiper-slide">
                 <div class="deals-card">
-                  <img src="/images/promotions/promo3.webp" alt="promotion card">
+                  <img
+                    src="/images/promotions/promo3.webp"
+                    alt="promotion card"
+                  />
                 </div>
               </div>
 
               <div class="swiper-slide">
                 <div class="deals-card">
-                  <img src="/images/promotions/promo1.webp" alt="promotion card">
+                  <img
+                    src="/images/promotions/promo1.webp"
+                    alt="promotion card"
+                  />
                 </div>
               </div>
             </div>
@@ -294,7 +523,10 @@
           <div class="swiper-wrapper">
             <div class="swiper-slide">
               <div class="promo-banner">
-                <img src="/images/promotions/promotion-banner.webp" alt="promotion banner">
+                <img
+                  src="/images/promotions/promotion-banner.webp"
+                  alt="promotion banner"
+                />
               </div>
             </div>
             <div class="swiper-slide">
@@ -309,11 +541,10 @@
           <div class="section-header">
             <h2>Top Rated Hotels</h2>
             <p class="smaller-label">
-              Lorem ipsum dolor, sit amet consectetur adipisicing
-              elit. Excepturi asperiores quia harum expedita, sint
-              dolorem repudiandae explicabo aliquid debitis, eaque
-              porro, maiores ipsum quae illum doloremque quasi.
-              Nostrum, vel quasi.
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+              Excepturi asperiores quia harum expedita, sint dolorem repudiandae
+              explicabo aliquid debitis, eaque porro, maiores ipsum quae illum
+              doloremque quasi. Nostrum, vel quasi.
             </p>
           </div>
 
@@ -329,14 +560,15 @@
                     <h3>Hotel Name</h3>
                     <div class="card-location-rating">
                       <p>
-                        <!-- Location pin --> Location
+                        <!-- Location pin -->
+                        Location
                       </p>
                       <p>★★★★☆</p>
                     </div>
                     <div class="card-price-book-wrapper">
                       <div class="card-price-wrapper">
                         <p class="even-smaller-label">Starts from</p>
-                        <p>IDR </p>
+                        <p>IDR</p>
                         <p class="even-smaller-label">per night/room</p>
                       </div>
 
@@ -356,14 +588,15 @@
                     <h3>Hotel Name</h3>
                     <div class="card-location-rating">
                       <p>
-                        <!-- Location pin --> Location
+                        <!-- Location pin -->
+                        Location
                       </p>
                       <p>★★★★☆</p>
                     </div>
                     <div class="card-price-book-wrapper">
                       <div class="card-price-wrapper">
                         <p class="smaller-label">Starts from</p>
-                        <p>IDR </p>
+                        <p>IDR</p>
                         <p class="smaller-label">per night/room</p>
                       </div>
 
@@ -383,14 +616,15 @@
                     <h3>Hotel Name</h3>
                     <div class="card-location-rating">
                       <p>
-                        <!-- Location pin --> Location
+                        <!-- Location pin -->
+                        Location
                       </p>
                       <p>★★★★☆</p>
                     </div>
                     <div class="card-price-book-wrapper">
                       <div class="card-price-wrapper">
                         <p class="smaller-label">Starts from</p>
-                        <p>IDR </p>
+                        <p>IDR</p>
                         <p class="smaller-label">per night/room</p>
                       </div>
 
@@ -410,14 +644,15 @@
                     <h3>Hotel Name</h3>
                     <div class="card-location-rating">
                       <p>
-                        <!-- Location pin --> Location
+                        <!-- Location pin -->
+                        Location
                       </p>
                       <p>★★★★☆</p>
                     </div>
                     <div class="card-price-book-wrapper">
                       <div class="card-price-wrapper">
                         <p class="smaller-label">Starts from</p>
-                        <p>IDR </p>
+                        <p>IDR</p>
                         <p class="smaller-label">per night/room</p>
                       </div>
 
@@ -437,14 +672,15 @@
                     <h3>Hotel Name</h3>
                     <div class="card-location-rating">
                       <p>
-                        <!-- Location pin --> Location
+                        <!-- Location pin -->
+                        Location
                       </p>
                       <p>★★★★☆</p>
                     </div>
                     <div class="card-price-book-wrapper">
                       <div class="card-price-wrapper">
                         <p class="smaller-label">Starts from</p>
-                        <p>IDR </p>
+                        <p>IDR</p>
                         <p class="smaller-label">per night/room</p>
                       </div>
 
@@ -465,9 +701,12 @@
         <div class="section-container">
           <div class="section-header">
             <h2>Top Destination</h2>
-            <p class="smaller-label">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione aliquam veniam
-              temporibus aperiam hic, incidunt repellendus nam ab, accusantium eaque maxime a. Sapiente doloremque
-              assumenda adipisci commodi autem, libero rem.</p>
+            <p class="smaller-label">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione
+              aliquam veniam temporibus aperiam hic, incidunt repellendus nam
+              ab, accusantium eaque maxime a. Sapiente doloremque assumenda
+              adipisci commodi autem, libero rem.
+            </p>
           </div>
 
           <div class="destinations-grid">
@@ -494,56 +733,143 @@
           <div class="section-header">
             <h2>Our Brand</h2>
             <p class="smaller-label">
-              Lorem ipsum dolor sit, amet consectetur adipisicing
-              elit. Exercitationem architecto ratione delectus
-              provident quos repellat harum, ea rerum nisi neque
-              consequuntur fuga nulla deserunt, distinctio non
-              corporis quod iure voluptatem.
+              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+              Exercitationem architecto ratione delectus provident quos repellat
+              harum, ea rerum nisi neque consequuntur fuga nulla deserunt,
+              distinctio non corporis quod iure voluptatem.
             </p>
           </div>
 
           <div class="brand-grid-container">
             <div class="brand-row">
-              <div class="brand-card"><img src="/images/logos/mff-logo-blue.webp" alt="Majestic Fast Ferry"></div>
-              <div class="brand-card"><img src="/images/logos/mjs-logo.webp" alt="MJS"></div>
-              <div class="brand-card"><img src="/images/logos/plpb-logo.webp" alt="PLPB"></div>
-              <div class="brand-card"><img src="/images/logos/ranoh-island-logo.webp" alt="Adventure Ranoh Island"></div>
-              <div class="brand-card"><img src="/images/logos/bcift-logo.webp" alt="Batam Center Ferry Terminal"></div>
-              <div class="brand-card bigger-brand-logo"><img src="/images/logos/majestic-kawanua-logo.webp" alt="Majestic Kawanua"></div>
-              <div class="brand-card bigger-brand-logo"><img src="/images/logos/majestic-koi-farm-logo.webp" alt="Majestic Koi Farm"></div>
+              <div class="brand-card">
+                <img
+                  src="/images/logos/mff-logo-blue.webp"
+                  alt="Majestic Fast Ferry"
+                />
+              </div>
+              <div class="brand-card">
+                <img src="/images/logos/mjs-logo.webp" alt="MJS" />
+              </div>
+              <div class="brand-card">
+                <img src="/images/logos/plpb-logo.webp" alt="PLPB" />
+              </div>
+              <div class="brand-card">
+                <img
+                  src="/images/logos/ranoh-island-logo.webp"
+                  alt="Adventure Ranoh Island"
+                />
+              </div>
+              <div class="brand-card">
+                <img
+                  src="/images/logos/bcift-logo.webp"
+                  alt="Batam Center Ferry Terminal"
+                />
+              </div>
+              <div class="brand-card bigger-brand-logo">
+                <img
+                  src="/images/logos/majestic-kawanua-logo.webp"
+                  alt="Majestic Kawanua"
+                />
+              </div>
             </div>
 
             <div class="brand-row brand-row-2">
-              <div class="brand-card brand-card-bicc"><img src="/images/logos/bicc-logo.webp" alt="Batam Island Country Club"></div>
-              <div class="brand-card"><img src="/images/logos/megacosta-logo.webp" alt="Megacosta"></div>
-              <div class="brand-card"><img src="/images/logos/kaima-logo.webp" alt="Kalma Hotel & Villa"></div>
-              <div class="brand-card"><img src="/images/logos/css-logo.webp" alt="PT Cahaya Samudra Shipyard"></div>
-              <div class="brand-card"><img src="/images/logos/indomal-logo-horizontal.webp" alt="Indomal Fast Ferry"></div>
-              <div class="brand-card"><img src="/images/logos/majestic-durian-farm-logo.webp" alt="Majestic Durian Farm"></div>
-              <div class="brand-card"><img src="/images/logos/mha-logo.webp" alt="Majestic Build"></div>
+              <div class="brand-card brand-card-bicc">
+                <img
+                  src="/images/logos/bicc-logo.webp"
+                  alt="Batam Island Country Club"
+                />
+              </div>
+              <div class="brand-card">
+                <img src="/images/logos/megacosta-logo.webp" alt="Megacosta" />
+              </div>
+              <div class="brand-card">
+                <img
+                  src="/images/logos/kaima-logo.webp"
+                  alt="Kalma Hotel & Villa"
+                />
+              </div>
+              <div class="brand-card">
+                <img
+                  src="/images/logos/css-logo.webp"
+                  alt="PT Cahaya Samudra Shipyard"
+                />
+              </div>
+              <div class="brand-card">
+                <img
+                  src="/images/logos/indomal-logo-horizontal.webp"
+                  alt="Indomal Fast Ferry"
+                />
+              </div>
+              <div class="brand-card">
+                <img
+                  src="/images/logos/majestic-durian-farm-logo.webp"
+                  alt="Majestic Durian Farm"
+                />
+              </div>
+              <div class="brand-card">
+                <img src="/images/logos/mha-logo.webp" alt="Majestic Build" />
+              </div>
+              <div class="brand-card bigger-brand-logo">
+                <img
+                  src="/images/logos/majestic-koi-farm-logo.webp"
+                  alt="Majestic Koi Farm"
+                />
+              </div>
+              <div class="brand-card">
+                <img
+                  src="/images/logos/dbb-logo.webp"
+                  alt="Bloom Nation Home DIY"
+                />
+              </div>
             </div>
 
             <div class="brand-row brand-row-3">
-              <div class="brand-card"><img src="/images/logos/meyer-rental-logo-short.webp" alt="Meyer Rental"></div>
-              <div class="brand-card"><img src="/images/logos/meyer-motors-logo-short.webp" alt="Meyer Motors"></div>
-              <div class="brand-card"><img src="/images/logos/nusa-indah-logo.webp" alt="Nusa Indah Travel"></div>
-              <div class="brand-card brand-card-nxg"><img src="/images/logos/nxg-logo.webp" alt="NXG"></div>
-              <div class="brand-card"><img src="/images/logos/veranta-cafe-logo.webp" alt="Veranta Cafe"></div>
-              <div class="brand-card bigger-brand-logo"><img src="/images/logos/dumai-express-logo.webp" alt="Dumai Express Group"></div>
-              <div class="brand-card"><img src="/images/logos/dbb-logo.webp" alt="Bloom Nation Home DIY"></div>
+              <div class="brand-card">
+                <img
+                  src="/images/logos/meyer-rental-logo-short.webp"
+                  alt="Meyer Rental"
+                />
+              </div>
+              <div class="brand-card">
+                <img
+                  src="/images/logos/meyer-motors-logo-short.webp"
+                  alt="Meyer Motors"
+                />
+              </div>
+              <div class="brand-card">
+                <img
+                  src="/images/logos/nusa-indah-logo.webp"
+                  alt="Nusa Indah Travel"
+                />
+              </div>
+              <div class="brand-card brand-card-nxg">
+                <img src="/images/logos/nxg-logo.webp" alt="NXG" />
+              </div>
+              <div class="brand-card">
+                <img
+                  src="/images/logos/veranta-cafe-logo.webp"
+                  alt="Veranta Cafe"
+                />
+              </div>
+              <div class="brand-card bigger-brand-logo">
+                <img
+                  src="/images/logos/dumai-express-logo.webp"
+                  alt="Dumai Express Group"
+                />
+              </div>
             </div>
           </div>
         </div>
       </section>
     </main>
 
-    <%- include('../partials/footer') %>
+    <%- include('../partials/footer') %> <%- include('../partials/loginModal')
+    %>
 
-      <%- include('../partials/loginModal') %>
-
-        <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-        <script src="/js/home.js"></script>
-</body>
-
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="/js/home.js"></script>
+  </body>
 </html>
