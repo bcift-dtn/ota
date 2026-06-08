@@ -1,3 +1,11 @@
+const _pageData = document.getElementById('pageData');
+const rawUser = JSON.parse(_pageData.dataset.user);
+const loggedInUser = {
+  fullName: rawUser?.fullName || '',
+  email: rawUser?.email || '',
+  phone: rawUser?.phone || ''
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     const bookingRole = document.getElementById('bookingRole');
     

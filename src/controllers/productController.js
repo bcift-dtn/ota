@@ -297,7 +297,13 @@ const getCheckoutPage = async (req, res) => {
     let filteredBasePrice = 0;
 
     if (selectedPackage.pricing_type === 'per_unit') {
-      filteredBasePrice = Number(selectedPackage.package_price) * Number(draftOrder.bookingQuantity);
+    
+      const safeQuantity = Math.min(
+        Math.max(1, parseInt(draftOrder.bookingQuantity || 1)),
+        selectedPackage.max_quantity || 99
+      );
+
+      filteredBasePrice = Number(selectedPackage.package_price) * safeQuantity;
 
     } else if (selectedPackage.pricing_type === 'per_pax') {
       const dbTiers = await getPackagePricingTiers([selectedPackage.package_id]);

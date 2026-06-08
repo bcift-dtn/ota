@@ -309,11 +309,12 @@
     <%- include('../partials/footer') %>
 
     <%- include('../partials/loginModal') %>
-
-    <script>
-      const packageDurationHours = <%= selectedPackage.duration_hours || 'null' %>;
-      const currentUser = <%- JSON.stringify(user).replace(/</g, '\\u003c')  %>;
-    </script>
+    
+    <div id="pageData"
+      data-duration="<%= selectedPackage.duration_hours || '' %>"
+      data-user="<%- JSON.stringify(user || null).replace(/</g, '\\u003c').replace(/"/g, '&quot;') %>"
+      hidden>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="/js/activities-detail.js"></script>

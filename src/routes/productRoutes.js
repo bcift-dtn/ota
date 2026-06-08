@@ -3,6 +3,10 @@ const router = express.Router();
 const { getCarRentals, getCarRentalDetail, getActivities, getActivitiesDetail, getCheckoutPage } = require('../controllers/productController');
 
 router.post('/checkout/draft', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({success: false, message: 'Please log in to continue.'})
+    }
+
     try {
         req.session.draftOrder = req.body;
 

@@ -1,3 +1,7 @@
+const _pageData = document.getElementById('pageData');
+const packageDurationHours = _pageData.dataset.duration ? Number(_pageData.dataset.duration) : null;
+const currentUser = JSON.parse(_pageData.dataset.user);
+
 flatpickr('input[type="date"]', {
   altInput: true,
   altFormat: "j F Y",

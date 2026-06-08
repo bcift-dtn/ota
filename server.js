@@ -13,7 +13,19 @@ const productRoutes = require('./src/routes/productRoutes');
 
 // Variable
 const app = express();
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc:  ["'self'"],
+      scriptSrc:   ["'self'", "https://cdn.jsdelivr.net", "https://unpkg.com"],
+      styleSrc:    ["'self'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
+      fontSrc:     ["'self'", "https://fonts.gstatic.com"],
+      imgSrc:      ["'self'", "data:", "blob:"],
+      frameSrc:    ["'self'", "https://www.google.com"],
+      connectSrc:  ["'self'", "https://cdn.jsdelivr.net", "https://unpkg.com"],
+    }
+  }
+}));
 const PORT = process.env.PORT || 3000;
 
 // Passport for google login

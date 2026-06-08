@@ -168,13 +168,10 @@
 
     <%- include('../partials/loginModal') %>
 
-    <script>
-      const loggedInUser = {
-        fullName: "<%= user.fullName || '' %>",
-        email: "<%= user.email || '' %>",
-        phone: "<%= user.phone || '' %>"
-      }
-    </script>
+    <div id="pageData"
+      data-user="<%- JSON.stringify(user || null).replace(/</g, '\\u003c').replace(/"/g, '&quot;') %>"
+      hidden>
+    </div>
 
     <script src="/js/checkout.js"></script>
 </body>
