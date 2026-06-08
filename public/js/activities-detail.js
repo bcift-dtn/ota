@@ -1,7 +1,7 @@
 flatpickr('input[type="date"]', {
   altInput: true,
   altFormat: "j F Y",
-  dateFormat: "d/m/Y",
+  dateFormat: "Y-m-d",
   minDate: "today",
   disableMobile: "true",
   allowInput:true,
@@ -45,17 +45,18 @@ if (paxCounters.length > 0) {
     plusBtn.addEventListener('click', (e) => {
       e.preventDefault();
       let count = parseInt(textEl.textContent);
-      const maxAllowed = parseInt(counter.getAttribute('data-max')) || 99;
+      
       const bookingQty = quantitySelect ? parseInt(quantitySelect.value) : 1;
+      const baseMaxAllowed = parseInt(counter.getAttribute('data-max')) || 99;
+      const maxAllowed = baseMaxAllowed * bookingQty;
       
       // If it's an infant or Extra Bed, it doesn't count towards the Max Pax limit
       if (counter.getAttribute('data-is-infant') === 'true') {
-        const maxInfants = 2 * bookingQty;
-
-        if (count < maxInfants && count < maxAllowed) {
+        if (count < maxAllowed) {
           textEl.textContent = count + 1;
           calculateGrandTotal();
         }
+
       } else if (counter.classList.contains('core-addon')) {
         if (count < maxAllowed) {
           textEl.textContent = count + 1;
@@ -69,7 +70,8 @@ if (paxCounters.length > 0) {
           }
         });
 
-        const maxPaxPerUnit = parseInt(document.querySelector('#maxPaxPerUnit').value);
+        const maxPaxInput = document.querySelector('#maxPaxPerUnit');
+        const maxPaxPerUnit = maxPaxInput ? parseInt(maxPaxInput.value) || 999 : 999;
         const totalMaxPax = maxPaxPerUnit * bookingQty;
 
         if (currentTotalHumans < totalMaxPax && count < maxAllowed) {
@@ -180,7 +182,10 @@ function calculateGrandTotal() {
 
       baseTotal += (price * qty);
       
-      if (!counter.classList.contains('core-addon')) {
+      const labelEl = counter.querySelector('.label-text');
+      const isExtraBed = labelEl && labelEl.textContent.toLowerCase().includes('extra bed');
+
+      if (!counter.classList.contains('core-addon') || isExtraBed) {
         totalPax += qty;
       }
     });
@@ -216,7 +221,7 @@ function calculateGrandTotal() {
     });
 
     if (bookingPaxQuantityText) {
-      bookingPaxQuantityText.textContent = `${totalPax} People`;
+      bookingPaxQuantityText.textContent = `${totalPax} Person(s)`;
     }
   }
 

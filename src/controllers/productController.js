@@ -258,10 +258,12 @@ const getActivitiesDetail = async (req, res) => {
 
     const selectedPackageId = parseInt(req.query.packageId) || null;
     const selectedPackage = packages.find(p => p.id === selectedPackageId) || packages[0];
+    const searchCheckInDate = req.query.activitiesCheckInDate || '';
 
     return res.render('pages/activities-detail', {
       product,
       selectedPackage,
+      searchCheckInDate,
       breadcrumbs: [
         { label: 'Home', url: '/' },
         { label: 'Activities', url: '/products/activities' },
@@ -335,8 +337,16 @@ const getCheckoutPage = async (req, res) => {
 
     const filteredGrandTotal = filteredBasePrice + taxAmount + platformFee;
 
+    const formattedVisitDate = new Date(draftOrder.visitDate).toLocaleDateString('en-GB', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+
     return res.render('pages/checkout', {
       draftOrder,
+      formattedVisitDate,
       product: rows[0],
       selectedPackage,
       platformFee,

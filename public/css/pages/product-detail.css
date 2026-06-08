@@ -252,6 +252,11 @@
   margin-top: 0.5rem;
 }
 
+.core-addon {
+  border-top: 1px dotted var(--clr-border);
+  padding-top: 1rem;
+}
+
 
 .booking-addons-collapsible {
   margin: 1.5rem 0;

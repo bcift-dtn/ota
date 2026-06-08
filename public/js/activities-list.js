@@ -1,7 +1,7 @@
 flatpickr('input[type="date"]', {
   altInput: true,
   altFormat: "j F Y",
-  dateFormat: "d/m/Y",
+  dateFormat: "Y-m-d",
   minDate: "today",
   disableMobile: "true",
   allowInput:true,
@@ -51,7 +51,8 @@ document.querySelectorAll('.confirm-selection-btn').forEach(btn => {
     }
 
     const packageId = activeOption.getAttribute('data-package-id');
+    const checkInDate = document.querySelector('#activitiesCheckInDate').value;
 
-    window.location.href = `/products/activities/${productId}?packageId=${packageId}`;
+    window.location.href = `/products/activities/${productId}?packageId=${packageId}&activitiesCheckInDate=${checkInDate}`;
   })
 })

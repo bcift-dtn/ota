@@ -5,7 +5,7 @@ const forms = document.querySelectorAll('.search-form');
 flatpickr('input[type="date"]', {
   altInput: true,
   altFormat: "j F Y",
-  dateFormat: "d/m/Y",
+  dateFormat: "Y-m-d",
   minDate: "today",
   disableMobile: "true",
   allowInput:true,

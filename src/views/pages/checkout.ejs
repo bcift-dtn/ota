@@ -102,10 +102,10 @@
               <div class="summary-details">
                 <div class="summary-details-row">
                   <span><i data-lucide="calendar"></i> Date:</span>
-                  <span><%= draftOrder.visitDate %></span>
+                  <span><%= formattedVisitDate %></span>
                 </div>
                 <div class="summary-details-row">
-                  <span><i data-lucide="clock"></i> Time Slot:</span>
+                  <span><i data-lucide="clock"></i> Time:</span>
                   <span><%= draftOrder.slotTime %></span>
                 </div>
                 <% if (draftOrder.productType === 'car_rental') { %>
