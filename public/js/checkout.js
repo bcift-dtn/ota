@@ -6,6 +6,25 @@ const loggedInUser = {
   phone: rawUser?.phone || ''
 };
 
+const phoneInstances = [];
+
+const phoneInputs = document.querySelectorAll('input[type="tel"][id^="visitorPhoneNumber_"]');
+
+phoneInputs.forEach(input => {
+    const iti = window.intlTelInput(input, {
+        initialCountry: 'id',
+        separateDialCode: true,
+        useFullscreenPopup: false,
+        dropdownContainer: document.body,
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.4/build/js/utils.js",
+    });
+
+    phoneInstances.push({
+        id: input.id,
+        instance: iti
+    })
+})
+
 document.addEventListener('DOMContentLoaded', () => {
     const bookingRoleRadios = document.querySelectorAll('input[name="bookingRole"]');
     const visitor1Name = document.getElementById('visitorName_1');

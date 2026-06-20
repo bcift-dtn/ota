@@ -334,3 +334,10 @@ h3 {
 .back-link:hover {
   color: var(--clr-primary);
 }
+
+.iti {
+  width: 100%;
+}
+.iti input {
+  width: 100%;
+}

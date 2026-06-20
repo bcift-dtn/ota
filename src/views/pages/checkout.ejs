@@ -11,6 +11,10 @@
   <link rel="stylesheet" href="/css/layout.css" />
   <link rel="stylesheet" href="/css/components.css" />
   <link rel="stylesheet" href="/css/pages/checkout.css" />
+  <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.4/build/css/intlTelInput.css"
+    />
 </head>
 
 <body>
@@ -87,8 +91,7 @@
                   </div>
                   <div class="input-group-split">
                     <div class="input-group">
-                      <input type="number" name="visitorPhoneNumber_<%= i %>" id="visitorPhoneNumber_<%= i %>"
-                        placeholder="Phone Number" required>
+                      <input type="tel" name="visitorPhoneNumber_<%= i %>" id="visitorPhoneNumber_<%= i %>" required>
                     </div>
                     <div class="input-group">
                       <input type="email" name="visitorEmail_<%= i %>" id="visitorEmail_<%= i %>" placeholder="Email"
@@ -185,6 +188,7 @@
       hidden>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.4/build/js/intlTelInput.min.js"></script>
     <script src="/js/checkout.js"></script>
 </body>
 
