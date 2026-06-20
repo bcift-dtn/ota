@@ -1,0 +1,359 @@
+.contact-banner {
+    width: 100%;
+    max-height: 35vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.contact-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.contact-content-container {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 1rem;
+}
+
+@media (min-width: 860px) {
+    .contact-content-container {
+        padding: 0 3rem;
+    }
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    margin-bottom: 4rem;
+}
+
+@media (min-width: 960px) {
+    .contact-grid {
+        grid-template-columns: 2fr 1fr;
+        align-items: start;
+    }
+}
+
+/* Main Contact Form */
+.contact-form-section,
+.quick-connect-card {
+    background-color: var(--clr-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.contact-form-section h2 {
+    color: var(--clr-primary);
+    margin-bottom: 1.5rem;
+}
+
+.contact-form-section form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row-split {
+    display: grid;
+    grid-template-columns: 1fr;
+    
+}
+
+@media (min-width: 600px) {
+    .form-row-split {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--clr-label-font);
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 0.8rem;
+    border: 1px solid var(--clr-border);
+    border-radius: 8px;
+    background-color: var(--clr-accent);
+    font-size: var(--fs-3);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--clr-primary);
+    background-color: var(--clr-bg);
+}
+
+.submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.8rem 2rem;
+    background-color: var(--clr-primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+@media (min-width: 600px) {
+    .submit-btn {
+        align-self: flex-end;
+    }
+}
+
+.submit-btn:hover {
+    opacity: 0.9;
+}
+
+.submit-btn svg {
+    width: 16px;
+    height: 16px;
+    transform: rotate(45deg);
+}
+
+/* Quick Connect and Map */
+.quick-connect-section {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 1.5rem;
+}
+
+.quick-connect-card h3 {
+    color: var(--clr-primary);
+    margin-bottom: 1.5rem;
+}
+
+.connect-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.connect-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--clr-secondary);
+    color: var(--clr-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-circle svg {
+    width: 18px;
+    height: 18px;
+}
+
+.connect-label {
+    font-size: var(--fs-2);
+    color: var(--clr-label-font);
+}
+
+.connect-value {
+    font-weight: 700;
+    color: var(--clr-neutral);
+}
+
+/* Map */
+.map-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.map {
+    height: 220px;
+    background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (min-width: 960px) {
+    .map-card {
+        flex: 1;
+    }
+
+    .map {
+        height: 100%;
+    }
+}   
+
+.mock-map::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(rgba(0, 102, 113, 0.15) 1.5px, transparent 1.5px);
+    background-size: 15px 15px;
+}
+
+.map-marker {
+    background-color: var(--clr-primary);
+    color: white;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    animation: bounce 2s infinite;
+}
+
+.map-marker svg {
+    width: 22px;
+    height: 22px;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* FAQ Accordions Section */
+.faq-section {
+    margin-top: 4rem;
+    text-align: center;
+}
+
+.faq-subtitle {
+    color: var(--clr-primary);
+    font-weight: 700;
+    font-size: var(--fs-3);
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.faq-section h2 {
+    color: var(--clr-neutral);
+    margin-bottom: 4rem;
+}
+
+.faq-accordion-container {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    text-align: left;
+    align-items: start;
+}
+
+@media (min-width: 960px) {
+  .faq-accordion-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.faq-item {
+    border: 1px solid var(--clr-border);
+    border-radius: 8px;
+    background-color: var(--clr-bg);
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.faq-item.active {
+    border-color: var(--clr-primary);
+}
+
+.faq-question {
+    width: 100%;
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: none;
+    border: none;
+    outline: none;
+    text-align: left;
+    font-weight: 600;
+    color: var(--clr-primary);
+    cursor: pointer;
+}
+
+.faq-question span {
+    font-size: var(--fs-4);
+}
+
+.faq-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--clr-primary);
+    transition: transform 0.2s ease;
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.faq-answer-content {
+    padding: 0 1.5rem 1.2rem;
+    color: var(--clr-label-font);
+    line-height: 1.6;
+}
+
+/* Form Status Messages*/
+.contact-status {
+    padding: 0.8rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: none;
+    font-weight: 600;
+}
+
+.contact-status.success {
+    display: block;
+    background-color: #D4EDDA;
+    color: #155724;
+    border: 1px solid #C3E6CB;
+}
+
+
+.contact-status.error {
+  display: block;
+  background-color: #F8D7DA;
+  color: #721C24;
+  border: 1px solid #F5C6CB;
+}
+
+.iti {
+  width: 100%;
+  font-size: var(--fs-3);
+}
+
+.iti input {
+  width: 100%;
+  font-size: var(--fs-3);
+}

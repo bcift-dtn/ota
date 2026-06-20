@@ -46,11 +46,23 @@
             <section class="booking-details-section">
               <h2 class="checkout-heading"><i data-lucide="users"></i> Booking Contact</h2>
         
-              <div class="input-group">
+              <!-- <div class="input-group">
                 <select name="bookingRole" id="bookingRole">
                   <option value="self">I am the visitor</option>
                   <option value="other">I am booking for someone else</option>
                 </select>
+              </div> -->
+
+              <div class="booking-contact-radio-group">
+                <label class="radio-label">
+                  <input type="radio" name="bookingRole" value="self" checked>
+                  <span>I am the visitor</span>
+                </label>
+
+                <label class="radio-label">
+                  <input type="radio" name="bookingRole" value="other">
+                  <span>I am booking for someone else</span>
+                </label>
               </div>
             </section>
         

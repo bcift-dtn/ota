@@ -10,6 +10,7 @@ const helmet = require("helmet")
 // Routes
 const authRoutes = require('./src/routes/authRoutes');
 const productRoutes = require('./src/routes/productRoutes');
+const contactController = require('./src/controllers/contactController');
 
 // Variable
 const app = express();
@@ -20,7 +21,7 @@ app.use(helmet({
       scriptSrc:   ["'self'", "https://cdn.jsdelivr.net", "https://unpkg.com"],
       styleSrc:    ["'self'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
       fontSrc:     ["'self'", "https://fonts.gstatic.com"],
-      imgSrc:      ["'self'", "data:", "blob:"],
+      imgSrc:      ["'self'", "data:", "blob:", "https://cdn.jsdelivr.net"],
       frameSrc:    ["'self'", "https://www.google.com"],
       connectSrc:  ["'self'", "https://cdn.jsdelivr.net", "https://unpkg.com"],
       upgradeInsecureRequests: null,
@@ -66,6 +67,8 @@ app.get("/", (req, res) => {
 
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
+app.get('/contact', contactController.renderContactPage);
+app.post('/contact/send', contactController.sendMessage);
 
 // Listen to PORT
 app.listen(PORT, () => {

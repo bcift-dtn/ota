@@ -25,14 +25,6 @@
   z-index: 1;
 }
 
-.hero-layer.hero-activities {
-    background-position: center 60%;
-}
-
-.hero-layer.hero-golf {
-    background-position: center;
-}
-
 .hero-layer.active {
   opacity: 1;
   z-index: 2;
@@ -51,7 +43,8 @@
 }
 
 #hero-tour-travel {
-  background-image: url(/images/hero-banners/meyer-hero.webp);
+  background-image: url(/images/hero-banners/nusa-indah-hero.webp);
+  background-position: center 40%;
 }
 
 #hero-golf {
