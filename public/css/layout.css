@@ -234,7 +234,7 @@ footer li a {
 .footer-brand-title {
   font-family: 'Alte Haas Grotesk', sans-serif;
   font-weight: normal;
-  font-size: 2.8rem;
+  font-size: var(--fs-7);
   color: white;
   line-height: 1;
   letter-spacing: 1px;
@@ -244,19 +244,34 @@ footer li a {
 .footer-brand-subtitle {
   font-family: 'Alte Haas Grotesk', sans-serif;
   font-weight: normal;
-  font-size: 1rem;
+  font-size: var(--fs-3);
   color: white;
+}
+
+@media (min-width: 768px) {
+  .footer-brand-title {
+    font-size: var(--fs-9);
+  }
+
+  .footer-brand-subtitle {
+    font-size: var(--fs-5);
+  }
+}
+
+.footer-one > p {
+  max-width: 60%;
+  margin: 1rem auto 0.5rem;
 }
 
 @media (min-width: 800px) {
   .footer-one {
     max-width: 20rem;
   }
-}
 
-.footer-one > p {
-  text-align: center;
-  margin: 1rem 0 0.5rem;
+  .footer-one > p {
+    max-width: 100%;
+    margin: 1rem 0 0.5rem;
+  }
 }
 
 .footer-two ul,

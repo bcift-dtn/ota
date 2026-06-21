@@ -67,6 +67,7 @@ app.get("/", (req, res) => {
 
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
+app.get('/about', (req, res) => res.render('pages/about'));
 app.get('/contact', contactController.renderContactPage);
 app.post('/contact/send', contactController.sendMessage);
 
