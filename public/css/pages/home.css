@@ -1,7 +1,7 @@
 /* Home */
 .hero-banner {
   width: 100%;
-  min-height: 40vh;
+  min-height: 50vh;
 
   position: relative;
 
@@ -44,7 +44,6 @@
 
 #hero-tour-travel {
   background-image: url(/images/hero-banners/nusa-indah-hero.webp);
-  background-position: center 40%;
 }
 
 #hero-golf {
