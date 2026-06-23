@@ -71,6 +71,21 @@
             </div>
         </div>
 
+        <div class="detail-location-info">
+          <h2 class="product-heading"><i data-lucide="map-pinned"></i>Location Information</h2>
+          <div class="map-container">
+            <% if (product.map_embed_url) { %>
+              <iframe src="<%= product.map_embed_url %> " width="100%" height="300" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <% } else if (product.latitude && product.longitude) { %>
+              <iframe width="100%" height="300" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?key=test&q=<%= product.latitude %>,<%= product.longitude %>"></iframe>
+            <% } else { %>
+              <div class="no-map-available">
+                <p>Map not available</p>
+              </div>
+            <% } %>
+          </div>
+        </div>
+
         <div class="detail-booking">
           <h2 class="product-heading"><i data-lucide="receipt-text"></i>Booking Information</h2>
           <form action="#">

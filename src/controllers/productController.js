@@ -335,8 +335,9 @@ const getCheckoutPage = async (req, res) => {
     }
 
     filteredBasePrice += filteredAddonsPrice;
-    
-    const platformFee = parseInt(process.env.PLATFORM_FEE) || 5000;
+
+    const envFee = parseInt(process.env.PLATFORM_FEE);
+    const platformFee = isNaN(envFee) ? 5000 : envFee;
     const taxRate = parseFloat(process.env.TAX_RATE) || 0.11;
 
     const taxAmount = filteredBasePrice * taxRate;
