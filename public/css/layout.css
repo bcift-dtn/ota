@@ -13,15 +13,6 @@
 
 /* .main-navigation Bar */
 .main-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  height: 5rem;
-
-  padding: var(--spacing-vertical-1) var(--spacing-horizontal-1);
-  
-
   position: fixed;
   width: 100%;
   max-width: 1920px;
@@ -29,12 +20,22 @@
   transform: translateX(-50%);
   top: 0;
   z-index: 100;
-
+  height: 5rem;
   background-color: transparent;
   box-shadow: none;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  /* box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25); */;
-  
+}
+
+.nav-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+
+  max-width: 1104px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-horizontal-1) 0 0;
+
   font-size: var(--fs-4);
   font-weight: 700;
 }
@@ -199,6 +200,235 @@ li form {
 
 .profile-dropdown-container {
   animation: profileSlideDown 0.3s cubic-bezier(0.24, -0.07, 0.78, 1.18) forwards;
+}
+
+/* Mobile Navbar hamburger */
+.nav-hamburger-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  padding: 0.25rem;
+}
+
+.main-nav .nav-hamburger-btn svg {
+  color: white;
+  filter: none;
+}
+
+.main-nav.scrolled .nav-hamburger-btn svg {
+  color: var(--clr-primary);
+}
+
+.main-nav .nav-inner > ul.navigation-link,
+.main-nav .profile-wrapper,
+.main-nav .nav-login-btn {
+  display: none;
+}
+
+/* Mobile nav Drawer */
+.mobile-nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 150;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-nav-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobile-nav-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: auto;
+  width: 100%;
+  height: 100%;
+  
+  background: white;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.3rem 0.5rem;
+
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  overflow-y: auto;
+}
+
+.mobile-nav-drawer.is-open {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 2.5rem;
+}
+
+.drawer-logo {
+  width: 170px;
+  height: auto;
+  margin-left: -1rem;
+}
+
+.drawer-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--clr-neutral);
+  padding: 0.25rem;
+}
+
+.drawer-account-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0 1.5rem;
+}
+
+.drawer-avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background-color: var(--clr-primary);
+  color: white;
+  font-weight: 700;
+  font-size: var(--fs-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.drawer-account-name {
+  font-weight: 700;
+  font-size: var(--fs-5);
+}
+
+.drawer-menu-container {
+  box-shadow: var(--primary-box-shadow);
+  padding: 1rem 1rem 1.5rem;
+  border-radius: 20px;
+}
+
+.drawer-account-menu,
+.drawer-nav-menu {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.drawer-account-menu li,
+.drawer-nav-menu li {
+  border-bottom: 0.5px solid #f1f1f1;
+  padding: 0;
+}
+
+li.drawer-section-label {
+  font-size: var(--fs-2);
+  font-weight: 700;
+  color: var(--clr-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 1.5rem;
+  border-bottom: none;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.drawer-account-menu a,
+.drawer-nav-menu a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  justify-content: flex-start;
+  color: var(--clr-neutral);
+  font-size: var(--fs-3);
+  font-weight: 500;
+  padding: 1rem 0;
+  border-radius: 20px;
+}
+
+.drawer-account-menu a:hover,
+.drawer-nav-menu a:hover {
+  text-decoration: none;
+}
+
+.mobile-nav-drawer i,
+.mobile-nav-drawer svg {
+  filter: none; 
+  width: 20px;
+  height: 20px;
+}
+
+.drawer-account-menu svg,
+.drawer-nav-menu svg {
+  color: var(--clr-label-font);
+}
+
+.drawer-chevron {
+  margin-left: auto;
+  color: var(--clr-border);
+}
+
+.drawer-footer {
+  margin-top: auto;
+  padding-top: 1.5rem;
+}
+
+.drawer-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+
+  background: #fff5f5;
+  border: 1.5px solid #e63946;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #e63946;
+  font-weight: 600;
+  font-size: var(--fs-4);
+}
+
+.drawer-logout-btn svg {
+  color: #e63946;
+  filter: none;
+}
+
+/* Hide burger and show deskto navbar */
+@media (min-width: 768px) {
+    .nav-hamburger-btn {
+      display: none;
+    }
+
+    .main-nav .nav-inner > ul.navigation-link,
+    .main-nav .profile-wrapper,
+    .main-nav .nav-login-btn {
+      display: flex;
+    }
+
+    .mobile-nav-drawer,
+    .mobile-nav-overlay {
+      display: none !important;
+    }
 }
 
 /* Footer */

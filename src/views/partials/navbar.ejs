@@ -1,41 +1,101 @@
 <nav class="main-nav">
-  <!-- A placeholder for now -->
-    <p class="navigation-link"><a href="/"><img src="/images/logos/megaterra-logo-white.avif" alt="MEGATERRA Logo" id="navLogo"></a></p>
-
-  <!-- Navigation Links -->
-  <ul class="navigation-link">
-    <li><a href="/about">ABOUT US</a></li>
-    <li><a href="#"> PROMO</a></li>
-    <li><a href="#">BLOG</a></li>
-    <li><a href="/contact">CONTACT US</a></li>
-    <li><a href="#">T&C</a></li>
-  </ul>
-
-  <!-- Login Button / Profile -->
-  <% if (user) { %>
-    <div class="profile-wrapper">
-      <button class="profile-btn" id="profileBtn"><i data-lucide="user"></i> <%= user.fullName %></button>
-      <div class="profile-dropdown-container hidden" id="profileDropdownContainer">
-        <p>Profile</p>
-        <ul class="profile-dropdown" id="profileDropdown">
-          <li><a href="#"><i data-lucide="user"></i> Personal Info</a></li>
-          <li><a href="#"><i data-lucide="lock-keyhole"></i> Account and Security</a></li>
-          <li><a href="#"><i data-lucide="tickets"></i> My Points</a></li>
-          <li><a href="#"><i data-lucide="receipt-text"></i> My Orders</a></li>
-          <li class="logout">
-            <form action="/auth/logout" method="post">
-              <button type="submit">
-                <i data-lucide="log-out"></i> Log Out
-              </button>
-            </form>
-          </li>
-        </ul>
+  <div class="nav-inner">
+    <!-- A placeholder for now -->
+      <p class="navigation-link"><a href="/"><img src="/images/logos/megaterra-logo-white.avif" alt="MEGATERRA Logo" id="navLogo"></a></p>
+    <!-- Navigation Links -->
+    <ul class="navigation-link">
+      <li><a href="/about">ABOUT US</a></li>
+      <li><a href="#"> PROMO</a></li>
+      <li><a href="#">BLOG</a></li>
+      <li><a href="/contact">CONTACT US</a></li>
+      <li><a href="#">T&C</a></li>
+    </ul>
+    <!-- Login Button / Profile -->
+    <% if (user) { %>
+      <div class="profile-wrapper">
+        <button class="profile-btn" id="profileBtn"><i data-lucide="user"></i> <%= user.fullName %></button>
+        <div class="profile-dropdown-container hidden" id="profileDropdownContainer">
+          <p>Profile</p>
+          <ul class="profile-dropdown" id="profileDropdown">
+            <li><a href="#"><i data-lucide="user"></i> Personal Info</a></li>
+            <li><a href="#"><i data-lucide="lock-keyhole"></i> Account and Security</a></li>
+            <li><a href="#"><i data-lucide="tickets"></i> My Points</a></li>
+            <li><a href="#"><i data-lucide="receipt-text"></i> My Orders</a></li>
+            <li class="logout">
+              <form action="/auth/logout" method="post">
+                <button type="submit">
+                  <i data-lucide="log-out"></i> Log Out
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-  <% } else { %> 
-    <button class="nav-login-btn" id="navLoginBtn">Login</button>
-  <% } %>
+    <% } else { %>
+      <button class="nav-login-btn" id="navLoginBtn">Login</button>
+    <% } %>
+    <!-- Mobile Hamburger Menu -->
+    <button class="nav-hamburger-btn" id="navHamburgerBtn" aria-label="Open Menu">
+      <i data-lucide="menu"></i>
+    </button>
+  </div>
 </nav>
+
+<!-- Mobile nav overlay -->
+ <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
+<div class="mobile-nav-drawer" id="mobileNavDrawer">
+  <div class="drawer-header">
+    <a href="/"><img src="/images/logos/megaterra-logo.avif" alt="MEGATERRA logo" class="drawer-logo"></a>
+    <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close Menu">
+      <i data-lucide="x"></i>
+    </button>
+  </div>
+
+  <!-- Account profile / login button -->
+  <div class="drawer-account-section">
+    <% if (user) { %>
+      <!-- On login -->
+      <div class="drawer-avatar"><%= user.fullName.charAt(0).toUpperCase() %></div>
+      <span class="drawer-account-name"><%= user.fullName %></span>
+    <% } else { %>
+      <!-- On not logged in -->
+        <button class="nav-login-btn" id="drawerLoginBtn">Login</button>
+    <% } %>
+  </div>
+
+
+  <div class="drawer-menu-container">
+    <!-- Account Menu -->
+    <% if (user) { %>
+      <ul class="drawer-account-menu">
+        <li><a href="#"><i data-lucide="user"></i> Personal Info <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
+        <li><a href="#"><i data-lucide="lock-keyhole"></i> Account and Security <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
+        <li><a href="#"><i data-lucide="tickets"></i> My Points <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
+        <li><a href="#"><i data-lucide="receipt-text"></i> My Orders <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
+      </ul>
+    <% } %>
+    <!-- Navigation menu -->
+    <ul class="drawer-nav-menu">
+      <li class="drawer-section-label">Navigation</li>
+      <li><a href="/about"><i data-lucide="info"></i> About Us <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
+      <li><a href="#"><i data-lucide="tag"></i> Promo <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
+      <li><a href="#"><i data-lucide="pencil-line"></i> Blog <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
+      <li><a href="/contact"><i data-lucide="headphones"></i> Contact Us <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
+      <li><a href="#"><i data-lucide="file-text"></i> T&C <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
+    </ul>
+    <!-- Logout button -->
+    <% if (user) { %>
+      <div class="drawer-footer">
+        <form action="/auth/logout" method="post">
+          <button type="submit" class="drawer-logout-btn">
+            <i data-lucide="log-out"></i> Log out
+          </button>
+        </form>
+      </div>
+    <% } %>
+  </div>
+</div>
 
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="/js/navbar.js"></script>
