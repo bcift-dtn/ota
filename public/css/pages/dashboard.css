@@ -227,3 +227,30 @@
 .dashboard-submit-btn:hover {
     opacity: 0.9;
 }
+
+/* Coming soon page */
+.coming-soon-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem;
+    background-color: var(--clr-bg);
+}
+
+.coming-soon-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--clr-primary);
+    margin-bottom: 1.5rem;
+}
+
+.coming-soon-wrapper h2 {
+    color: var(--clr-neutral);
+    margin-bottom: 0.5rem;
+}
+
+.coming-soon-wrapper p {
+    color: var(--clr-label-font);
+}

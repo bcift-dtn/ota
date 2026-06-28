@@ -17,11 +17,11 @@ const updateProfile = async (req, res) => {
             address: updatedUser.address
         };
 
-        res.redirect('/dashboard/personal-info')
+        return res.status(200).json({ message: 'Profile updated successfully!' });
     } catch (error) {
         console.error('Profile update error: ', error);
 
-        res.redirect('/dashboard/personal-info')
+        return res.status(500).json({ error: 'Failed to update profile. Please try again. '})
     }
 };
 

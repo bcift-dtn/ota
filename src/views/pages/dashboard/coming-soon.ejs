@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Info - Dashboard - MEGATERRA</title>
+
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages/dashboard.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.4/build/css/intlTelInput.css"
+    />
+  </head>
+  <body>
+    <%- include('../../partials/navbar') %>
+
+    <main>
+      <!-- Hero banner -->
+      <div class="dashboard-banner">
+        <img
+          src="/images/hero-banners/contact-hero.webp"
+          alt="Contact Us Banner"
+        />
+      </div>
+
+      <section class="dashboard-container">
+        <aside class="dashboard-sidebar">
+          <ul class="dashboard-sidebar-nav">
+            <li>
+              <a href="/dashboard/personal-info"
+                ><i data-lucide="user"></i> Personal info</a
+              >
+            </li>
+            <li>
+              <a href="/dashboard/account-security"
+                ><i data-lucide="lock"></i> Account and security</a
+              >
+            </li>
+            <li>
+              <a
+                href="/dashboard/points"
+                class="<%= activeMenu === 'points' ? 'active' : '' %>"
+                ><i data-lucide="tickets"></i> My points</a
+              >
+            </li>
+            <li>
+              <a
+                href="/dashboard/orders"
+                class="<%= activeMenu === 'orders' ? 'active' : '' %>"
+                ><i data-lucide="receipt-text"></i> My orders</a
+              >
+            </li>
+            <li>
+              <a
+                href="/dashboard/status"
+                class="<%= activeMenu === 'status' ? 'active' : '' %>"
+                ><i data-lucide="bell"></i> Status</a
+              >
+            </li>
+          </ul>
+        </aside>
+        <section class="dashboard-content">
+          <div class="coming-soon-wrapper">
+            <i data-lucide="hammer" class="coming-soon-icon"></i>
+            <h2>Coming soon...</h2>
+            <p>We are currently building this feature. Check back soon!</p>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <%- include('../../partials/footer') %> <%-
+    include('../../partials/loginModal') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.4/build/js/intlTelInput.min.js"></script>
+    <script src="/js/dashboard.js"></script>
+  </body>
+</html>

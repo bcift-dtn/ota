@@ -41,24 +41,28 @@
               >
             </li>
             <li>
-              <a href="#"><i data-lucide="tickets"></i> My points</a>
+              <a href="/dashboard/points"
+                ><i data-lucide="tickets"></i> My points</a
+              >
             </li>
             <li>
-              <a href="#"><i data-lucide="receipt-text"></i> My orders</a>
+              <a href="/dashboard/orders"
+                ><i data-lucide="receipt-text"></i> My orders</a
+              >
             </li>
             <li>
-              <a href="#"><i data-lucide="bell"></i> Status</a>
+              <a href="/dashboard/status"><i data-lucide="bell"></i> Status</a>
             </li>
           </ul>
         </aside>
         <section class="dashboard-content">
           <h1 class="dashboard-title">Personal Info</h1>
+
+          <!-- Status message -->
+          <p id="profileMessage" class="dashboard-status"></p>
+
           <h3>Account info</h3>
-          <form
-            action="/dashboard/update-profile"
-            method="POST"
-            class="dashboard-form"
-          >
+          <form id="updateProfileForm" class="dashboard-form">
             <div class="dashboard-form-group">
               <label for="fullName">Full Name</label>
               <input
