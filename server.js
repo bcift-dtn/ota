@@ -10,6 +10,7 @@ const helmet = require("helmet")
 // Routes
 const authRoutes = require('./src/routes/authRoutes');
 const productRoutes = require('./src/routes/productRoutes');
+const userRoutes = require('./src/routes/userRoutes');
 const contactController = require('./src/controllers/contactController');
 
 // Variable
@@ -67,6 +68,7 @@ app.get("/", (req, res) => {
 
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
+app.use('/dashboard', userRoutes);
 app.get('/about', (req, res) => res.render('pages/about'));
 app.get('/contact', contactController.renderContactPage);
 app.post('/contact/send', contactController.sendMessage);

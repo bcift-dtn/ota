@@ -56,7 +56,9 @@ const loginUser = async (req, res) => {
       req.session.user = { 
         id: user.id,
         fullName: user.full_name,
+        phone: user.phone,
         email: user.email,
+        address: user.address,
         isUser: user.is_user,
         isAgent: user.is_agent,
         isSeller: user.is_seller,

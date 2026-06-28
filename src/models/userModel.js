@@ -97,4 +97,30 @@ const verifyUserEmail = async (id) => {
   }
 }
 
-module.exports = { createUser, findUserByEmail, generateVerificationToken, findUserByToken, verifyUserEmail, findOrCreateGoogleUser };
+const updateUserProfile = async (id, fullName, phone, email, address) => {
+  const query = `
+    UPDATE ota.users
+    SET full_name = $1, phone = $2, email = $3, address = $4, updated_at = NOW()
+    WHERE id = $5
+    RETURNING *;
+  `;
+
+  const values = [fullName, phone, email, address, id];
+
+  try {
+    const res = await pool.query(query, values);
+    return res.rows[0];
+  } catch (err) {
+    throw err;
+  }
+}
+
+module.exports = { 
+  createUser, 
+  findUserByEmail, 
+  generateVerificationToken, 
+  findUserByToken, 
+  verifyUserEmail, 
+  findOrCreateGoogleUser,
+  updateUserProfile 
+ };

@@ -17,8 +17,8 @@
         <div class="profile-dropdown-container hidden" id="profileDropdownContainer">
           <p>Profile</p>
           <ul class="profile-dropdown" id="profileDropdown">
-            <li><a href="#"><i data-lucide="user"></i> Personal Info</a></li>
-            <li><a href="#"><i data-lucide="lock-keyhole"></i> Account and Security</a></li>
+            <li><a href="/dashboard/personal-info"><i data-lucide="user"></i> Personal Info</a></li>
+            <li><a href="/dashboard/account-security"><i data-lucide="lock-keyhole"></i> Account and Security</a></li>
             <li><a href="#"><i data-lucide="tickets"></i> My Points</a></li>
             <li><a href="#"><i data-lucide="receipt-text"></i> My Orders</a></li>
             <li class="logout">
@@ -60,7 +60,7 @@
       <span class="drawer-account-name"><%= user.fullName %></span>
     <% } else { %>
       <!-- On not logged in -->
-        <button class="nav-login-btn" id="drawerLoginBtn">Login</button>
+        <button class="drawer-login-btn" id="drawerLoginBtn">Login</button>
     <% } %>
   </div>
 
@@ -69,8 +69,8 @@
     <!-- Account Menu -->
     <% if (user) { %>
       <ul class="drawer-account-menu">
-        <li><a href="#"><i data-lucide="user"></i> Personal Info <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
-        <li><a href="#"><i data-lucide="lock-keyhole"></i> Account and Security <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
+        <li><a href="/dashboard/personal-info"><i data-lucide="user"></i> Personal Info <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
+        <li><a href="/dashboard/account-security"><i data-lucide="lock-keyhole"></i> Account and Security <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
         <li><a href="#"><i data-lucide="tickets"></i> My Points <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
         <li><a href="#"><i data-lucide="receipt-text"></i> My Orders <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
       </ul>

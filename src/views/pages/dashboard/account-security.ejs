@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account and Security - Dashboard - MEGATERRA</title>
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages/dashboard.css" />
+  </head>
+  <body>
+    <%- include('../../partials/navbar') %>
+
+    <main>
+      <div class="dashboard-banner">
+        <img
+          src="/images/hero-banners/contact-hero.webp"
+          alt="Contact Us Banner"
+        />
+      </div>
+
+      <section class="dashboard-container">
+        <aside class="dashboard-sidebar">
+          <ul class="dashboard-sidebar-nav">
+            <li>
+              <a href="/dashboard/personal-info"
+                ><i data-lucide="user"></i> Personal info</a
+              >
+            </li>
+            <li>
+              <a href="/dashboard/account-security" class="active"
+                ><i data-lucide="lock"></i> Account and security</a
+              >
+            </li>
+            <li>
+              <a href="#"><i data-lucide="tickets"></i> My points</a>
+            </li>
+            <li>
+              <a href="#"><i data-lucide="receipt-text"></i> My orders</a>
+            </li>
+            <li>
+              <a href="#"><i data-lucide="bell"></i> Status</a>
+            </li>
+          </ul>
+        </aside>
+
+        <section class="dashboard-content">
+          <h1 class="dashboard-title">Login and Security</h1>
+          <h3>Change Password</h3>
+          <form id="changePasswordForm" class="dashboard-form">
+            <div class="dashboard-form-group">
+              <label for="oldPassword">Old Password</label>
+              <input
+                type="password"
+                id="oldPassword"
+                placeholder="Old Password"
+                required
+              />
+            </div>
+
+            <div class="dashboard-form-group">
+              <label for="newPassword">New Password</label>
+              <input
+                type="password"
+                id="newPassword"
+                placeholder="New Password"
+                required
+              />
+              <span class="password-hint">Must be 8 characters at least</span>
+            </div>
+
+            <div class="dashboard-form-group">
+              <label for="confirmNewPassword">Confirm New Password</label>
+              <input
+                type="password"
+                id="confirmNewPassword"
+                placeholder="Confirm New Password"
+                required
+              />
+              <span class="password-hint">Must be 8 characters at least</span>
+            </div>
+
+            <button type="submit" class="dashboard-submit-btn">
+              Update profile
+            </button>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <%- include('../../partials/footer') %> <%-
+    include('../../partials/loginModal') %>
+  </body>
+</html>

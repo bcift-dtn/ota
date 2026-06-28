@@ -21,7 +21,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 })
 
-const navLoginBtn = document.querySelector('#navLoginBtn')
+const navLoginBtn = document.querySelector('#navLoginBtn');
+const drawerLoginBtn = document.querySelector('#drawerLoginBtn');
 const modalOverlay = document.querySelector('#modalOverlay');
 
 lucide.createIcons();
@@ -31,6 +32,11 @@ navLoginBtn?.addEventListener('click', e  => {
 
   modalOverlay.classList.remove('hidden');
 })
+
+drawerLoginBtn?.addEventListener('click', () => {
+    closeDrawer();
+    document.querySelector('#navLoginBtn')?.click();
+});
 
 modalOverlay.addEventListener('click', e  => {
   if (e.target === modalOverlay) {

@@ -292,6 +292,18 @@ li form {
   padding: 0.25rem;
 }
 
+.drawer-login-btn {
+  width: 100%;
+  padding: 0.6rem 0;
+
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  background-color: var(--clr-primary);
+  color: white;
+  cursor: pointer;
+}
+
 .drawer-account-section {
   display: flex;
   align-items: center;
@@ -324,6 +336,10 @@ li form {
   border-radius: 20px;
 }
 
+.drawer-account-menu {
+  margin-bottom: 1.5rem;
+}
+
 .drawer-account-menu,
 .drawer-nav-menu {
   list-style: none;
@@ -344,7 +360,7 @@ li.drawer-section-label {
   color: var(--clr-primary);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-top: 1.5rem;
+
   border-bottom: none;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
