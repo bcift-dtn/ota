@@ -115,6 +115,35 @@ const updateUserProfile = async (id, fullName, phone, email, address) => {
   }
 }
 
+const findUserById = async id => {
+  const query = `
+    SELECT * FROM ota.users
+    WHERE id = $1
+  `
+
+  try {
+    const res = await pool.query(query, [id]);
+    return res.rows[0];
+  } catch (err) {
+    throw err;
+  }
+}
+
+const updatePassword = async (id, newHashesPassword) => {
+  const query = `
+    UPDATE ota.users
+    SET password = $1
+    WHERE id = $2
+    RETURNING id;
+  `
+
+  try {
+    await pool.query(query, [newHashesPassword, id])
+  } catch (err) {
+    throw err;
+  }
+}
+
 module.exports = { 
   createUser, 
   findUserByEmail, 
@@ -122,5 +151,7 @@ module.exports = {
   findUserByToken, 
   verifyUserEmail, 
   findOrCreateGoogleUser,
-  updateUserProfile 
+  updateUserProfile,
+  findUserById,
+  updatePassword
  };

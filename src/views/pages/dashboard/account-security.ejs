@@ -47,42 +47,76 @@
 
         <section class="dashboard-content">
           <h1 class="dashboard-title">Login and Security</h1>
+
+          <p id="passwordMessage" class="dashboard-status"></p>
+
           <h3>Change Password</h3>
           <form id="changePasswordForm" class="dashboard-form">
             <div class="dashboard-form-group">
               <label for="oldPassword">Old Password</label>
-              <input
-                type="password"
-                id="oldPassword"
-                placeholder="Old Password"
-                required
-              />
+              <div class="password-input-wrapper">
+                <input
+                  type="password"
+                  id="oldPassword"
+                  placeholder="Old Password"
+                  required
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  data-target="oldPassword"
+                >
+                  <i data-lucide="eye-closed"></i>
+                </button>
+              </div>
             </div>
 
             <div class="dashboard-form-group">
               <label for="newPassword">New Password</label>
-              <input
-                type="password"
-                id="newPassword"
-                placeholder="New Password"
-                required
-              />
+              <div class="password-input-wrapper">
+                <input
+                  type="password"
+                  id="newPassword"
+                  placeholder="New Password"
+                  required
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  data-target="newPassword"
+                >
+                  <i data-lucide="eye-closed"></i>
+                </button>
+              </div>
               <span class="password-hint">Must be 8 characters at least</span>
             </div>
 
             <div class="dashboard-form-group">
               <label for="confirmNewPassword">Confirm New Password</label>
-              <input
-                type="password"
-                id="confirmNewPassword"
-                placeholder="Confirm New Password"
-                required
-              />
+              <div class="password-input-wrapper">
+                <input
+                  type="password"
+                  id="confirmNewPassword"
+                  placeholder="Confirm New Password"
+                  required
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  data-target="confirmNewPassword"
+                >
+                  <i data-lucide="eye-closed"></i>
+                </button>
+              </div>
               <span class="password-hint">Must be 8 characters at least</span>
             </div>
 
-            <button type="submit" class="dashboard-submit-btn">
-              Update profile
+            <button
+              type="submit"
+              id="changePasswordBtn"
+              class="dashboard-submit-btn"
+            >
+              Change Password
             </button>
           </form>
         </section>
@@ -91,5 +125,7 @@
 
     <%- include('../../partials/footer') %> <%-
     include('../../partials/loginModal') %>
+
+    <script src="/js/account-security.js"></script>
   </body>
 </html>

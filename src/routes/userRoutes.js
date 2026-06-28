@@ -8,4 +8,6 @@ router.get('/account-security', (req, res) => res.render('pages/dashboard/accoun
 
 router.post('/update-profile', userController.updateProfile);
 
+router.post('/change-password', userController.changePassword);
+
 module.exports = router;
