@@ -11,17 +11,16 @@
     <link rel="stylesheet" href="/css/pages/register.css" />
   </head>
 
-  <body>
+  <body class="force-solid-nav">
     <%- include('../partials/navbar') %>
 
     <main class="register-wrapper">
       <!-- Banner -->
       <section class="banner">
         <img
-          class="person-banner"
-          src="/images/example.webp"
-          alt="a man with laptop"
-          width="1280"
+          class="register-image"
+          src="/images/register-page-img.webp"
+          alt="Register page image"
         />
       </section>
 
@@ -63,7 +62,7 @@
 
           <div class="register-fields register-password-wrapper">
             <label for="password">Password:</label>
-            <div>
+            <div class="password-input-wrapper">
               <input
                 type="password"
                 name="password"
@@ -86,7 +85,7 @@
 
           <div class="register-fields register-password-wrapper">
             <label for="confirmPassword">Confirm Password:</label>
-            <div>
+            <div class="password-input-wrapper">
               <input
                 type="password"
                 name="confirmPassword"

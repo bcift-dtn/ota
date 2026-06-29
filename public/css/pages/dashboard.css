@@ -150,34 +150,6 @@
     color: var(--clr-neutral);
 }
 
-.password-input-wrapper {
-    position: relative;;
-    display: flex;
-    align-items: center;
-}
-
-.password-input-wrapper input {
-    width: 100%;
-    padding-right: 3rem;
-}
-
-.password-input-wrapper .toggle-password {
-    position: absolute;
-    right: 1rem;
-    background: none;
-    color: #9CA3AF;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-}
-
-.password-input-wrapper .toggle-password:hover {
-    color: var(--clr-primary);
-}
-
 /* Phone input field */
 .iti {
     width: 100%;
