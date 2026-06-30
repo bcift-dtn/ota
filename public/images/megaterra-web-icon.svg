@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 4074 4062" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,-242932.844426,-59854.231401)">
+        <g id="Artboard45" transform="matrix(0.215104,0,0,0.5,195018.153675,17202.835652)">
+            <rect x="222751" y="85302.791" width="18938.684" height="8122.458" style="fill:none;"/>
+            <g transform="matrix(42.74866,0,0,18.390838,210368.658222,82712.719514)">
+                <path d="M678.197,244.705C682.618,252.551 715.516,310.951 710.595,352.51C709.281,363.613 694.044,390.162 672.898,347.298C619.664,239.388 562.004,302.266 527.582,295.118C482.354,285.727 428.909,187.084 529.455,168.277C565.527,161.53 603.437,179.175 609.313,181.91C647.251,199.567 673.981,238.555 678.197,244.705Z" style="fill:url(#_Linear1);"/>
+                <path d="M314.855,303.535C334.038,207.366 434.832,158.558 452.079,184.802C460.382,197.437 447.628,217.422 444.933,222.722C410.348,290.752 460.489,315.419 479.206,339.731C493.942,358.872 479.418,371.121 475.248,373.034C437.696,390.267 439.42,305.026 378.501,304.595C345.338,304.36 315.352,345.589 314.855,303.535Z" style="fill:url(#_Linear2);"/>
+                <path d="M375.59,507.397C374.309,506.235 353.604,489.551 336.956,462.22C286.997,380.201 317.826,321.431 361.533,336.395C412.834,353.959 405.408,437.722 405.535,448.5C406.095,496.244 445.299,518.354 447.397,530.516C448.422,536.463 438.629,556.917 375.59,507.397Z" style="fill:url(#_Linear3);"/>
+                <path d="M539.472,556.195C427.622,562.712 482.938,483.854 502.774,468.867C571.422,417.004 631.364,451.079 630.396,494.498C629.824,520.134 603.129,546.37 539.472,556.195Z" style="fill:url(#_Linear4);"/>
+                <path d="M691.407,451.439C687.984,456.418 670.271,494.078 641.94,449.229C616.511,408.975 634.123,357.933 644.509,358.359C661.776,359.066 651.609,388.997 700.483,392.714C720.43,394.231 693.558,447.2 691.407,451.439Z" style="fill:url(#_Linear5);"/>
+            </g>
+        </g>
+    </g>
+    <defs>
+        <linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(182.346672,132.575385,-132.575385,182.346672,511.166528,208.780822)"><stop offset="0" style="stop-color:rgb(0,169,252);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(45,220,253);stop-opacity:1"/></linearGradient>
+        <linearGradient id="_Linear2" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(114.032162,-19.5506,19.5506,114.032162,342.989242,276.549003)"><stop offset="0" style="stop-color:rgb(112,79,252);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(61,194,252);stop-opacity:1"/></linearGradient>
+        <linearGradient id="_Linear3" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(74.140239,156.573811,-156.573811,74.140239,339.866426,358.35614)"><stop offset="0" style="stop-color:rgb(97,65,251);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(93,127,250);stop-opacity:1"/></linearGradient>
+        <linearGradient id="_Linear4" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-106.006276,49.426826,-49.426826,-106.006276,591.668298,484.920807)"><stop offset="0" style="stop-color:rgb(15,191,253);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(6,96,251);stop-opacity:1"/></linearGradient>
+        <linearGradient id="_Linear5" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(13.304117,-50.632691,50.632691,13.304117,655.019496,446.524911)"><stop offset="0" style="stop-color:rgb(78,193,252);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(116,233,252);stop-opacity:1"/></linearGradient>
+    </defs>
+</svg>

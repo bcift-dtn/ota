@@ -47,3 +47,22 @@ function updateNavState() {
 
 window.addEventListener('scroll', updateNavState);
 updateNavState();
+
+// Dynamically inject Favicons to all pages
+const injectFavicon = () => {
+    const head = document.head;
+    
+    const icoLink = document.createElement('link');
+    icoLink.rel = 'icon';
+    icoLink.type = 'image/x-icon';
+    icoLink.href = '/images/favicon.ico';
+    
+    const svgLink = document.createElement('link');
+    svgLink.rel = 'icon';
+    svgLink.type = 'image/svg+xml';
+    svgLink.href = '/images/megaterra-web-icon.svg';
+    
+    head.appendChild(icoLink);
+    head.appendChild(svgLink);
+};
+injectFavicon();
