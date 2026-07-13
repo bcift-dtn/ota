@@ -610,9 +610,12 @@ footer li a {
   color: var(--clr-neutral);
 }
 
-.hero-car-list img,
-.hero-ferry-list img {
+.hero-car-list img {
   object-position: center 70%;
+}
+
+.hero-ferry-list img {
+  object-position: center 0%;
 }
 
 .hero-banner::after,

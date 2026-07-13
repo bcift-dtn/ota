@@ -23,6 +23,63 @@
             <h1>FERRY</h1>
         </section>
 
+        <section class="search-component">
+          <div class="search-form" data-form="ferry">
+            <form action="/ferry" method="GET">
+              <div class="search-component-left">
+                <div class="search-form-top">
+                  <div class="trip-type-wrapper">
+                    <input type="radio" class="one-wray-radio" id="onewayRadio" name="tripType" value="one-way"
+                      <%= (!query.tripType || query.tripType === 'one-way') ? 'checked' : '' %>>
+                    <label for="onewayRadio" class="label-text">One way</label>
+                    <input type="radio" class="two-way-radio" id="twowayRadio" name="tripType" value="two-way"
+                    <%= query.tripType === 'two-way' ? 'checked' : '' %>>
+                    <label for="twowayRadio" class="label-text">Two way</label>
+                  </div>
+                </div>
+                <div class="search-form-bottom">
+                  <div class="from-to-wrapper">
+                    <div class="search-input-wrapper">
+                      <label for="fromPort" class="label-text">From</label>
+                      <div class="input-icon-wrapper">
+                        <select name="fromPort" id="fromPort">
+                          <option value="batam-center-terminal" <%= query.fromPort === 'batam-center-terminal' ? 'selected' : '' %>>Batam Center Terminal</option>
+                          <option value="harbourfront" <%= query.fromPort === 'harbourfront' ? 'selected' : '' %>>Harbourfront</option>
+                          <option value="tanah-merah" <%= query.fromPort === 'tanah-merah' ? 'selected' : '' %>>Tanah Merah</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="search-input-wrapper">
+                      <label for="toPort" class="label-text">To</label>
+                      <div class="input-icon-wrapper">
+                        <select name="toPort" id="toPort">
+                          <option value="batam-center-terminal" <%= query.toPort === 'batam-center-terminal' ? 'selected' : '' %>>Batam Center Terminal</option>
+                          <option value="harbourfront" <%= query.toPort === 'harbourfront' ? 'selected' : '' %>>Harbourfront</option>
+                          <option value="tanah-merah" <%= query.toPort === 'tanah-merah' ? 'selected' : '' %>>Tanah Merah</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="search-date-wrapper">
+                    <div class="search-input-wrapper">
+                      <label for="departureDate" class="label-text">Departure Date</label>
+                      <input type="date" class="date-input" name="departureDate" id="departureDate"
+                        value="<%= query.departureDate || '' %>" placeholder="Select date...">
+                    </div>
+                    <div class="search-input-wrapper <%= (!query.tripType || query.tripType === 'one-way') ? 'hidden' : '' %>" id="returnDateWrapper">
+                      <label for="returnDate" class="label-text">Return Date</label>
+                      <input type="date" class="date-input" name="returnDate" id="returnDate"
+                        value="<%= query.returnDate || '' %>" placeholder="Select date...">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="submit-search-btn" id="submitFerrySearchBtn">Search</button>
+            </form>
+          </div>
+        </section>
+
         <%- include('../partials/breadcrumb', { breadcrumbs: [
           { label: 'Home', url: '/'},
           { label: 'Ferry', url: '/ferry'}
@@ -134,5 +191,8 @@
 
     <%- include('../partials/footer') %>
     <%- include('../partials/loginModal') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="/js/ferry-list.js"></script> 
   </body>
 </html>
