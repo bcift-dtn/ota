@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ferry - MEGATERRA</title>
+
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/components/search.css" />
+    <link rel="stylesheet" href="/css/pages/ferry-list.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+  </head>
+  <body>
+    <%- include('../partials/navbar') %>
+    <main>
+        <section class="list-hero-banner hero-ferry-list">
+            <img src="/images/hero-banners/majestic-hero.webp" alt="Ferry Hero Banner">
+            <h1>FERRY</h1>
+        </section>
+
+        <%- include('../partials/breadcrumb', { breadcrumbs: [
+          { label: 'Home', url: '/'},
+          { label: 'Ferry', url: '/ferry'}
+        ]}) %>
+
+        <section class="product-list">
+          <div class="product-list-container">
+            <% listings.forEach(listing => { %>
+              <% 
+                const q = new URLSearchParams();
+                if (query.tripType) q.set('tripType', query.tripType);
+                if (query.departureDate) q.set('departureDate', query.departureDate);
+                if (query.returnDate) q.set('returnDate', query.returnDate);
+                if (query.fromPort) q.set('fromPort', query.fromPort);
+                if (query.toPort) q.set('toPort', query.toPort);
+                if (query.adults) q.set('adults', query.adults);
+                if (query.children) q.set('children', query.children);
+                if (query.infants) q.set('infants', query.infants);
+                
+                const queryString = q.toString();
+              %> 
+
+              <div class="product-card-horizontal" data-product-id="<%= listing.id %>">
+                <div class="product-card-top">
+                  <div class="product-card-image">
+                    <% if (listing.image_url) { %>
+                      <img src="<%= listing.image_url %>" alt="<%= listing.title %>">
+                    <% } else { %>
+                      <div class="product-card-image-placeholder"></div>
+                    <% } %> 
+                  </div>
+
+                  <div class="product-card-info">
+                    <div class="product-card-info-split">
+                      <div class="product-card-info-left">
+                        <h2><%= listing.title %> </h2>
+                        <div>
+                          <p class="smaller-label label-text">
+                            <i data-lucide="map-pin"></i>
+                            <%= listing.location %> 
+                          </p>
+
+                          <p class="smaller-label label-text">
+                            <i data-lucide="ship"></i>
+                            <%= listing.depart_port %> → <%= listing.arrival_port %> 
+                          </p>
+
+                          <p class="smaller-label label-text">
+                            <i data-lucide="clock"></i>
+                            ±<%= listing.duration_minutes %> min
+                          </p>
+                        </div>
+                      </div>
+
+                      <div class="product-card-info-right">
+                        <div>
+                          <p>Start from</p>
+                          <div class="product-card-price-wrapper">
+                            <% if (listing.vendor_api_name === 'MAJESTIC') { %>
+                              <p class="product-card-price">IDR 290,000</p>
+                            <% } else { %> 
+                              <p class="product-card-price">IDR <%= listing.formatted_starting_price %></p>
+                            <% } %>
+                          </div>
+                        </div>
+                        <a href="/ferry/<%= listing.id %><%= queryString ? '?' + queryString : '' %>" class="detail-btn">Detail</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+
+            <% if (listings.length === 0) { %> 
+              <div class="empty-state">
+                <i data-lucide="ship"></i>
+                <h2>No Ferry Found</h2>
+                <p>No ferry products are available at this time.</p>
+              </div>
+            <% } %>
+
+            <% if (totalPages > 1) { %>
+              <% 
+                let startPage = 1;
+                let endPage = totalPages;
+                if (totalPages > 5) {
+                  if (currentPage <= 3) { startPage = 1; endPage = 5; }
+                  else if (currentPage >= totalPages - 2) { startPage = totalPages - 4; endPage = totalPages; }
+                  else { startPage = currentPage - 2; endPage = currentPage + 2; }
+                }
+              %> 
+              <div class="pagination-wrapper">
+                <% if (currentPage > 1 ) { %> 
+                  <a href="/ferry?page=1" class="page-text-btn page-first-btn">First Page</a>
+                  <a href="/ferry?page=<%= currentPage - 1 %>" class="page-icon-btn">&lt;</a>
+                <% } %>
+                <% for (let i = startPage; i <= endPage; i++) { %> 
+                  <a href="/ferry?page=<%= i %>" class="page-btn <%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+                <% } %>
+                <% if (currentPage < totalPages) { %> 
+                  <a href="/ferry?page=<%= currentPage + 1%>" class="page-icon-btn">&gt;</a>
+                  <a href="/ferry?page=<%= totalPages %>" class="page-text-btn page-last-btn">Last Page</a>
+                <% } %>
+              </div>
+            <% } %> 
+          </div>
+        </section>
+    </main>
+
+    <%- include('../partials/footer') %>
+    <%- include('../partials/loginModal') %>
+  </body>
+</html>

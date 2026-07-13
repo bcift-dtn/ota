@@ -253,5 +253,70 @@ const getProductAddons = async (productId, packageIds) => {
   }
 }
 
+// Get ferry listing
+const getFerryListings = async (limit, offset) => {
+  const query = `
+    SELECT
+      p.*,
+      fd.depart_port, fd.arrival_port,
+      fd.duration_minutes, fd.vendor_api_name, fd.vendor_journey_code,
+      MAX(pi.image_url) as image_url
+    FROM ota.products p
+    JOIN ota.ferry_details fd on p.id = fd.product_id
+    LEFT JOIN ota.product_images pi ON p.id = pi.product_id AND pi.is_primary = true
+    WHERE p.type = 'ferry' AND p.is_active = true
+    GROUP BY p.id, fd.depart_port, fd.arrival_port, fd.duration_minutes, fd.vendor_api_name, fd.vendor_journey_code
+    ORDER BY p.priority DESC, p.created_at DESC
+    LIMIT $1 OFFSET $2
+  `;
+
+  try {
+    const res = await pool.query(query, [limit, offset]);
+    return res.rows;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getFerryCount = async () => {
+  const query = `
+    SELECT COUNT(p.id) as total
+    FROM ota.products p
+    WHERE p.type = 'ferry' AND p.is_active = true
+  `;
+
+  try {
+    const res = await pool.query(query);
+    return parseInt(res.rows[0].total);
+  } catch (error) {
+    throw error;
+  }
+}
+
+const getFerryById = async (id) => {
+  const query = `
+    SELECT
+      p.*,
+      fd.depart_port, fd.arrival_port, fd.duration_minutes,
+      fd.vendor_api_name, fd.vendor_journey_code,
+      pi.image_url, pi.is_primary, pi.sort_order as image_sort_order
+    FROM ota.products p
+    JOIN ota.ferry_details fd ON p.id = fd.product_id
+    LEFT JOIN ota.product_images pi ON p.id = pi.product_id
+    WHERE p.id = $1 AND p.type = 'ferry' AND p.is_active = true
+    ORDER BY pi.sort_order ASC
+  `
+
+  try {
+    const res = await pool.query(query, [id]);
+    return res.rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = { getCarRentalListings, getCarRentalById, getPackagesByProductIds, getCarRentalCount, 
-  getActivitiesCount, getActivitiesListings, getActivitiesById, getProductAmenities, getPackageAmenities, getPackagePricingTiers, getPackageTimeSlots, getProductAddons };
+  getActivitiesCount, getActivitiesListings, getActivitiesById, getProductAmenities, getPackageAmenities,
+  getPackagePricingTiers, getPackageTimeSlots, getProductAddons,
+  getFerryListings, getFerryCount, getFerryById
+};
