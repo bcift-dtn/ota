@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title><%= product.title || 'Ferry Detail' %> - MEGATERRA</title>
+
+        <link rel="stylesheet" href="/css/base.css">
+        <link rel="stylesheet" href="/css/components.css">
+        <link rel="stylesheet" href="/css/layout.css">
+        <link rel="stylesheet" href="/css/pages/product-detail.css">
+        <link rel="stylesheet" href="/css/pages/ferry-detail.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    </head>
+    <body>
+        <!-- Header -->
+        <%- include('../partials/navbar') %>
+
+        <main>
+            <section class="list-hero-banner hero-ferry-list">
+                <img src="/images/hero-banners/majestic-hero.webp" alt="Ferry Hero Banner">
+                <h1>FERRY</h1>
+            </section>
+            <%- include('../partials/breadcrumb', { breadcrumbs: [
+                { label: 'Home', url: '/'},
+                { label: 'Ferry', url: '/ferry'},
+                { label: product.title, url: '#'}
+            ]}) %>
+
+            <section class="detail-container">
+                <div class="detail-top">
+                    <div class="detail-gallery">
+                        <% 
+                            const uniqueImages = images
+                                .filter(r => r.image_url)
+                                .filter((r, i, arr) => arr.findIndex(x => x.image_url === r.image_url) === i);
+                            
+                            const mainImage = uniqueImages.length > 0 ? uniqueImages[0].image_url : '/images/hero-banners/majestic-hero.webp';
+                        %> 
+                        <img src="<%= mainImage %>" alt="<%= product.title %>" class="detail-main-image">
+
+                        <div class="detail-thumbnails">
+                            <% uniqueImages.forEach((img, index) => { %> 
+                                <img class="detail-thumbnail <%= index === 0 ? 'active-thumb' : '' %>" src="<%= img.image_url %>" alt="<%= product.title %> image <%= index + 1 %>">
+                            <% }) %> 
+                        </div>
+                    </div>
+
+                    <div class="detail-summary">
+                        <div class="detail-summary-top">
+                            <h1 class="product-heading"><%= product.title %></h1>
+                            <% const normalPrice = prices.length > 0 ? prices.find(p => p.category === 'Normal' || p.PassengerType === 'Normal') : null;%> 
+                            <% if (normalPrice) { %> 
+                                <p class="even-bigger-label">IDR <%= Number(normalPrice.Price).toLocaleString('id-ID') %></p>
+                            <% } else { %>
+                                <p class="even-bigger-label">Check schedules for pricing</p> 
+                            <% } %>
+                        </div>
+                        
+                        <div class="detail-badges">
+                            <div class="package-amenities">
+                                <p class="abit-smaller-label">
+                                    <i data-lucide="ship"></i><%= product.depart_port %> → <%= product.arrival_port %>
+                                </p>
+                                <p class="abit-smaller-label">
+                                    <i data-lucide="clock"></i>±<%= product.duration_minutes %> min
+                                </p>
+                                <p class="abit-smaller-label">
+                                    <i data-lucide="map-pin"></i><%= product.location %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-location-info">
+                    <h2 class="product-heading"><i data-lucide="map-pinned"></i>Location Information</h2>
+                    <div class="map-container">
+                        <% if (product.map_embed_url) { %> 
+                            <iframe src="<%= product.map_embed_url %>" width="100%" height="300"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <% } else if (product.latitude && product.longitude) { %>
+                            <iframe width="100%" height="300" loading="lazy" allowfullscreen
+                            src="https://www.google.com/maps/embed/v1/place?key=test&q=<%= product.latitude %>,<%= product.longitude %>"></iframe>
+                        <% } else { %> 
+                            <div class="no-map-available"><p>Map not available</p></div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div class="detail-booking">
+                    <h2 class="product-heading"><i data-lucide="receipt-text"></i>Booking Information</h2>
+                    <form action="#">
+                        <input type="hidden" id="currentProductId" value="<%= product.id %>">
+                        <input type="hidden" id="currentProductType" value="<%= product.type %>">
+                        <input type="hidden" id="journeyCode" value="<%= product.vendor_journey_code %>">
+                        <input type="hidden" id="isApiDriven" value="<%= isApiDriven %>">
+                        <input type="hidden" id="selectedTripCode" value="">
+                        <input type="hidden" id="pricePerPax" value="">
+
+                        <div class="ferry-trip-type-display">
+                            <p class="label-text">
+                                <i data-lucide="arrow-right-left"></i>
+                                <%= query.tripType === 'two-way' ? 'Round Trip' : 'One way' %> 
+                                - <%= product.depart_port %> → <%= product.arrival_port %>
+                            </p>
+                        </div>
+
+                        <div class="booking-input-wrapper">
+                            <div class="booking-pickup-date-wrapper">
+                                <label for="ferryDepartureDate" class="label-text">Departure Date</label>
+                                <input type="date" class="date-input" id="ferryDepartureDate" name="ferryDepartureDate"
+                                value="<%= query.departureDate || '' %>" placeholder="Select date..." required>
+                            </div>
+                        </div>
+
+                        <div class="ferry-schedule-section">
+                            <p class="label-text"><i data-lucide="list"></i>Available Departures</p>
+                            <div id="scheduleContainer" class="schedule-container">
+                                <p class="label-text schedule-placeholder">Select a date view available departures.</p>
+                            </div>
+                        </div>
+
+                        <div class="pax-counter-wrapper">
+                            <div class="pax-counter" data-type="adult" data-min="1">
+                                <div class="pax-counter-left">
+                                    <p class="label-text">ADULT</p>
+                                    <p class="even-smaller-label">Age 12+</p>
+                                </div>
+                                <div class="pax-counter-right">
+                                    <button type="button" class="pax-counter-minus">-</button>
+                                    <p class="pax-counter-text" id="adultCount">1</p>
+                                    <button type="button" class="pax-counter-plus">+</button>
+                                </div>
+                            </div>
+
+                            <div class="pax-counter" data-type="child" data-min="0">
+                                <div class="pax-counter-left">
+                                    <p class="label-text">CHILD</p>
+                                    <p class="even-smaller-label">Age 2–11</p>
+                                </div>
+                                <div class="pax-counter-right">
+                                    <button type="button" class="pax-counter-minus">-</button>
+                                    <p class="pax-counter-text" id="childCount">0</p>
+                                    <button type="button" class="pax-counter-plus">+</button>
+                                </div>
+                            </div>
+
+                            <div class="pax-counter" data-type="infant" data-min="0">
+                                <div class="pax-counter-left">
+                                    <p class="label-text">INFANT</p>
+                                    <p class="even-smaller-label">Under 2</p>
+                                </div>
+                                <div class="pax-counter-right">
+                                    <button type="button" class="pax-counter-minus">-</button>
+                                    <p class="pax-counter-text" id="infantCount">0</p>
+                                    <button type="button" class="pax-counter-plus">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="booking-summary">
+                            <div class="booking-summary-daily-rate">
+                                <p>Price per Pax</p>
+                                <p id="displayPricePerPax">-</p>
+                            </div>
+                            <div class="booking-summary-quantity">
+                                <p>Passengers</p>
+                                <p id="displayTotalPax">1 Pax</p>
+                            </div>
+                        </div>
+
+                        <div class="booking-total-price">
+                            <p class="bigger-label">Total Price</p>
+                            <p class="bigger-label" id="bookingTotalPriceText">IDR 0</p>
+                        </div>
+
+                        <button type="button" class="booking-continue-btn" id="ferryBookingContinueBtn">CONTINUE</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <%- include('../partials/footer') %>
+        <%- include('../partials/loginModal') %>
+
+        <div id="pageData" data-product-id="<%= product.id %>" data-user="<%- JSON.stringify(user || null).replace(/</g, '\\u003c').replace(/"/g, '&quot;') %>" hidden></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="/js/ferry-detail.js"></script>
+    </body>
+</html>

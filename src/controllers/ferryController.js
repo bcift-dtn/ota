@@ -50,7 +50,8 @@ const getFerryDetail = async (req, res) => {
                 images: rows,
                 schedule,
                 prices,
-                isApiDriven: true
+                isApiDriven: true,
+                query: req.query,
             });
         }
 
@@ -59,7 +60,8 @@ const getFerryDetail = async (req, res) => {
             images: rows,
             schedule: [],
             prices: [],
-            isApiDriven: false
+            isApiDriven: false,
+            query: req.query,
         })
     } catch (error) {
         console.error('Ferry detail error:', error);
@@ -67,4 +69,21 @@ const getFerryDetail = async (req, res) => {
     }
 }
 
-module.exports = { getFerryList, getFerryDetail };
+const getScheduleByDate = async (req, res) => {
+    try {
+        const rows = await productModel.getFerryById(req.params.id);
+        if (!rows.length) return res.status(404).json({ error: 'Ferry not found'});
+
+        const product = rows[0];
+        const date = req.query.date || new Date().toISOString().split('T')[0]; 
+
+        const schedule = await majesticService.getSchedule(product.vendor_journey_code, date);
+        
+        res.json({ schedule });
+    } catch (error) {
+        console.error('Schedule fetch error:', error.message);
+        res.json({ schedule: [] });
+    }
+}
+
+module.exports = { getFerryList, getFerryDetail, getScheduleByDate };
