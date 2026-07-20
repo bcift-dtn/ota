@@ -98,9 +98,10 @@
                         <input type="hidden" id="selectedTripCode" value="">
                         <input type="hidden" id="pricePerPax" value="">
 
+                        <div class="status-message" id="ferryBookingStatus"></div>
+
                         <div class="ferry-trip-type-display">
-                            <p class="label-text">
-                                <i data-lucide="arrow-right-left"></i>
+                            <p class="even-smaller-label label-text">
                                 <%= query.tripType === 'two-way' ? 'Round Trip' : 'One way' %> 
                                 - <%= product.depart_port %> → <%= product.arrival_port %>
                             </p>
@@ -115,7 +116,7 @@
                         </div>
 
                         <div class="ferry-schedule-section">
-                            <p class="label-text"><i data-lucide="list"></i>Available Departures</p>
+                            <p class="label-text">Available Departures</p>
                             <div id="scheduleContainer" class="schedule-container">
                                 <p class="label-text schedule-placeholder">Select a date view available departures.</p>
                             </div>
@@ -161,12 +162,12 @@
 
                         <div class="booking-summary">
                             <div class="booking-summary-daily-rate">
-                                <p>Price per Pax</p>
+                                <p>Price per Visitor</p>
                                 <p id="displayPricePerPax">-</p>
                             </div>
                             <div class="booking-summary-quantity">
                                 <p>Passengers</p>
-                                <p id="displayTotalPax">1 Pax</p>
+                                <p id="displayTotalPax">1 Visitor</p>
                             </div>
                         </div>
 

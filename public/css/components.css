@@ -198,6 +198,30 @@
   font-size: var(--fs-3);
 }
 
+/* Status message */
+.status-message {
+    display: none;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    font-size: var(--fs-3);
+}
+
+.status-message.error {
+    display: block;
+    background-color: #F8D7DA;
+    color: #721C24;
+    border: 1px solid #F5C6CB;
+}
+
+.status-message.success {
+    display: block;
+    background-color: #D4EDDA;
+    color: #155724;
+    border: 1px solid #C3E6CB;
+}
+
 @keyframes modalZoomIn {
   from {
     transform: scale(0.5);

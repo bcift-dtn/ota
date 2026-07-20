@@ -1,3 +1,10 @@
+const ferrySearchStatus = document.getElementById('ferrySearchStatus');
+
+function showSearchError(msg) {
+    ferrySearchStatus.textContent = msg;
+    ferrySearchStatus.className = 'status-message error';
+}
+
 flatpickr('input[type="date"]', {
   altInput: true,
   altFormat: "j F Y",
@@ -6,9 +13,30 @@ flatpickr('input[type="date"]', {
   disableMobile: "true",
   allowInput: true,
 });
+
 document.querySelectorAll('input[name="tripType"]').forEach(radio => {
   radio.addEventListener('change', e => {
     const wrapper = document.getElementById('returnDateWrapper');
     wrapper.classList.toggle('hidden', e.target.value !== 'two-way');
   });
 });
+
+document.querySelector('.search-form[data-form="ferry"] form').addEventListener('submit', e => {
+  const departureDate = document.getElementById('departureDate').value;
+  const tripType = document.querySelector('input[name="tripType"]:checked')?.value;
+  const returnDate = document.getElementById('returnDate').value;
+
+  if (!departureDate) {
+    e.preventDefault();
+    showSearchError('Please select a departure date.');
+    document.getElementById('departureDate').focus();
+    return;
+  }
+
+  if (tripType === 'two-way' && !returnDate) {
+      e.preventDefault();
+      showSearchError('Please select a return date for round trips.');
+      document.getElementById('returnDate').focus();
+      return;
+  }
+})

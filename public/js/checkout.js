@@ -6,6 +6,15 @@ const loggedInUser = {
   phone: rawUser?.phone || ''
 };
 
+flatpickr('input[type="date"]', {
+  altInput: true,
+  altFormat: "j F Y",
+  dateFormat: "Y-m-d",
+  minDate: "today",
+  disableMobile: "true",
+  allowInput: true,
+});
+
 const phoneInstances = [];
 
 const phoneInputs = document.querySelectorAll('input[type="tel"][id^="visitorPhoneNumber_"]');

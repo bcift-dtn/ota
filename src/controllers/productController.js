@@ -2,6 +2,8 @@ const { getCarRentalListings, getCarRentalById, getPackagesByProductIds, getCarR
   getActivitiesCount, getActivitiesListings, getActivitiesById, getProductAmenities, getPackageAmenities, 
   getPackagePricingTiers, getPackageTimeSlots, getProductAddons } = require('../models/productModel');
 
+const { getFerryCheckout } = require('./ferryController');
+
 const getCarRentals = async (req, res) => {
   const {
     'driver-needs': driverNeeds,
@@ -277,11 +279,14 @@ const getActivitiesDetail = async (req, res) => {
 }
 
 const getCheckoutPage = async (req, res) => {
-  const draftOrder = req.session.draftOrder;
-
-  if (!draftOrder) return res.redirect('/');
-
   try {
+    const draftOrder = req.session.draftOrder;
+    if (!draftOrder) return res.redirect('/');
+
+    if (draftOrder.productType === 'ferry') {
+      return getFerryCheckout(req, res, draftOrder);
+    }
+
     let rows = [];
 
     if (draftOrder.productType === 'activities') {

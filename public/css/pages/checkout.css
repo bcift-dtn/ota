@@ -205,11 +205,31 @@ h3 {
     border-bottom: 1px solid var(--clr-border);
 }
 
+.input-group-split-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
 @media (min-width: 480px) {
     .input-group-split {
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
     }
+
+    .input-group-split-2 {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+}
+
+.input-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url(/images/icons/chevron-down.svg);;
+  background-repeat: no-repeat;
+  background-position: right 0.3rem center;
+  background-size: 1.2rem;
+  cursor: pointer;
 }
 
 .input-group input,

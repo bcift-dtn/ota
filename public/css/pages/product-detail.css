@@ -159,8 +159,18 @@
 
   outline: none;
   background: none;
-  border: 2px solid var(--clr-primary);
+  border: 2px solid var(--clr-secondary);
   border-radius: 10px;
+  accent-color: var(--clr-secondary);
+}
+
+.booking-pickup-address-wrapper input:active,
+.booking-pickup-address-wrapper input:focus,
+.booking-input-wrapper input:active,
+.booking-input-wrapper input:focus,
+.detail-booking select:active,
+.detail-booking select:focus {
+  border: 2px solid var(--clr-primary);
   accent-color: var(--clr-primary);
 }
 

@@ -14,7 +14,11 @@
   <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.4/build/css/intlTelInput.css"
-    />
+  />
+  <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+  />
 </head>
 
 <body>
@@ -71,58 +75,118 @@
             </section>
         
             <section class="visitor-details-section">
-        
-              <% for (let i=1; i <=draftOrder.totalPax; i++) { %>
-                <div class="visitor-card">
-                  <h2 class="checkout-heading"><i data-lucide="users"></i> Visitor Details</h2>
-                  <h3>Visitor <%= i %>
-                      <%= i===1 ? '(Lead Visitor)' : '' %>
-                  </h3>
-                  <div class="input-group">
-                    <select name="visitorTitle_<%= i %>" id="visitorTitle_<%= i %>">
-                      <option value="Mr">Mr.</option>
-                      <option value="Mrs">Mrs.</option>
-                      <option value="Ms">Ms.</option>
-                    </select>
-                  </div>
-                  <div class="input-group">
-                    <input type="text" name="visitorName_<%= i %>" id="visitorName_<%= i %>" placeholder="Full Name"
-                      required>
-                  </div>
-                  <div class="input-group-split">
+              <% if (draftOrder.productType === 'ferry') { %>
+                <% const paxTypes = [
+                  ...Array(draftOrder.adults).fill('Adult'),
+                  ...Array(draftOrder.children).fill('Child'),
+                  ...Array(draftOrder.infants).fill('Infant')
+                ]; %>
+
+                <% paxTypes.forEach((type, idx) => { const i = idx + 1;  %> 
+                  <div class="visitor-card">
+                    <h2 class="checkout-heading"><i data-lucide="users"></i> Visitor Details</h2>
+                    <h3>Passenger <%= i %> (<%= type %>)</h3>
                     <div class="input-group">
-                      <input type="tel" name="visitorPhoneNumber_<%= i %>" id="visitorPhoneNumber_<%= i %>" required>
+                      <input type="text" name="passportName_<%= i %>" placeholder="Full Name" maxlength="40" required>
+                    </div>
+
+                    <div class="input-group-split-2">
+                      <div class="input-group">
+                        <input type="text" name="passportNo_<%= i %>" placeholder="Passport Number" maxlength="10" required>
+                      </div>
+                      
+                      <div class="input-group">
+                        <select name="gender_<%= i %>" id="gender_<%= i %>" required>
+                          <option value="">Gender</option>
+                          <option value="M">Male</option>
+                          <option value="F">Female</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="input-group-split-2">
+                      <div class="input-group">
+                        <input type="date" class="date-input" name="birthDate_<%= i %>" placeholder="Date of Birth" required>
+                      </div>
+
+                      <div class="input-group">
+                        <input type="text" name="birthPlace_<%= i %>" placeholder="Place of Birth" required>
+                      </div>
+                    </div>
+
+                    <div class="input-group-split-2">
+                      <div class="input-group">
+                        <input type="date" class="date-input" name="passportIssueDate_<%= i %>" placeholder="Passport Issue Date" required>
+                      </div>
+
+                      <div class="input-group">
+                        <input type="date" class="date-input" name="passportExpiredDate_<%= i %>" placeholder="Passport Expiry Date" required>
+                      </div>
+                    </div>
+
+                    <div class="input-group">
+                      <input type="text" class="visitor-nationality" name="nationality_<%= i %>" placeholder="Nationality (e.g. Indonesian)" required>
+                    </div>
+                  </div>
+                <% }) %>
+              <% } else { %>
+                <% for (let i=1; i <=draftOrder.totalPax; i++) { %>
+                  <div class="visitor-card">
+                    <h2 class="checkout-heading"><i data-lucide="users"></i> Visitor Details</h2>
+                    <h3>Visitor <%= i %>
+                        <%= i===1 ? '(Lead Visitor)' : '' %>
+                    </h3>
+                    <div class="input-group">
+                      <select name="visitorTitle_<%= i %>" id="visitorTitle_<%= i %>">
+                        <option value="Mr">Mr.</option>
+                        <option value="Mrs">Mrs.</option>
+                        <option value="Ms">Ms.</option>
+                      </select>
                     </div>
                     <div class="input-group">
-                      <input type="email" name="visitorEmail_<%= i %>" id="visitorEmail_<%= i %>" placeholder="Email"
+                      <input type="text" name="visitorName_<%= i %>" id="visitorName_<%= i %>" placeholder="Full Name"
                         required>
                     </div>
+                    <div class="input-group-split">
+                      <div class="input-group">
+                        <input type="tel" name="visitorPhoneNumber_<%= i %>" id="visitorPhoneNumber_<%= i %>" required>
+                      </div>
+                      <div class="input-group">
+                        <input type="email" name="visitorEmail_<%= i %>" id="visitorEmail_<%= i %>" placeholder="Email"
+                          required>
+                      </div>
+                    </div>
+                    <h3>Additional Information</h3>
+                    <div class="input-group">
+                      <textarea type="text" name="visitorRequest_<%= i %>" id="visitorRequest_<%= i %>"
+                        placeholder="Special Requests (Optional)" rows="4"></textarea>
+                    </div>
                   </div>
-                  <h3>Additional Information</h3>
-                  <div class="input-group">
-                    <textarea type="text" name="visitorRequest_<%= i %>" id="visitorRequest_<%= i %>"
-                      placeholder="Special Requests (Optional)" rows="4"></textarea>
-                  </div>
-                </div>
                 <% } %>
+              <% } %>
             </section>
           </div>
+          
           <section class="checkout-sidebar">
             <div class="order-summary-card">
               <% if (product.image_url) { %>
                 <img src="<%= product.image_url %>" alt="Product Image" class="summary-img">
               <% } %>
               <h2><%= product.title %></h2>
-              <p class="summary-package-name"><%= selectedPackage.package_name || selectedPackage.name %></p>
+              <% if (draftOrder.productType !== 'ferry') { %> 
+                <p class="summary-package-name"><%= selectedPackage.package_name || selectedPackage.name %></p>
+              <% } %>
               <div class="summary-details">
                 <div class="summary-details-row">
                   <span><i data-lucide="calendar"></i> Date:</span>
-                  <span><%= formattedVisitDate %></span>
+                  <span><%= draftOrder.productType === 'ferry' ? formattedDepartureDate : formattedVisitDate %></span>
                 </div>
-                <div class="summary-details-row">
-                  <span><i data-lucide="clock"></i> Time:</span>
-                  <span><%= draftOrder.slotTime %></span>
-                </div>
+                <% if (draftOrder.productType !== 'ferry') { %>
+                  <div class="summary-details-row">
+                    <span><i data-lucide="clock"></i> Time:</span>
+                    <span><%= draftOrder.slotTime %></span>
+                  </div>
+                <% } %>
                 <% if (draftOrder.productType === 'car_rental') { %>
                   <div class="summary-details-row">
                     <span><i data-lucide="map-pin"></i>Pickup:</span>
@@ -132,6 +196,19 @@
                     <span><i data-lucide="users"></i> Quantity:</span>
                     <span><%= draftOrder.bookingQuantity %> Car(s)</span>
                   </div>
+                <% } else if (draftOrder.productType === 'ferry') { %>
+                  <div class="summary-details-row">
+                    <span><i data-lucide="ship"></i> Route:</span>
+                    <span><%= product.depart_port %> → <%= product.arrival_port %></span>
+                  </div>
+                  <div class="summary-details-row">
+                    <span><i data-lucide="tag"></i> Trip Code:</span>
+                    <span><%= draftOrder.tripCode %></span>
+                  </div>
+                  <div class="summary-details-row">
+                    <span><i data-lucide="users"></i> Passengers:</span>
+                    <span><%= totalPax %> Person(s)</span>
+                  </div>
                 <% } else { %>
                   <div class="summary-details-row">
                     <span><i data-lucide="users"></i> Total Visitors:</span>
@@ -140,9 +217,12 @@
                 <% } %>
               </div>
               <div class="summary-price-breakdown">
+                <% const displayBasePrice = draftOrder.productType === 'ferry' ? basePrice : filteredBasePrice; %>
+                <% const displayGrandTotal = draftOrder.productType === 'ferry' ? grandTotal : filteredGrandTotal; %>
+
                 <div class="price-row smaller-label">
                   <span>Package Price</span>
-                  <span>IDR <%= filteredBasePrice.toLocaleString('id-ID') %></span>
+                  <span>IDR <%= displayBasePrice.toLocaleString('id-ID') %></span>
                 </div>
 
                 <div class="price-row smaller-label">
@@ -157,19 +237,21 @@
 
                 <div class="price-row total-row">
                   <span>Total Price</span>
-                  <span class="total-price-text even-bigger-label">IDR <%= filteredGrandTotal.toLocaleString('id-ID') %></span>
+                  <span class="total-price-text even-bigger-label">IDR <%= displayGrandTotal.toLocaleString('id-ID') %></span>
                 </div>
               </div>
-              <div class="policy-box">
-                <p class="smaller-label">
-                  <i data-lucide="<%= selectedPackage.is_reschedulable ? 'calendar-check' : 'calendar-x' %>"></i>
-                  <%= selectedPackage.is_reschedulable ? 'Can be rescheduled' : 'Cannot be rescheduled' %>
-                </p>
-                <p class="smaller-label">
-                  <i data-lucide="<%= selectedPackage.is_refundable ? 'check-circle' : 'x-circle' %>"></i>
-                  <%= selectedPackage.is_refundable ? 'Refundable' : 'Non-refundable' %>
-                </p>
-              </div>
+              <% if (draftOrder.productType !== 'ferry') { %>
+                <div class="policy-box">
+                  <p class="smaller-label">
+                    <i data-lucide="<%= selectedPackage.is_reschedulable ? 'calendar-check' : 'calendar-x' %>"></i>
+                    <%= selectedPackage.is_reschedulable ? 'Can be rescheduled' : 'Cannot be rescheduled' %>
+                  </p>
+                  <p class="smaller-label">
+                    <i data-lucide="<%= selectedPackage.is_refundable ? 'check-circle' : 'x-circle' %>"></i>
+                    <%= selectedPackage.is_refundable ? 'Refundable' : 'Non-refundable' %>
+                  </p>
+                </div>
+              <% } %>
               <button type="submit" class="submit-payment-btn">Continue to Payment</button>
             </div>
           </section>
@@ -189,6 +271,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.4/build/js/intlTelInput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="/js/checkout.js"></script>
 </body>
 

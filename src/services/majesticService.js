@@ -9,31 +9,47 @@ const mffPost = async (endpoint, body = {}) => {
         ...body
     };
 
-    console.log('[MFF] Calling:', endpoint, JSON.stringify(payload));
-
     const res = await fetch(`${MFF_BASE_URL}/${endpoint}/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     });
 
-    if (!res.ok) throw new Error(`MFF API Error: ${res.status}`);
+    if (!res.ok) {
+        const errorBody = await res.text(); // ← read their error message
+        console.error('[MFF] Error body:', errorBody);
+        throw new Error(`MFF API Error: ${res.status}`);
+    }
 
     return res.json();
 }
 
-const getSchedule = (journeyCode, date) => {
+const getSchedule = ({ departPort, arrivalPort, travelDate, totalPax = 1, journeyType = '1', isReturnOpenTicket = '0', returnDepartPort = '', returnArrivalPort = '', returnTravelDate = '' }) => {
     return mffPost('MFFSchedule', {
-        JourneyCode: journeyCode,
-        DepartDate: date
+        TicketCategory: 'Normal',
+        TotalPax: String(totalPax),
+        JourneyType: String(journeyType),
+        IsReturnOpenTicket: String(isReturnOpenTicket),
+        DepartPort: departPort,
+        ArrivalPort: arrivalPort,
+        TravelDate: travelDate,
+        ReturnDepartPort: returnDepartPort,
+        ReturnArrivalPort: returnArrivalPort,
+        ReturnTravelDate: returnTravelDate
+    });
+};
+
+async function getPriceByTripCode(tripCode) {
+    return mffPost('MFFPriceList', {
+        JourneyType: '1',
+        IsReturnOpenTicket: '0',
+        CodeType: 'TripCode',
+        DepartCode: tripCode,
+        ReturnCode: ''
     });
 }
 
-const getPriceList = (journeyCode) => {
-    return mffPost('MFFPriceList', { 
-        JourneyCode: journeyCode
-    });
-}
+const getPriceList = () => mffPost('MFFPriceList', {});
 
 const getTripCapacity = (tripCode) => {
     return mffPost('MFFTripCapacity', {
@@ -46,5 +62,5 @@ const checkDeposit = () => {
 }
 
 module.exports = {
-    getSchedule, getPriceList, getTripCapacity, checkDeposit
+    getSchedule, getPriceList, getTripCapacity, checkDeposit, getPriceByTripCode
 };
