@@ -16,8 +16,20 @@ flatpickr('input[type="date"]', {
 
 document.querySelectorAll('input[name="tripType"]').forEach(radio => {
   radio.addEventListener('change', e => {
+    const newTripType = e.target.value;
+
     const wrapper = document.getElementById('returnDateWrapper');
     wrapper.classList.toggle('hidden', e.target.value !== 'two-way');
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('tripType', newTripType);
+    window.history.replaceState(null, '', url.toString());
+
+    document.querySelectorAll('.detail-btn').forEach(link => {
+      const linkUrl = new URL(link.href);
+      linkUrl.searchParams.set('tripType', newTripType);
+      link.href = linkUrl.toString();
+    })
   });
 });
 
