@@ -6,7 +6,7 @@ const selectedTripCodeEl = document.getElementById('selectedTripCode');
 const prefillDate = document.getElementById('ferryDepartureDate').value || null;
 
 const ferryTripType = document.getElementById('ferryTripType')?.value || 'one-way';
-const isTwoWay = ferryTripType === 'two-way';
+let isTwoWay = ferryTripType === 'two-way';
 const selectedReturnTripCodeEl = document.getElementById('selectedReturnTripCode');
 const returnScheduleContainer = document.getElementById('returnScheduleContainer');
 
@@ -41,23 +41,21 @@ flatpickr('#ferryDepartureDate', {
     }
 });
 
-if (isTwoWay) {
-    const returnPreFill = document.getElementById('ferryReturnDate')?.value || null;
+const returnPreFill = document.getElementById('ferryReturnDate')?.value || null;
 
-    flatpickr('#ferryReturnDate', {
-        altInput: true,
-        altFormat: 'j F Y',
-        dateFormat: 'Y-m-d',
-        minDate: prefillDate || 'today',
-        disableMobile: true,
-        allowInput: true,
-        defaultDate: returnPreFill,
-        onChange: (_, dateStr) => {
-            const depart = document.getElementById('ferryDepartureDate').value;
-            if (depart) fetchSchedules(depart, dateStr);
-        }
-    })
-}
+flatpickr('#ferryReturnDate', {
+    altInput: true,
+    altFormat: 'j F Y',
+    dateFormat: 'Y-m-d',
+    minDate: prefillDate || 'today',
+    disableMobile: true,
+    allowInput: true,
+    defaultDate: returnPreFill,
+    onChange: (_, dateStr) => {
+        const depart = document.getElementById('ferryDepartureDate').value;
+        if (depart) fetchSchedules(depart, dateStr);
+    }
+})
 
 // Change main image preview
 document.querySelectorAll('.detail-thumbnail').forEach(thumb => {
@@ -68,6 +66,49 @@ document.querySelectorAll('.detail-thumbnail').forEach(thumb => {
     thumb.classList.add('active-thumb');
   });
 });
+
+// trips type radio button
+const fromPortSelect = document.getElementById('detailFromPort');
+const toPortSelect = document.getElementById('detailToPort');
+
+document.querySelectorAll('input[name="detailTripType"]').forEach(radio => {
+    radio.addEventListener('change', e => {
+        const isNowTwoWay = e.target.value === 'two-way';
+        isTwoWay = isNowTwoWay;
+
+        document.getElementById('ferryTripType').value = e.target.value;
+
+        const returnDateWrapper = document.getElementById('returnDateBookingWrapper');
+        const returnSection = document.getElementById('returnScheduleSection')
+        if (returnDateWrapper) returnDateWrapper.classList.toggle('hidden', !isNowTwoWay);
+        if (returnSection) returnSection.classList.toggle('hidden', !isNowTwoWay);
+
+        const currentDate = document.getElementById('ferryDepartureDate').value;
+        if(currentDate) {
+            const returnDate = isNowTwoWay ? (document.getElementById('ferryReturnDate')?.value || '') : '';
+            fetchSchedules(currentDate, returnDate);
+        }
+    });
+});
+
+// change from to port logic
+[fromPortSelect, toPortSelect].forEach(sel => {
+    if (!sel) return;
+    sel.addEventListener('change', () => {
+        if (fromPortSelect.value === toPortSelect.value) {
+            showBookingStatus('Departure and arrival port cannot be the same.');
+            return;
+        }
+
+        statusEl.className = 'status-message';
+        const currentDate = document.getElementById('ferryDepartureDate').value;
+        const currentTripType = document.getElementById('ferryTripType').value;
+        const isNowTwoWay = currentTripType === 'two-way';
+        const returnDate = isNowTwoWay ? (document.getElementById('ferryReturnDate')?.value || '') : '';
+
+        if (currentDate) fetchSchedules(currentDate, returnDate)
+    })
+})
 
 // Show schedule if date alr filled
 if (prefillDate) {
@@ -84,6 +125,8 @@ async function fetchSchedules(date, returnDate = '') {
 
     try {
         const params = new URLSearchParams({ date });
+        params.set('fromPort', fromPortSelect?.value || '');
+        params.set('toPort', toPortSelect?.value || '');
         if (isTwoWay) {
             params.set('tripType', 'two-way');
             params.set('returnDate', returnDate);

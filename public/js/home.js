@@ -257,3 +257,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 })
+
+function syncPortOptions() {
+    const from = document.getElementById('fromPort');
+    const to   = document.getElementById('toPort');
+    if (!from || !to) return;
+    Array.from(to.options).forEach(opt   => opt.disabled = (opt.value === from.value));
+    Array.from(from.options).forEach(opt => opt.disabled = (opt.value === to.value));
+}
+document.getElementById('fromPort')?.addEventListener('change', syncPortOptions);
+document.getElementById('toPort')?.addEventListener('change', syncPortOptions);
+syncPortOptions();

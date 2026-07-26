@@ -2,6 +2,21 @@ const productModel = require('../models/productModel');
 const majesticService = require('../services/majesticService');
 const { getSGDtoIDR } = require('../services/rateService');
 
+const PORT_CODES = {
+    'harbourfront': 'HBF',
+    'tanah-merah': 'TMF',
+    'batam-center-terminal': 'BTC',
+    'sekupang': 'SKP',
+    'HBF': 'HBF', 'TMF': 'TMF', 'BTC': 'BTC', 'SKP': 'SKP'
+}
+
+const PORT_NAMES = {
+    'HBF': 'Harbourfront',
+    'TMF': 'Tanah Merah',
+    'BTC': 'Batam Center Terminal',
+    'SKP': 'Sekupang'
+}
+
 const getFerryList = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -33,6 +48,9 @@ const getFerryDetail = async (req, res) => {
 
         const product = rows[0];
 
+        const departPortCode = PORT_CODES[req.query.fromPort] || product.depart_port;
+        const arrivalPortCode = PORT_CODES[req.query.toPort] || product.arrival_port;
+
         if (product.vendor_api_name === 'MAJESTIC') {
             const today = new Date().toISOString().split('T')[0];
             let schedule = [];
@@ -57,6 +75,9 @@ const getFerryDetail = async (req, res) => {
                 prices,
                 isApiDriven: true,
                 query: req.query,
+                departPortCode,
+                arrivalPortCode,
+                PORT_NAMES,
             });
         }
 
@@ -67,6 +88,9 @@ const getFerryDetail = async (req, res) => {
             prices: [],
             isApiDriven: false,
             query: req.query,
+            departPortCode,
+            arrivalPortCode,
+            PORT_NAMES,
         })
     } catch (error) {
         console.error('Ferry detail error:', error);
@@ -84,15 +108,17 @@ const getScheduleByDate = async (req, res) => {
         const tripType = req.query.tripType || 'one-way';
         const returnDate = req.query.returnDate || '';
         const isTwoWay = tripType === 'two-way' && !!returnDate;
+        const departPort = PORT_CODES[req.query.fromPort] || product.depart_port;
+        const arrivalPort = PORT_CODES[req.query.toPort] || product.arrival_port;
 
         const apiData = await majesticService.getSchedule({
-            departPort: product.depart_port,
-            arrivalPort: product.arrival_port,
+            departPort: departPort,
+            arrivalPort: arrivalPort,
             travelDate: date,
             journeyType: isTwoWay? '2' : '1',
             isReturnOpenTicket: '0',
-            returnDepartPort: isTwoWay ? product.arrival_port : '',
-            returnArrivalPort: isTwoWay ? product.depart_port : '',
+            returnDepartPort: isTwoWay ? arrivalPort : '',
+            returnArrivalPort: isTwoWay ? departPort : '',
             returnTravelDate: isTwoWay ? returnDate : ''
         });
 

@@ -101,10 +101,35 @@
                         <div class="status-message" id="ferryBookingStatus"></div>
 
                         <div class="ferry-trip-type-display">
-                            <p class="even-smaller-label label-text">
-                                <%= query.tripType === 'two-way' ? 'Round Trip' : 'One way' %> 
-                                - <%= product.depart_port %> → <%= product.arrival_port %>
-                            </p>
+                            <div class="trip-type-wrapper">
+                                <input type="radio" id="detailOnewayRadio" name="detailTripType" value="one-way" <%= (query.tripType !== 'two-way') ? 'checked' : '' %>>
+                                <label for="detailOnewayRadio" class="label-text">One way</label>
+
+                                <input type="radio" id="detailTwowayRadio" name="detailTripType" value="two-way" <%= (query.tripType === 'two-way') ? 'checked' : '' %>>
+                                <label for="detailTwowayRadio" class="label-text">Round Trip</label>
+                            </div>
+                        </div>
+
+                        <div class="booking-input-wrapper">
+                            <div class="booking-port-wrapper">
+                                <label for="detailFromPort" class="label-text">From</label>
+                                <select name="detailFromPort" id="detailFromPort">
+                                    <option value="HBF" <%= departPortCode === 'HBF' ? 'selected' : '' %>>Harbourfront</option>
+                                    <option value="TMF" <%= departPortCode === 'TMF' ? 'selected' : '' %>>Tanah Merah</option>
+                                    <option value="BTC" <%= departPortCode === 'BTC' ? 'selected' : '' %>>Batam Centre</option>
+                                    <option value="SKP" <%= departPortCode === 'SKP' ? 'selected' : '' %>>Sekupang</option>
+                                </select>
+                            </div>
+
+                            <div class="booking-port-wrapper">
+                                <label for="detailToPort" class="label-text">To</label>
+                                <select name="detailToPort" id="detailToPort">
+                                    <option value="HBF" <%= arrivalPortCode === 'HBF' ? 'selected' : '' %>>Harbourfront</option>
+                                    <option value="TMF" <%= arrivalPortCode === 'TMF' ? 'selected' : '' %>>Tanah Merah</option>
+                                    <option value="BTC" <%= arrivalPortCode === 'BTC' ? 'selected' : '' %>>Batam Centre</option>
+                                    <option value="SKP" <%= arrivalPortCode === 'SKP' ? 'selected' : '' %>>Sekupang</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="booking-input-wrapper">
@@ -118,15 +143,11 @@
                             <input type="hidden" id="ferryTripType" value="<%= query.tripType || 'one-way' %>">
                             <input type="hidden" id="selectedReturnTripCode" value="">
 
-                            <% if (query.tripType === 'two-way') { %> 
-                                <div class="booking-pickup-date-wrapper" id="returnDateBookingWrapper">
-                                    <label for="ferryReturnDate" class="label-text">Return Date</label>
-                                    <input type="date" class="date-input" id="ferryReturnDate" name="ferryReturnDate" value="<%= query.returnDate || '' %>" placeholder="Select return date..." required>
-                                </div>
-                            <% } %>
+                            <div class="booking-pickup-date-wrapper <%= query.tripType !== 'two-way' ? 'hidden' : '' %>" id="returnDateBookingWrapper">
+                                <label for="ferryReturnDate" class="label-text">Return Date</label>
+                                <input type="date" class="date-input" id="ferryReturnDate" name="ferryReturnDate" value="<%= query.returnDate || '' %>" placeholder="Select return date..." required>
+                            </div>
                         </div>
-
-                        
 
                         <div class="ferry-schedule-section">
                             <p class="label-text">Available Departures</p>
@@ -135,14 +156,12 @@
                             </div>
                         </div>
 
-                        <% if (query.tripType === 'two-way') { %> 
-                            <div class="ferry-schedule-section" id="returnScheduleSection">
-                                <p class="label-text">Available Returns</p>
-                                <div id="returnScheduleContainer" class="schedule-container">
-                                    <p class="label-text schedule-placeholder">Select a return date to view available returns.</p>
-                                </div>
+                        <div class="ferry-schedule-section <%= query.tripType !== 'two-way' ? 'hidden' : '' %>" id="returnScheduleSection">
+                            <p class="label-text">Available Returns</p>
+                            <div id="returnScheduleContainer" class="schedule-container">
+                                <p class="label-text schedule-placeholder">Select a return date to view available returns.</p>
                             </div>
-                        <% } %>
+                        </div>
 
                         <div class="pax-counter-wrapper">
                             <div class="pax-counter" data-type="adult" data-min="1">
