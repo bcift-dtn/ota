@@ -39,22 +39,54 @@ const getSchedule = ({ departPort, arrivalPort, travelDate, totalPax = 1, journe
     });
 };
 
-async function getPriceByTripCode(tripCode) {
-    return mffPost('MFFPriceList', {
-        JourneyType: '1',
+async function getPriceByTripCode(tripCode, journeyType = '1') {
+    return mffPost('MFFPriceListByTripCode', {
+        TicketCategory: 'Normal',
+        JourneyType: journeyType,
         IsReturnOpenTicket: '0',
         CodeType: 'TripCode',
         DepartCode: tripCode,
-        ReturnCode: ''
+        ReturnCode: '',
     });
 }
 
 const getPriceList = () => mffPost('MFFPriceList', {});
 
-const getTripCapacity = (tripCode) => {
+const getTripCapacity = (tripCode, travelDate, totalPax) => {
     return mffPost('MFFTripCapacity', {
-        TripCode: tripCode
+        TripCode: tripCode,
+        TravelDate: travelDate,
+        TotalPax: String(totalPax)
     });
+}
+
+let _countryCache = { value: null, fetchedAt: 0};
+let _countryInFlight = null;
+const ONE_DAY = 24 * 60 * 60 * 1000;
+
+async function getCountryList() {
+    if (_countryCache.value && Date.now() - _countryCache.fetchedAt < ONE_DAY) {
+        return _countryCache.value;
+    }
+
+    if (_countryInFlight) return _countryInFlight;
+
+    _countryInFlight = mffPost('MFFCountryList')
+        .then(data => {
+            _countryCache = { value: data, fetchedAt: Date.now() };
+
+            console.log(`[MFF] CountryList cached: ${data.length} countries`);
+            return data;
+        })
+        .catch(err => {
+            console.error(`[MFF] CountryList fetch failed:`, err.message);
+            return _countryCache.value || [];
+        })
+        .finally(() => {
+            _countryInFlight = null;
+        });
+
+    return _countryInFlight;
 }
 
 const checkDeposit = () => {
@@ -62,5 +94,5 @@ const checkDeposit = () => {
 }
 
 module.exports = {
-    getSchedule, getPriceList, getTripCapacity, checkDeposit, getPriceByTripCode
+    getSchedule, getPriceList, getTripCapacity, checkDeposit, getPriceByTripCode, getCountryList
 };

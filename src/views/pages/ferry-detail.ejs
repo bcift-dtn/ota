@@ -113,7 +113,20 @@
                                 <input type="date" class="date-input" id="ferryDepartureDate" name="ferryDepartureDate"
                                 value="<%= query.departureDate || '' %>" placeholder="Select date..." required>
                             </div>
+
+
+                            <input type="hidden" id="ferryTripType" value="<%= query.tripType || 'one-way' %>">
+                            <input type="hidden" id="selectedReturnTripCode" value="">
+
+                            <% if (query.tripType === 'two-way') { %> 
+                                <div class="booking-pickup-date-wrapper" id="returnDateBookingWrapper">
+                                    <label for="ferryReturnDate" class="label-text">Return Date</label>
+                                    <input type="date" class="date-input" id="ferryReturnDate" name="ferryReturnDate" value="<%= query.returnDate || '' %>" placeholder="Select return date..." required>
+                                </div>
+                            <% } %>
                         </div>
+
+                        
 
                         <div class="ferry-schedule-section">
                             <p class="label-text">Available Departures</p>
@@ -121,6 +134,15 @@
                                 <p class="label-text schedule-placeholder">Select a date view available departures.</p>
                             </div>
                         </div>
+
+                        <% if (query.tripType === 'two-way') { %> 
+                            <div class="ferry-schedule-section" id="returnScheduleSection">
+                                <p class="label-text">Available Returns</p>
+                                <div id="returnScheduleContainer" class="schedule-container">
+                                    <p class="label-text schedule-placeholder">Select a return date to view available returns.</p>
+                                </div>
+                            </div>
+                        <% } %>
 
                         <div class="pax-counter-wrapper">
                             <div class="pax-counter" data-type="adult" data-min="1">

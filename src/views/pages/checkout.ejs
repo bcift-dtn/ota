@@ -125,7 +125,12 @@
                     </div>
 
                     <div class="input-group">
-                      <input type="text" class="visitor-nationality" name="nationality_<%= i %>" placeholder="Nationality (e.g. Indonesian)" required>
+                      <select name="nationality_<%= i %>" id="nationality_<%= i %>" required>
+                        <option value="">Select Nationality</option>
+                        <% countryList.forEach(c => { %>
+                          <option value="<%= c.Nationality %>"><%= c.Nationality %></option>
+                        <% }) %>
+                      </select>
                     </div>
                   </div>
                 <% }) %>

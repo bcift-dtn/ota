@@ -5,6 +5,11 @@ const totalPriceDisplay = document.getElementById('bookingTotalPriceText');
 const selectedTripCodeEl = document.getElementById('selectedTripCode');
 const prefillDate = document.getElementById('ferryDepartureDate').value || null;
 
+const ferryTripType = document.getElementById('ferryTripType')?.value || 'one-way';
+const isTwoWay = ferryTripType === 'two-way';
+const selectedReturnTripCodeEl = document.getElementById('selectedReturnTripCode');
+const returnScheduleContainer = document.getElementById('returnScheduleContainer');
+
 const currentUser = JSON.parse(document.getElementById('pageData').dataset.user);
 const ferryModalOverlay = document.querySelector('#modalOverlay');
 const statusEl = document.getElementById('ferryBookingStatus');
@@ -16,6 +21,11 @@ function showBookingStatus(message, type = 'error') {
     statusEl.scrollIntoView({ behavior: 'smooth', block: 'nearest'});
 }
 
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('error') === 'no_seats') {
+    showBookingStatus('Sorry, this trip no longer has enough seats. Please select another departure time.')
+}
+
 // Init flatpickr
 flatpickr('#ferryDepartureDate', {
     altInput: true,
@@ -25,8 +35,29 @@ flatpickr('#ferryDepartureDate', {
     disableMobile: true,
     allowInput: true,
     defaultDate: prefillDate,
-    onChange: (SelectedDates, dateStr) => fetchSchedules(dateStr),
+    onChange: (_, dateStr) => {
+        const returnDate = isTwoWay ? (document.getElementById('ferryReturnDate')?.value || '') : '';
+        fetchSchedules(dateStr, returnDate);
+    }
 });
+
+if (isTwoWay) {
+    const returnPreFill = document.getElementById('ferryReturnDate')?.value || null;
+
+    flatpickr('#ferryReturnDate', {
+        altInput: true,
+        altFormat: 'j F Y',
+        dateFormat: 'Y-m-d',
+        minDate: prefillDate || 'today',
+        disableMobile: true,
+        allowInput: true,
+        defaultDate: returnPreFill,
+        onChange: (_, dateStr) => {
+            const depart = document.getElementById('ferryDepartureDate').value;
+            if (depart) fetchSchedules(depart, dateStr);
+        }
+    })
+}
 
 // Change main image preview
 document.querySelectorAll('.detail-thumbnail').forEach(thumb => {
@@ -39,15 +70,31 @@ document.querySelectorAll('.detail-thumbnail').forEach(thumb => {
 });
 
 // Show schedule if date alr filled
-if (prefillDate) fetchSchedules(prefillDate);
+if (prefillDate) {
+    const returnPrefill = isTwoWay ? (document.getElementById('ferryReturnDate')?.value || '') : '';
+    fetchSchedules(prefillDate, returnPrefill);
+};
 
 // Get schedule
-async function fetchSchedules(date) {
+async function fetchSchedules(date, returnDate = '') {
     scheduleContainer.innerHTML = '<p class="label-text">Loading schedules...</p>';
+    if (isTwoWay && returnScheduleContainer) {
+        returnScheduleContainer.innerHTML = `<p class="label-text">Loading returns...</p>`;
+    }
+
     try {
-        const res = await fetch(`/ferry/${productId}/schedules?date=${date}`);
+        const params = new URLSearchParams({ date });
+        if (isTwoWay) {
+            params.set('tripType', 'two-way');
+            params.set('returnDate', returnDate);
+        }
+        const res = await fetch(`/ferry/${productId}/schedules?${params}`);
         const data = await res.json();
         renderSchedules(data.schedule, data.pricePerPax);
+
+        if (isTwoWay && returnScheduleContainer) {
+            renderReturnSchedules(data.returnSchedule, data.pricePerPax);
+        }
         
     } catch (error) {
         scheduleContainer.innerHTML = '<p class="label-text">Failed to load schedules. Please try again.</p>'
@@ -82,6 +129,34 @@ function selectSchedule(card) {
     selectedTripCodeEl.value = card.dataset.tripCode;
     pricePerPaxEl.value = card.dataset.price
     recalculateTotal();
+}
+
+// Return Schedule
+function renderReturnSchedules(schedule, pricePerPax) {
+    if (!returnScheduleContainer) return;
+
+    if (!schedule || schedule.length === 0) {
+        returnScheduleContainer.innerHTML = '<p class="label-text">No returns available for this date.</p>'
+        return;
+    }
+
+    returnScheduleContainer.innerHTML = schedule.map(slot => `
+        <div class="schedule-card return-schedule-card" data-trip-code="${slot.TripCode}" data-price="${pricePerPax}">
+        <p class="label-text">${slot.TravelTime}</p>
+        <p class="even-smaller-label">${slot.SeatCategory ?? 'Premium'}</p>
+        <p class="label-text">IDR ${Number(pricePerPax).toLocaleString('id-ID')}</p>
+        </div>
+    `).join('');
+    
+    returnScheduleContainer.querySelectorAll('.return-schedule-card').forEach(card => {
+        card.addEventListener('click', () => selectReturnSchedule(card));
+    });
+}
+
+function selectReturnSchedule(card) {
+    returnScheduleContainer.querySelectorAll('.return-schedule-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedReturnTripCodeEl.value = card.dataset.tripCode;
 }
 
 document.querySelectorAll('.pax-counter').forEach(counter => {
@@ -131,6 +206,11 @@ document.getElementById('ferryBookingContinueBtn').addEventListener('click', asy
         return;
     }
 
+    if (isTwoWay && !selectedReturnTripCodeEl.value) {
+        showBookingStatus('Please select a return departure time.');
+        return;
+    }
+
     // clear old status
     statusEl.className = 'status-message';
 
@@ -140,6 +220,10 @@ document.getElementById('ferryBookingContinueBtn').addEventListener('click', asy
             productType: 'ferry',
             tripCode,
             departureDate: date,
+            ...(isTwoWay && {
+                returnTripCode: selectedReturnTripCodeEl.value,
+                returnDate: document.getElementById('ferryReturnDate')?.value
+            }),
             adults: parseInt(document.getElementById('adultCount').textContent),
             children: parseInt(document.getElementById('childCount').textContent),
             infants: parseInt(document.getElementById('infantCount').textContent)
@@ -159,6 +243,10 @@ document.getElementById('ferryBookingContinueBtn').addEventListener('click', asy
                 productType: 'ferry',
                 tripCode,
                 departureDate: date,
+                ...(isTwoWay && {
+                    returnTripCode: selectedReturnTripCodeEl.value,
+                    returnDate: document.getElementById('ferryReturnDate')?.value
+                }),
                 SeatCategory: document.querySelector('.schedule-card.selected .even-smaller-label')?.textContent || 'Premium',
                 adults: parseInt(document.getElementById('adultCount').textContent),
                 children: parseInt(document.getElementById('childCount').textContent),
@@ -177,4 +265,3 @@ document.getElementById('ferryBookingContinueBtn').addEventListener('click', asy
         showBookingStatus('Failed to proceed to checkout. Please try again.');
     }
 });
-
