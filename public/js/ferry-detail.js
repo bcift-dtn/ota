@@ -14,6 +14,52 @@ const currentUser = JSON.parse(document.getElementById('pageData').dataset.user)
 const ferryModalOverlay = document.querySelector('#modalOverlay');
 const statusEl = document.getElementById('ferryBookingStatus');
 
+const scheduleModalOverlay = document.getElementById('scheduleModalOverlay');
+const scheduleModalBody    = document.getElementById('scheduleModalBody');
+const scheduleModalTitle   = document.getElementById('scheduleModalTitle');
+const departureScheduleBtn = document.getElementById('departureScheduleBtn');
+const returnScheduleBtn    = document.getElementById('returnScheduleBtn');
+
+let currentScheduleType = 'depart';
+let _cachedDepartSchedule = [];
+let _cachedReturnSchedule = [];
+let _cachedPricePerPax = 0;
+
+const BATAM_PORTS = new Set(['BTC', 'SKP']);
+const SG_PORTS = new Set(['HBF', 'TMF']);
+
+function getRegion(code) {
+    return BATAM_PORTS.has(code) ? 'batam' : SG_PORTS.has(code) ? 'sg' : null;
+}
+
+function syncPortOptions(fromSel, toSel) {
+    const fromRegion = getRegion(fromSel.value);
+    Array.from(toSel.options).forEach(opt => {
+        opt.disabled = opt.value === fromSel.value || getRegion (opt.value) === fromRegion;
+    });
+
+    if (toSel.options[toSel.selectedIndex]?.disabled) {
+        const firstValid = Array.from(toSel.options).find(o => !o.disabled);
+        if (firstValid) toSel.value = firstValid.value;
+    }
+}
+
+function openScheduleModal(type) {
+    currentScheduleType = type;
+    scheduleModalTitle.textContent = type === 'depart' ? 'Select Departure Time' : 'Select Return Time';
+    const data = type === 'depart' ? _cachedDepartSchedule : _cachedReturnSchedule;
+    renderSchedulesIntoModal(data, _cachedPricePerPax);
+    scheduleModalOverlay.classList.remove('hidden');
+}
+function closeScheduleModal() {
+    scheduleModalOverlay.classList.add('hidden');
+}
+
+departureScheduleBtn?.addEventListener('click', () => openScheduleModal('depart'));
+returnScheduleBtn?.addEventListener('click',    () => openScheduleModal('return'));
+document.getElementById('scheduleModalClose')?.addEventListener('click', closeScheduleModal);
+scheduleModalOverlay?.addEventListener('click', e => { if (e.target === e.currentTarget) closeScheduleModal(); });
+
 // Validation status
 function showBookingStatus(message, type = 'error') {
     statusEl.textContent = message;
@@ -70,6 +116,13 @@ document.querySelectorAll('.detail-thumbnail').forEach(thumb => {
 // trips type radio button
 const fromPortSelect = document.getElementById('detailFromPort');
 const toPortSelect = document.getElementById('detailToPort');
+const returnFromPortSelect = document.getElementById('detailReturnFromPort');
+const returnToPortSelect   = document.getElementById('detailReturnToPort');
+
+syncPortOptions(fromPortSelect, toPortSelect);
+if (returnFromPortSelect && returnToPortSelect) {
+    syncPortOptions(returnFromPortSelect, returnToPortSelect);
+}
 
 document.querySelectorAll('input[name="detailTripType"]').forEach(radio => {
     radio.addEventListener('change', e => {
@@ -80,8 +133,11 @@ document.querySelectorAll('input[name="detailTripType"]').forEach(radio => {
 
         const returnDateWrapper = document.getElementById('returnDateBookingWrapper');
         const returnSection = document.getElementById('returnScheduleSection')
+        const returnPortRow = document.getElementById('returnPortRow');
         if (returnDateWrapper) returnDateWrapper.classList.toggle('hidden', !isNowTwoWay);
         if (returnSection) returnSection.classList.toggle('hidden', !isNowTwoWay);
+        if (returnPortRow) returnPortRow.classList.toggle('hidden', !isNowTwoWay);
+        returnScheduleBtn?.classList.toggle('hidden', !isNowTwoWay);
 
         const currentDate = document.getElementById('ferryDepartureDate').value;
         if(currentDate) {
@@ -95,10 +151,8 @@ document.querySelectorAll('input[name="detailTripType"]').forEach(radio => {
 [fromPortSelect, toPortSelect].forEach(sel => {
     if (!sel) return;
     sel.addEventListener('change', () => {
-        if (fromPortSelect.value === toPortSelect.value) {
-            showBookingStatus('Departure and arrival port cannot be the same.');
-            return;
-        }
+        syncPortOptions(fromPortSelect, toPortSelect);
+        syncPortOptions(returnFromPortSelect, returnToPortSelect);
 
         statusEl.className = 'status-message';
         const currentDate = document.getElementById('ferryDepartureDate').value;
@@ -106,9 +160,22 @@ document.querySelectorAll('input[name="detailTripType"]').forEach(radio => {
         const isNowTwoWay = currentTripType === 'two-way';
         const returnDate = isNowTwoWay ? (document.getElementById('ferryReturnDate')?.value || '') : '';
 
-        if (currentDate) fetchSchedules(currentDate, returnDate)
-    })
-})
+        if (currentDate) fetchSchedules(currentDate, returnDate);
+    });
+});
+
+// Return from to port logic
+[returnFromPortSelect, returnToPortSelect].forEach(sel => {
+    if (!sel) return;
+    sel.addEventListener('change', () => {
+        syncPortOptions(fromPortSelect, toPortSelect);
+        syncPortOptions(returnFromPortSelect, returnToPortSelect);
+        statusEl.className = 'status-message';
+        const currentDate = document.getElementById('ferryDepartureDate').value;
+        const returnDate = document.getElementById('ferryReturnDate')?.value || '';
+        if (currentDate) fetchSchedules(currentDate, returnDate);
+    });
+});
 
 // Show schedule if date alr filled
 if (prefillDate) {
@@ -118,10 +185,9 @@ if (prefillDate) {
 
 // Get schedule
 async function fetchSchedules(date, returnDate = '') {
-    scheduleContainer.innerHTML = '<p class="label-text">Loading schedules...</p>';
-    if (isTwoWay && returnScheduleContainer) {
-        returnScheduleContainer.innerHTML = `<p class="label-text">Loading returns...</p>`;
-    }
+    
+    departureScheduleBtn?.setAttribute('disabled', '');
+    if (isTwoWay) returnScheduleBtn?.setAttribute('disabled', '');
 
     try {
         const params = new URLSearchParams({ date });
@@ -130,18 +196,47 @@ async function fetchSchedules(date, returnDate = '') {
         if (isTwoWay) {
             params.set('tripType', 'two-way');
             params.set('returnDate', returnDate);
+            params.set('returnFromPort', returnFromPortSelect?.value || toPortSelect.value);
+            params.set('returnToPort',   returnToPortSelect?.value || fromPortSelect.value);
         }
         const res = await fetch(`/ferry/${productId}/schedules?${params}`);
         const data = await res.json();
-        renderSchedules(data.schedule, data.pricePerPax);
 
-        if (isTwoWay && returnScheduleContainer) {
-            renderReturnSchedules(data.returnSchedule, data.pricePerPax);
-        }
+        departureScheduleBtn?.removeAttribute('disabled');
+        if (isTwoWay) returnScheduleBtn?.removeAttribute('disabled');
+
+        _cachedDepartSchedule = data.schedule || [];
+        _cachedReturnSchedule = data.returnSchedule || [];
+        _cachedPricePerPax    = data.pricePerPax || 0;
+
+        departureScheduleBtn?.classList.toggle('btn-unavailable', _cachedDepartSchedule.length === 0);
+        if (isTwoWay) returnScheduleBtn?.classList.toggle('btn-unavailable', _cachedReturnSchedule.length === 0)
         
     } catch (error) {
-        scheduleContainer.innerHTML = '<p class="label-text">Failed to load schedules. Please try again.</p>'
+        showBookingStatus('Failed to load schedules. Please try again.');
     }
+}
+
+function renderSchedulesIntoModal(schedule, pricePerPax) {
+    if (!schedule || schedule.length === 0) {
+        scheduleModalBody.innerHTML = `<p class="label-text">No schedules available for this date.</p>`;
+        return;
+    }
+    scheduleModalBody.innerHTML = schedule.map(slot => `
+        <div class="schedule-card" data-trip-code="${slot.TripCode}" data-price="${pricePerPax}">
+            <p class="label-text">${slot.TravelTime}</p>
+            <p class="even-smaller-label">${slot.SeatCategory ?? 'Premium'}</p>
+            <p class="label-text">IDR ${Number(pricePerPax).toLocaleString('id-ID')}</p>
+        </div>
+    `).join('');
+
+    scheduleModalBody.querySelectorAll('.schedule-card').forEach(card => {
+        card.addEventListener('click', () => {
+            if (currentScheduleType === 'depart') selectSchedule(card);
+            else selectReturnSchedule(card);
+            closeScheduleModal();
+        })
+    })
 }
 
 function renderSchedules(schedule, pricePerPax) {
@@ -172,6 +267,11 @@ function selectSchedule(card) {
     selectedTripCodeEl.value = card.dataset.tripCode;
     pricePerPaxEl.value = card.dataset.price
     recalculateTotal();
+
+    const time = card.querySelector('.label-text').textContent;
+    const cat  = card.querySelector('.even-smaller-label').textContent;
+    document.getElementById('departureScheduleLabel').textContent = `${time} — ${cat}`;
+    departureScheduleBtn?.classList.add('has-selection');
 }
 
 // Return Schedule
@@ -197,9 +297,14 @@ function renderReturnSchedules(schedule, pricePerPax) {
 }
 
 function selectReturnSchedule(card) {
-    returnScheduleContainer.querySelectorAll('.return-schedule-card').forEach(c => c.classList.remove('selected'));
+    scheduleModalBody.querySelectorAll('.schedule-card').forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
     selectedReturnTripCodeEl.value = card.dataset.tripCode;
+    
+    const time = card.querySelector('.label-text').textContent;
+    const cat = card.querySelector('.even-smaller-label').textContent;
+    document.getElementById('returnScheduleLabel').textContent = `${time} - ${cat}`;
+    returnScheduleBtn?.classList.add('has-selection');
 }
 
 document.querySelectorAll('.pax-counter').forEach(counter => {

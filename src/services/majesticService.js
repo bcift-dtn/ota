@@ -24,7 +24,11 @@ const mffPost = async (endpoint, body = {}) => {
     return res.json();
 }
 
-const getSchedule = ({ departPort, arrivalPort, travelDate, totalPax = 1, journeyType = '1', isReturnOpenTicket = '0', returnDepartPort = '', returnArrivalPort = '', returnTravelDate = '' }) => {
+const getSchedule = ({ 
+    departPort, arrivalPort, travelDate, totalPax = 1, journeyType = '1', 
+    isReturnOpenTicket = '0', returnDepartPort = '', returnArrivalPort = '', 
+    returnTravelDate = '' }) => {
+        const isReturn = journeyType === '2';
     return mffPost('MFFSchedule', {
         TicketCategory: 'Normal',
         TotalPax: String(totalPax),
@@ -33,9 +37,11 @@ const getSchedule = ({ departPort, arrivalPort, travelDate, totalPax = 1, journe
         DepartPort: departPort,
         ArrivalPort: arrivalPort,
         TravelDate: travelDate,
-        ReturnDepartPort: returnDepartPort,
-        ReturnArrivalPort: returnArrivalPort,
-        ReturnTravelDate: returnTravelDate
+        ...(isReturn && {
+            ReturnDepartPort: returnDepartPort,
+            ReturnArrivalPort: returnArrivalPort,
+            ReturnTravelDate: returnTravelDate,
+        })
     });
 };
 

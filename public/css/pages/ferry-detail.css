@@ -40,3 +40,171 @@
     border-top: 1px solid var(--clr-accent);
     margin-top: 1rem;
 }
+
+/* Detail Page Trip Type Radio */
+.ferry-trip-type-radio-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.ferry-trip-type-radio-group .trip-radio-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex: 1;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--clr-border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.ferry-trip-type-radio-group .trip-radio-label:hover {
+    border-color: var(--clr-primary);
+    background-color: var(--clr-accent);
+}
+
+.ferry-trip-type-radio-group .trip-radio-label:has(input[type="radio"]:checked) {
+    border-color: var(--clr-primary);
+    background-color: var(--clr-secondary);
+}
+
+.ferry-trip-type-radio-group input[type="radio"] {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--clr-primary);
+    cursor: pointer;
+    margin: 0;
+}
+
+/* Port */
+.ferry-port-row,
+.ferry-return-port-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+
+.ferry-port-row .booking-port-wrapper,
+.ferry-return-port-row .booking-port-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.ferry-port-separator {
+    color: var(--clr-primary);
+    font-weight: 700;
+    padding-bottom: 0.6rem;
+}
+.ferry-return-port-row {
+    padding-top: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* ── Select Schedule Button ── */
+.schedule-btn-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.schedule-select-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    flex: 1;
+    padding: 0.75rem 1rem;
+    background: none;
+    border: 2px solid var(--clr-accent);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+    text-align: left;
+    min-width: 0;
+}
+
+.schedule-select-btn:hover {
+    border-color: var(--clr-primary);
+}
+
+.schedule-select-btn.has-selection {
+    border-color: var(--clr-primary);
+    background-color: var(--clr-accent);
+}
+
+.schedule-select-btn .btn-header {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--clr-label-font);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.schedule-select-btn .btn-value {
+    font-weight: 600;
+    color: var(--clr-primary-font);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+/* ── Schedule Modal ── */
+.schedule-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 900;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.schedule-modal {
+    background: white;
+    border-radius: 20px 20px 0 0;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 600px;
+    max-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.schedule-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.schedule-modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--clr-label-font);
+    line-height: 1;
+    padding: 0;
+}
+
+.schedule-modal-body {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+}
+
+@media (min-width: 860px) {
+    .schedule-modal-overlay { align-items: center; }
+    .schedule-modal { border-radius: 20px; max-height: 60vh; }
+}

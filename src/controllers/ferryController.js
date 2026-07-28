@@ -117,8 +117,8 @@ const getScheduleByDate = async (req, res) => {
             travelDate: date,
             journeyType: isTwoWay? '2' : '1',
             isReturnOpenTicket: '0',
-            returnDepartPort: isTwoWay ? arrivalPort : '',
-            returnArrivalPort: isTwoWay ? departPort : '',
+            returnDepartPort: isTwoWay ? (PORT_CODES[req.query.returnFromPort] || arrivalPort) : '',
+            returnArrivalPort: isTwoWay ? (PORT_CODES[req.query.returnToPort]  || departPort)  : '',
             returnTravelDate: isTwoWay ? returnDate : ''
         });
 

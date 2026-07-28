@@ -100,34 +100,74 @@
 
                         <div class="status-message" id="ferryBookingStatus"></div>
 
-                        <div class="ferry-trip-type-display">
-                            <div class="trip-type-wrapper">
-                                <input type="radio" id="detailOnewayRadio" name="detailTripType" value="one-way" <%= (query.tripType !== 'two-way') ? 'checked' : '' %>>
-                                <label for="detailOnewayRadio" class="label-text">One way</label>
+                        <div class="ferry-trip-type-radio-group">
+                            <label class="trip-radio-label">
+                                <input type="radio" name="detailTripType" value="one-way" <%= (query.tripType !== 'two-way') ? 'checked' : '' %>>
+                                <span class="label-text">One way</span>
+                            </label>
 
-                                <input type="radio" id="detailTwowayRadio" name="detailTripType" value="two-way" <%= (query.tripType === 'two-way') ? 'checked' : '' %>>
-                                <label for="detailTwowayRadio" class="label-text">Round Trip</label>
-                            </div>
+                            <label class="trip-radio-label">
+                                <input type="radio" name="detailTripType" value="two-way" <%= (query.tripType === 'two-way') ? 'checked' : '' %>>
+                                <span class="label-text">Round Trip</span>
+                            </label>
                         </div>
 
-                        <div class="booking-input-wrapper">
+                        <div class="ferry-port-row">
                             <div class="booking-port-wrapper">
                                 <label for="detailFromPort" class="label-text">From</label>
                                 <select name="detailFromPort" id="detailFromPort">
-                                    <option value="HBF" <%= departPortCode === 'HBF' ? 'selected' : '' %>>Harbourfront</option>
-                                    <option value="TMF" <%= departPortCode === 'TMF' ? 'selected' : '' %>>Tanah Merah</option>
-                                    <option value="BTC" <%= departPortCode === 'BTC' ? 'selected' : '' %>>Batam Centre</option>
-                                    <option value="SKP" <%= departPortCode === 'SKP' ? 'selected' : '' %>>Sekupang</option>
+                                    <optgroup label="Singapore">
+                                        <option value="HBF" <%= departPortCode === 'HBF' ? 'selected' : '' %>>Harbourfront</option>
+                                        <option value="TMF" <%= departPortCode === 'TMF' ? 'selected' : '' %>>Tanah Merah</option>
+                                    </optgroup>
+                                    <optgroup label="Batam">
+                                        <option value="BTC" <%= departPortCode === 'BTC' ? 'selected' : '' %>>Batam Centre</option>
+                                        <option value="SKP" <%= departPortCode === 'SKP' ? 'selected' : '' %>>Sekupang</option>
+                                    </optgroup>
                                 </select>
                             </div>
-
+                            <span class="ferry-port-separator">→</span>
                             <div class="booking-port-wrapper">
                                 <label for="detailToPort" class="label-text">To</label>
                                 <select name="detailToPort" id="detailToPort">
-                                    <option value="HBF" <%= arrivalPortCode === 'HBF' ? 'selected' : '' %>>Harbourfront</option>
-                                    <option value="TMF" <%= arrivalPortCode === 'TMF' ? 'selected' : '' %>>Tanah Merah</option>
-                                    <option value="BTC" <%= arrivalPortCode === 'BTC' ? 'selected' : '' %>>Batam Centre</option>
-                                    <option value="SKP" <%= arrivalPortCode === 'SKP' ? 'selected' : '' %>>Sekupang</option>
+                                    <optgroup label="Singapore">
+                                        <option value="HBF" <%= arrivalPortCode  === 'HBF' ? 'selected' : '' %>>Harbourfront</option>
+                                        <option value="TMF" <%= arrivalPortCode  === 'TMF' ? 'selected' : '' %>>Tanah Merah</option>
+                                    </optgroup>
+                                    <optgroup label="Batam">
+                                        <option value="BTC" <%= arrivalPortCode  === 'BTC' ? 'selected' : '' %>>Batam Centre</option>
+                                        <option value="SKP" <%= arrivalPortCode  === 'SKP' ? 'selected' : '' %>>Sekupang</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="ferry-return-port-row <%= query.tripType !== 'two-way' ? 'hidden' : '' %>" id="returnPortRow">
+                            <div class="booking-port-wrapper">
+                                <label for="detailReturnFromPort" class="label-text">Return From</label>
+                                <select id="detailReturnFromPort">
+                                    <optgroup label="Singapore">
+                                        <option value="HBF" <%= arrivalPortCode  === 'HBF' ? 'selected' : '' %>>Harbourfront</option>
+                                        <option value="TMF" <%= arrivalPortCode  === 'TMF' ? 'selected' : '' %>>Tanah Merah</option>
+                                    </optgroup>
+                                    <optgroup label="Batam">
+                                        <option value="BTC" <%= arrivalPortCode  === 'BTC' ? 'selected' : '' %>>Batam Centre</option>
+                                        <option value="SKP" <%= arrivalPortCode  === 'SKP' ? 'selected' : '' %>>Sekupang</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <span class="ferry-port-separator">→</span>
+                            <div class="booking-port-wrapper">
+                                <label for="detailReturnToPort" class="label-text">Return To</label>
+                                <select id="detailReturnToPort">
+                                    <optgroup label="Singapore">
+                                        <option value="HBF" <%= departPortCode === 'HBF' ? 'selected' : '' %>>Harbourfront</option>
+                                        <option value="TMF" <%= departPortCode === 'TMF' ? 'selected' : '' %>>Tanah Merah</option>
+                                    </optgroup>
+                                    <optgroup label="Batam">
+                                        <option value="BTC" <%= departPortCode === 'BTC' ? 'selected' : '' %>>Batam Centre</option>
+                                        <option value="SKP" <%= departPortCode === 'SKP' ? 'selected' : '' %>>Sekupang</option>
+                                    </optgroup>
                                 </select>
                             </div>
                         </div>
@@ -149,19 +189,34 @@
                             </div>
                         </div>
 
-                        <div class="ferry-schedule-section">
-                            <p class="label-text">Available Departures</p>
-                            <div id="scheduleContainer" class="schedule-container">
-                                <p class="label-text schedule-placeholder">Select a date view available departures.</p>
-                            </div>
+                        <div class="schedule-btn-row">
+                            <button type="button" class="schedule-select-btn" id="departureScheduleBtn">
+                                <i data-lucide="clock"></i>
+                                <span id="departureScheduleLabel">Select Departure Time</span>
+                                <i data-lucide="chevron-down"></i>
+                            </button>
+
+                            <button type="button" class="schedule-select-btn <%= query.tripType !== 'two-way' ? 'hidden' : '' %>"
+                                id="returnScheduleBtn">
+                                <i data-lucide="clock"></i>
+                                <span id="returnScheduleLabel">Select Return Time</span>
+                                <i data-lucide="chevron-down"></i>
+                            </button>
                         </div>
 
-                        <div class="ferry-schedule-section <%= query.tripType !== 'two-way' ? 'hidden' : '' %>" id="returnScheduleSection">
-                            <p class="label-text">Available Returns</p>
-                            <div id="returnScheduleContainer" class="schedule-container">
-                                <p class="label-text schedule-placeholder">Select a return date to view available returns.</p>
+                        <!-- Schedule Modal -->
+                         <div class="schedule-modal-overlay hidden" id="scheduleModalOverlay">
+                            <div class="schedule-modal">
+                                <div class="schedule-modal-header">
+                                    <p class="label-text" id="scheduleModalTitle">Available Departures</p>
+                                    <button type="button" id="scheduleModalClose" class="schedule-modal-close-btn">x</button>
+                                </div>
+
+                                <div class="schedule-modal-body" id="scheduleModalBody">
+                                    
+                                </div>
                             </div>
-                        </div>
+                         </div>
 
                         <div class="pax-counter-wrapper">
                             <div class="pax-counter" data-type="adult" data-min="1">
