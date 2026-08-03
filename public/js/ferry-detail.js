@@ -28,17 +28,17 @@ let _cachedPricePerPax = 0;
 // Options
 const VALID_ROUTES = {
     'HBF': ['BTC', 'SKP'],
-    'TMF': ['TPG', 'BTC'],
+    'TMF': ['TNJ', 'BTC'],
     'BTC': ['HBF', 'TMF'],
     'SKP': ['HBF'],
-    'TPG': ['TMF']
+    'TNJ': ['TMF']
 };
 
 // OptGroup
 const PORT_GROUPS = {
     'HBF': 'singapore', 'TMF': 'singapore',
     'BTC': 'batam',     'SKP': 'batam',
-    'TPG': 'tanjung-pinang'
+    'TNJ': 'tanjung-pinang'
 };
 
 function openScheduleModal(type) {

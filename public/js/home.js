@@ -4,10 +4,10 @@ const forms = document.querySelectorAll('.search-form');
 
 const VALID_ROUTES = {
     'HBF': ['BTC', 'SKP'],
-    'TMF': ['TPG', 'BTC'],
+    'TMF': ['TNJ', 'BTC'],
     'BTC': ['HBF', 'TMF'],
     'SKP': ['HBF'],
-    'TPG': ['TMF']
+    'TNJ': ['TMF']
 };
 
 flatpickr('input[type="date"]', {

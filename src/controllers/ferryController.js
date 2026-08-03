@@ -7,8 +7,8 @@ const PORT_CODES = {
     'tanah-merah': 'TMF',
     'batam-center-terminal': 'BTC',
     'sekupang': 'SKP',
-    'tanjung-pinang': 'TPG',
-    'HBF': 'HBF', 'TMF': 'TMF', 'BTC': 'BTC', 'SKP': 'SKP', 'TPG': 'TPG'
+    'tanjung-pinang': 'TNJ',
+    'HBF': 'HBF', 'TMF': 'TMF', 'BTC': 'BTC', 'SKP': 'SKP', 'TNJ': 'TNJ'
 }
 
 const PORT_NAMES = {
@@ -16,7 +16,7 @@ const PORT_NAMES = {
     'TMF': 'Tanah Merah',
     'BTC': 'Batam Center Terminal',
     'SKP': 'Sekupang',
-    'TPG': 'Tanjung Pinang'
+    'TNJ': 'Tanjung Pinang'
 }
 
 const getFerryList = async (req, res) => {
@@ -128,15 +128,29 @@ const getScheduleByDate = async (req, res) => {
         const departTrips = scheduleObj?.DepartTrips || [];
         const returnTrips = scheduleObj?.ReturnTrips || [];
 
-        const parsePrice = (str) => parseFloat(String(str || '0').replace(/[^0-9.]/g, '') || 0);
-        if (departTrips.length > 0) {
+        const rate = await getSGDtoIDR();
+        const rawPrices = scheduleObj?.Price || [];
+        console.log('[DEBUG] scheduleObj.Price:', scheduleObj?.Price)
+
+        const parsePrice = (str) => {
+            const val = parseFloat(String(str || '0').replace(/[^0-9.]/g, '') || 0);
+            return String(str).includes('SGD') ? Math.ceil(val * rate) : Math.ceil(val);
+        };
+
+        let adultIDR = 0, childIDR = 0;
+
+        if (rawPrices.length > 0) {
+            const adultEntry = rawPrices.find(p => p.Category?.toLowerCase() === 'adult');
+            const childEntry = rawPrices.find(p => p.Category?.toLowerCase() === 'child');
+            adultIDR = parsePrice(adultEntry?.Price || '0');
+            childIDR = parsePrice(childEntry?.Price || adultEntry?.Price || '0');
+        } else if (departTrips.length > 0) {
             const priceData = await majesticService.getPriceByTripCode(departTrips[0].TripCode);
-            // API returns a flat array: [{Category:'Adult', Price:'IDR 370000.00'}, ...]
             const priceList = Array.isArray(priceData) ? priceData : [];
             const adultEntry = priceList.find(p => p.Category?.toLowerCase() === 'adult');
             const childEntry = priceList.find(p => p.Category?.toLowerCase() === 'child');
-            adultIDR = Math.ceil(parsePrice(adultEntry?.Price || 0)); // ← already IDR, NO rate
-            childIDR = Math.ceil(parsePrice(childEntry?.Price || adultEntry?.Price || 0));
+            adultIDR = parsePrice(adultEntry?.Price || '0');
+            childIDR = parsePrice(childEntry?.Price || adultEntry?.Price || '0');
         }
         
         res.json({ 
