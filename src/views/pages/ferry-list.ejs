@@ -44,9 +44,17 @@
                       <label for="fromPort" class="label-text">From</label>
                       <div class="input-icon-wrapper">
                         <select name="fromPort" id="fromPort">
-                          <option value="batam-center-terminal" <%= query.fromPort === 'batam-center-terminal' ? 'selected' : '' %>>Batam Center Terminal</option>
-                          <option value="harbourfront" <%= query.fromPort === 'harbourfront' ? 'selected' : '' %>>Harbourfront</option>
-                          <option value="tanah-merah" <%= query.fromPort === 'tanah-merah' ? 'selected' : '' %>>Tanah Merah</option>
+                          <optgroup label="Singapore">
+                            <option value="HBF">Harbourfront</option>
+                            <option value="TMF">Tanah Merah</option>
+                          </optgroup>
+                          <optgroup label="Batam">
+                            <option value="BTC">Batam Centre</option>
+                            <option value="SKP">Sekupang</option>
+                          </optgroup>
+                          <optgroup label="Tanjung Pinang">
+                            <option value="TPG">Tanjung Pinang</option>
+                          </optgroup>
                         </select>
                       </div>
                     </div>
@@ -54,9 +62,17 @@
                       <label for="toPort" class="label-text">To</label>
                       <div class="input-icon-wrapper">
                         <select name="toPort" id="toPort">
-                          <option value="batam-center-terminal" <%= query.toPort === 'batam-center-terminal' ? 'selected' : '' %>>Batam Center Terminal</option>
-                          <option value="harbourfront" <%= query.toPort === 'harbourfront' ? 'selected' : '' %>>Harbourfront</option>
-                          <option value="tanah-merah" <%= query.toPort === 'tanah-merah' ? 'selected' : '' %>>Tanah Merah</option>
+                          <optgroup label="Singapore">
+                            <option value="HBF">Harbourfront</option>
+                            <option value="TMF">Tanah Merah</option>
+                          </optgroup>
+                          <optgroup label="Batam">
+                            <option value="BTC">Batam Centre</option>
+                            <option value="SKP">Sekupang</option>
+                          </optgroup>
+                          <optgroup label="Tanjung Pinang">
+                            <option value="TPG">Tanjung Pinang</option>
+                          </optgroup>
                         </select>
                       </div>
                     </div>

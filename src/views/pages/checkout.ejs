@@ -204,12 +204,33 @@
                 <% } else if (draftOrder.productType === 'ferry') { %>
                   <div class="summary-details-row">
                     <span><i data-lucide="ship"></i> Route:</span>
-                    <span><%= product.depart_port %> → <%= product.arrival_port %></span>
+                    <span><%= draftOrder.fromPort || product.depart_port %> 
+                    → 
+                    <%= draftOrder.toPort || product.arrival_port %></span>
                   </div>
                   <div class="summary-details-row">
                     <span><i data-lucide="tag"></i> Trip Code:</span>
                     <span><%= draftOrder.tripCode %></span>
                   </div>
+
+                  <% if (isTwoWay) { %>
+                    <div class="summary-details-row">
+                      <span><i data-lucide="ship"></i> Return Route:</span>
+                      <span>
+                        <%= draftOrder.returnFromPort || product.arrival_port %> 
+                        → 
+                        <%= draftOrder.returnToPort || product.depart_port %>
+                      </span>
+                    </div>
+                    <div class="summary-details-row">
+                      <span><i data-lucide="tag"></i> Return Trip Code:</span>
+                      <span><%= draftOrder.returnTripCode %></span>
+                    </div>
+                    <div class="summary-details-row">
+                      <span><i data-lucide="calendar"></i> Return Date:</span>
+                      <span><%= new Date(draftOrder.returnDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                    </div>
+                  <% } %>
                   <div class="summary-details-row">
                     <span><i data-lucide="users"></i> Passengers:</span>
                     <span><%= totalPax %> Person(s)</span>

@@ -45,14 +45,14 @@ const getSchedule = ({
     });
 };
 
-async function getPriceByTripCode(tripCode, journeyType = '1') {
+async function getPriceByTripCode(tripCode, returnCode = '', journeyType = '1') {
     return mffPost('MFFPriceListByTripCode', {
         TicketCategory: 'Normal',
         JourneyType: journeyType,
         IsReturnOpenTicket: '0',
         CodeType: 'TripCode',
         DepartCode: tripCode,
-        ReturnCode: '',
+        ReturnCode: returnCode,
     });
 }
 

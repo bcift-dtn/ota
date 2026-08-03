@@ -7,14 +7,16 @@ const PORT_CODES = {
     'tanah-merah': 'TMF',
     'batam-center-terminal': 'BTC',
     'sekupang': 'SKP',
-    'HBF': 'HBF', 'TMF': 'TMF', 'BTC': 'BTC', 'SKP': 'SKP'
+    'tanjung-pinang': 'TPG',
+    'HBF': 'HBF', 'TMF': 'TMF', 'BTC': 'BTC', 'SKP': 'SKP', 'TPG': 'TPG'
 }
 
 const PORT_NAMES = {
     'HBF': 'Harbourfront',
     'TMF': 'Tanah Merah',
     'BTC': 'Batam Center Terminal',
-    'SKP': 'Sekupang'
+    'SKP': 'Sekupang',
+    'TPG': 'Tanjung Pinang'
 }
 
 const getFerryList = async (req, res) => {
@@ -125,15 +127,17 @@ const getScheduleByDate = async (req, res) => {
         const scheduleObj = Array.isArray(apiData) ? apiData[0] : apiData;
         const departTrips = scheduleObj?.DepartTrips || [];
         const returnTrips = scheduleObj?.ReturnTrips || [];
-        const rawPrices = scheduleObj?.Price || [];
 
         const parsePrice = (str) => parseFloat(String(str || '0').replace(/[^0-9.]/g, '') || 0);
-        const adultEntry = rawPrices.find(p => p.Category?.toLowerCase() === 'adult');
-        const childEntry = rawPrices.find(p => p.Category?.toLowerCase() === 'child');
-        
-        const rate = await getSGDtoIDR();
-        const adultIDR = Math.ceil(parsePrice(adultEntry?.Price || 0) * rate);
-        const childIDR = Math.ceil(parsePrice(childEntry?.Price || adultEntry?.Price || 0) * rate);
+        if (departTrips.length > 0) {
+            const priceData = await majesticService.getPriceByTripCode(departTrips[0].TripCode);
+            // API returns a flat array: [{Category:'Adult', Price:'IDR 370000.00'}, ...]
+            const priceList = Array.isArray(priceData) ? priceData : [];
+            const adultEntry = priceList.find(p => p.Category?.toLowerCase() === 'adult');
+            const childEntry = priceList.find(p => p.Category?.toLowerCase() === 'child');
+            adultIDR = Math.ceil(parsePrice(adultEntry?.Price || 0)); // ← already IDR, NO rate
+            childIDR = Math.ceil(parsePrice(childEntry?.Price || adultEntry?.Price || 0));
+        }
         
         res.json({ 
             schedule: departTrips,
@@ -190,19 +194,21 @@ const getFerryCheckout = async (req, res, draftOrder) => {
     }
 
     // Get Prices
-    const rawPrices = await majesticService.getPriceByTripCode(draftOrder.tripCode, isTwoWay ? '2' : '1');
-    const priceList = Array.isArray(rawPrices) ? rawPrices : [];
+    const rawPrices = await majesticService.getPriceByTripCode(
+        draftOrder.tripCode,
+        isTwoWay ? (draftOrder.returnTripCode || '') : '',
+        isTwoWay ? '2' : '1'
+    );
+    console.log('[FERRY] getPriceByTripCode raw:', JSON.stringify(rawPrices));
 
     const parsePrice = (str) => parseFloat(String(str || '0').replace(/[^0-9.]/g, '') || 0);
-
-    // Adult and Child Category price
+    const priceList = Array.isArray(rawPrices) ? rawPrices : [];
     const adultPrice = priceList.find(p => p.Category?.toLowerCase() === 'adult');
     const childPrice = priceList.find(p => p.Category?.toLowerCase() === 'child');
-
-    const rate = await getSGDtoIDR();
-    const adultIDR = Math.ceil(parsePrice(adultPrice?.Price || 0) * rate);
-    const childIDR = Math.ceil(parsePrice(childPrice?.Price || adultPrice?.Price || 0) * rate);
-
+    
+    const adultIDR = Math.ceil(parsePrice(adultPrice?.Price || 0));
+    const childIDR = Math.ceil(parsePrice(childPrice?.Price || adultPrice?.Price || 0));
+    
     const basePrice = (adultIDR * draftOrder.adults) + (childIDR * draftOrder.children);
     const taxRate = parseFloat(process.env.TAX_RATE) || 0.11;
     const platformFee = parseInt(process.env.PLATFORM_FEE) || 5000;
@@ -221,6 +227,8 @@ const getFerryCheckout = async (req, res, draftOrder) => {
     return res.render('pages/checkout', {
         draftOrder,
         product,
+        isTwoWay,
+        PORT_NAMES,
         totalPax,
         basePrice,
         taxRate,

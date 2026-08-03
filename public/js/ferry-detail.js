@@ -25,24 +25,21 @@ let _cachedDepartSchedule = [];
 let _cachedReturnSchedule = [];
 let _cachedPricePerPax = 0;
 
-const BATAM_PORTS = new Set(['BTC', 'SKP']);
-const SG_PORTS = new Set(['HBF', 'TMF']);
+// Options
+const VALID_ROUTES = {
+    'HBF': ['BTC', 'SKP'],
+    'TMF': ['TPG', 'BTC'],
+    'BTC': ['HBF', 'TMF'],
+    'SKP': ['HBF'],
+    'TPG': ['TMF']
+};
 
-function getRegion(code) {
-    return BATAM_PORTS.has(code) ? 'batam' : SG_PORTS.has(code) ? 'sg' : null;
-}
-
-function syncPortOptions(fromSel, toSel) {
-    const fromRegion = getRegion(fromSel.value);
-    Array.from(toSel.options).forEach(opt => {
-        opt.disabled = opt.value === fromSel.value || getRegion (opt.value) === fromRegion;
-    });
-
-    if (toSel.options[toSel.selectedIndex]?.disabled) {
-        const firstValid = Array.from(toSel.options).find(o => !o.disabled);
-        if (firstValid) toSel.value = firstValid.value;
-    }
-}
+// OptGroup
+const PORT_GROUPS = {
+    'HBF': 'singapore', 'TMF': 'singapore',
+    'BTC': 'batam',     'SKP': 'batam',
+    'TPG': 'tanjung-pinang'
+};
 
 function openScheduleModal(type) {
     currentScheduleType = type;
@@ -119,8 +116,31 @@ const toPortSelect = document.getElementById('detailToPort');
 const returnFromPortSelect = document.getElementById('detailReturnFromPort');
 const returnToPortSelect   = document.getElementById('detailReturnToPort');
 
+function syncPortOptions(fromSel, toSel) {
+    const validDests = VALID_ROUTES[fromSel.value] || [];
+    Array.from(toSel.options).forEach(opt => {
+        opt.disabled = opt.value === '' || !validDests.includes(opt.value);
+    });
+    if (toSel.options[toSel.selectedIndex]?.disabled) {
+        const firstValid = Array.from(toSel.options).find(o => !o.disabled);
+        if (firstValid) toSel.value = firstValid.value;
+    }
+}
+
+function syncReturnFromOptions(outboundFromSel, returnFromSel) {
+    const fromGroup = PORT_GROUPS[outboundFromSel.value];
+    Array.from(returnFromSel.options).forEach(opt => {
+        opt.disabled = opt.value === '' || PORT_GROUPS[opt.value] === fromGroup;
+    });
+    if (returnFromSel.options[returnFromSel.selectedIndex]?.disabled) {
+        const firstValid = Array.from(returnFromSel.options).find(o => !o.disabled);
+        if (firstValid) returnFromSel.value = firstValid.value;
+    }
+}
+
 syncPortOptions(fromPortSelect, toPortSelect);
 if (returnFromPortSelect && returnToPortSelect) {
+    syncReturnFromOptions(fromPortSelect, returnFromPortSelect);
     syncPortOptions(returnFromPortSelect, returnToPortSelect);
 }
 
@@ -152,6 +172,7 @@ document.querySelectorAll('input[name="detailTripType"]').forEach(radio => {
     if (!sel) return;
     sel.addEventListener('change', () => {
         syncPortOptions(fromPortSelect, toPortSelect);
+        syncReturnFromOptions(fromPortSelect, returnFromPortSelect);
         syncPortOptions(returnFromPortSelect, returnToPortSelect);
 
         statusEl.className = 'status-message';
@@ -329,10 +350,22 @@ function getTotalPax() {
     return Array.from(document.querySelectorAll('.pax-counter-text')).reduce((sum, el) => sum + parseInt(el.textContent), 0);
 }
 
+function getPaidPax() {
+    let total = 0;
+    document.querySelectorAll('.pax-counter').forEach(counter => {
+        if (counter.dataset.type !== 'infant') {
+            total += parseInt(counter.querySelector('.pax-counter-text').textContent) || 0;
+        }
+    });
+
+    return total;
+}
+
 function recalculateTotal() {
     const price = parseFloat(pricePerPaxEl.value) || 0;
+    const paidPax = getPaidPax();
     const totalPax = getTotalPax();
-    const total = price * getTotalPax();
+    const total = price * paidPax;
     
     totalPriceDisplay.textContent = `IDR ${total.toLocaleString('id-ID')}`;
 
@@ -368,9 +401,13 @@ document.getElementById('ferryBookingContinueBtn').addEventListener('click', asy
             productType: 'ferry',
             tripCode,
             departureDate: date,
+            fromPort: fromPortSelect?.value,
+            toPort: toPortSelect?.value,
             ...(isTwoWay && {
                 returnTripCode: selectedReturnTripCodeEl.value,
-                returnDate: document.getElementById('ferryReturnDate')?.value
+                returnDate: document.getElementById('ferryReturnDate')?.value,
+                returnFromPort: returnFromPortSelect?.value,
+                returnToPort: returnToPortSelect?.value
             }),
             adults: parseInt(document.getElementById('adultCount').textContent),
             children: parseInt(document.getElementById('childCount').textContent),
@@ -391,9 +428,13 @@ document.getElementById('ferryBookingContinueBtn').addEventListener('click', asy
                 productType: 'ferry',
                 tripCode,
                 departureDate: date,
+                fromPort: fromPortSelect?.value,
+                toPort: toPortSelect?.value,
                 ...(isTwoWay && {
                     returnTripCode: selectedReturnTripCodeEl.value,
-                    returnDate: document.getElementById('ferryReturnDate')?.value
+                    returnDate: document.getElementById('ferryReturnDate')?.value,
+                    returnFromPort: returnFromPortSelect?.value,
+                    returnToPort: returnToPortSelect?.value
                 }),
                 SeatCategory: document.querySelector('.schedule-card.selected .even-smaller-label')?.textContent || 'Premium',
                 adults: parseInt(document.getElementById('adultCount').textContent),

@@ -5,6 +5,14 @@ function showSearchError(msg) {
     ferrySearchStatus.className = 'status-message error';
 }
 
+const VALID_ROUTES = {
+    'HBF': ['BTC', 'SKP'],
+    'TMF': ['TPG', 'BTC'],
+    'BTC': ['HBF', 'TMF'],
+    'SKP': ['HBF'],
+    'TPG': ['TMF']
+};
+
 flatpickr('input[type="date"]', {
   altInput: true,
   altFormat: "j F Y",
@@ -53,13 +61,20 @@ document.querySelector('.search-form[data-form="ferry"] form').addEventListener(
   }
 })
 
-function syncPortOptions() {
-    const from = document.getElementById('fromPort');
-    const to   = document.getElementById('toPort');
-    if (!from || !to) return;
-    Array.from(to.options).forEach(opt   => opt.disabled = (opt.value === from.value));
-    Array.from(from.options).forEach(opt => opt.disabled = (opt.value === to.value));
+function syncPortOptions(fromSel, toSel) {
+    const validDests = VALID_ROUTES[fromSel.value] || [];
+    Array.from(toSel.options).forEach(opt => {
+        opt.disabled = opt.value === '' || !validDests.includes(opt.value);
+    });
+    if (toSel.options[toSel.selectedIndex]?.disabled) {
+        const firstValid = Array.from(toSel.options).find(o => !o.disabled);
+        if (firstValid) toSel.value = firstValid.value;
+    }
 }
-document.getElementById('fromPort')?.addEventListener('change', syncPortOptions);
-document.getElementById('toPort')?.addEventListener('change', syncPortOptions);
-syncPortOptions();
+
+const fromPortEl = document.getElementById('fromPort');
+const toPortEl = document.getElementById('toPort');
+if (fromPortEl && toPortEl) {
+  syncPortOptions(fromPortEl, toPortEl);
+  fromPortEl.addEventListener('change', () => syncPortOptions(fromPortEl, toPortEl));
+}
