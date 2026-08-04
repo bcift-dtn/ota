@@ -16,7 +16,7 @@ const mffPost = async (endpoint, body = {}) => {
     });
 
     if (!res.ok) {
-        const errorBody = await res.text(); // ← read their error message
+        const errorBody = await res.text();
         console.error('[MFF] Error body:', errorBody);
         throw new Error(`MFF API Error: ${res.status}`);
     }

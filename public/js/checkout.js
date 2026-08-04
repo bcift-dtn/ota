@@ -15,6 +15,22 @@ flatpickr('input[type="date"]', {
   allowInput: true,
 });
 
+flatpickr('#birthDateInput', {
+    altInput: true,
+    altFormat: "j F Y",
+    dateFormat: "Y-m-d",
+    disableMobile: "true",
+    allowInput: true,
+});
+
+flatpickr('#passportIssueInput', {
+    altInput: true,
+    altFormat: "j F Y",
+    dateFormat: "Y-m-d",
+    disableMobile: "true",
+    allowInput: true,
+});
+
 const phoneInstances = [];
 
 const phoneInputs = document.querySelectorAll('input[type="tel"][id^="visitorPhoneNumber_"]');
