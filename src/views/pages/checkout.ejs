@@ -126,7 +126,7 @@
 
                     <div class="input-group">
                       <select name="nationality_<%= i %>" id="nationality_<%= i %>" required>
-                        <option value="">Select Nationality</option>
+                        <option value="">Select Country</option>
                         <% countryList.forEach(c => { %>
                           <option value="<%= c.Nationality %>"><%= c.Nationality %></option>
                         <% }) %>
@@ -247,7 +247,12 @@
                 <% const displayGrandTotal = draftOrder.productType === 'ferry' ? grandTotal : filteredGrandTotal; %>
 
                 <div class="price-row smaller-label">
-                  <span>Package Price</span>
+                  <% if (draftOrder.productType === 'ferry') { %> 
+                    <span>Ticket Price</span>
+                  <% } else { %> 
+                    <span>Package Price</span>  
+                  <% } %> 
+
                   <span>IDR <%= displayBasePrice.toLocaleString('id-ID') %></span>
                 </div>
 
