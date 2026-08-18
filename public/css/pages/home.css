@@ -284,63 +284,6 @@
   accent-color: var(--clr-primary);
 }
 
-
-
-.pax-counter-wrapper {
-  position: relative;
-}
-
-.pax-counter-wrapper .pax-summary-btn {
-  width: 100%;
-  padding: 0.4rem 2rem;
-  background: var(--clr-accent);
-  border: 1px dashed var(--clr-secondary);
-  outline: none;
-  border-radius: 5px;
-
-  cursor: pointer;
-}
-
-.pax-counter {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  width: 100%;
-  padding: 1rem;
-  margin-top: 0.5rem;
-
-  position: absolute;
-  background-color: var(--clr-bg);
-  box-shadow: var(--primary-box-shadow);
-  border-radius: 10px;
-}
-
-.pax-counter>div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.pax-counter .pax-counter-text {
-  width: 2.5rem;
-  padding-bottom: 0.5rem;
-  text-align: center;
-  border-bottom: 1px solid var(--clr-primary);
-}
-
-.pax-counter>div button {
-  padding: 0.5rem;
-
-  color: var(--clr-primary);
-
-  font-size: var(--fs-5);
-
-  background: none;
-  border: none;
-  outline: none;
-  cursor: pointer;
-}
-
 .search-form input {
   background: var(--clr-accent);
   border: none;
@@ -434,13 +377,15 @@
 /* Exclusive Deal */
 .exclusive-deals,
 .top-hotels,
-.top-destinations {
+.top-destinations,
+.popular-attractions {
   margin: 3rem 1rem;
 }
 
 .exclusive-deals,
 .top-hotels,
 .top-destinations,
+.popular-attractions,
 .our-brand .section-container {
   max-width: 1200px;
   margin-left: auto;
@@ -616,6 +561,71 @@
   background-color: var(--clr-primary);
 }
 
+/* Attractions */
+.popular-attractions .section-header {
+  margin-bottom: 0.5rem;
+}
+
+.attractions-title {
+  margin-bottom: 0.5rem;
+}
+
+.attractions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.attraction-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  cursor: pointer;
+}
+
+.attraction-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.45s ease;
+}
+
+.attraction-card:hover img {
+  transform: scale(1.06);
+}
+
+.attraction-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.62) 0%, transparent 55%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px 10px;
+}
+
+.attraction-name {
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+@media (min-width: 860px) {
+  .attractions-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .attraction-name {
+    font-size: 0.85rem;
+  }
+}
+
+/* Destination */
 .top-destinations .section-header {
   text-align: justify;
   margin-bottom: 0.5rem;
@@ -751,6 +761,7 @@
   .exclusive-deals,
   .top-hotels,
   .top-destinations,
+  .popular-attractions,
   .our-brand .section-container {
     padding: 0 3rem;
   }
@@ -780,11 +791,6 @@
   .trip-type-wrapper .two-way-radio,
   .driver-wrapper .without-driver-radio {
     margin-left: 1rem;
-  }
-
-  .pax-counter {
-    width: 20rem;
-    margin-left: -5.2rem;
   }
 }
 
