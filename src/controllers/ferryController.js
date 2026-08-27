@@ -130,7 +130,6 @@ const getScheduleByDate = async (req, res) => {
 
         const rate = await getSGDtoIDR();
         const rawPrices = scheduleObj?.Price || [];
-        console.log('[DEBUG] scheduleObj.Price:', scheduleObj?.Price)
 
         const parsePrice = (str) => {
             const val = parseFloat(String(str || '0').replace(/[^0-9.]/g, '') || 0);
@@ -213,7 +212,6 @@ const getFerryCheckout = async (req, res, draftOrder) => {
         isTwoWay ? (draftOrder.returnTripCode || '') : '',
         isTwoWay ? '2' : '1'
     );
-    console.log('[FERRY] getPriceByTripCode raw:', JSON.stringify(rawPrices));
 
     const parsePrice = (str) => parseFloat(String(str || '0').replace(/[^0-9.]/g, '') || 0);
     const priceList = Array.isArray(rawPrices) ? rawPrices : [];

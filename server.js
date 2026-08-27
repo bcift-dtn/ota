@@ -51,7 +51,7 @@ app.use(exSession({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false,
+    secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
   }
 }));
@@ -74,6 +74,9 @@ app.use('/ferry', ferryRoutes);
 app.get('/about', (req, res) => res.render('pages/about'));
 app.get('/contact', contactController.renderContactPage);
 app.post('/contact/send', contactController.sendMessage);
+app.use((req, res) => {
+  res.status(404).render('pages/404', { message: 'Page not found.' });
+});
 
 // Listen to PORT
 app.listen(PORT, () => {

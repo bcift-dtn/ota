@@ -373,4 +373,17 @@ const getCheckoutPage = async (req, res) => {
   }
 }
 
-module.exports = { getCarRentals, getCarRentalDetail, getActivities, getActivitiesDetail, getCheckoutPage };
+const saveDraftOrder = (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ success: false, message: 'Please log in to continue.' });
+  }
+  try {
+    req.session.draftOrder = req.body;
+    return res.status(200).json({ success: true, message: 'Draft saved' });
+  } catch (err){
+    console.error('Draft save error:', err);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+}
+
+module.exports = { getCarRentals, getCarRentalDetail, getActivities, getActivitiesDetail, getCheckoutPage, saveDraftOrder };
