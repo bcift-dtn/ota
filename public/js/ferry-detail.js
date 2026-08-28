@@ -1,31 +1,4 @@
-const productId = document.getElementById('currentProductId').value;
-const pricePerPaxEl = document.getElementById('pricePerPax');
-const scheduleContainer = document.getElementById('scheduleContainer');
-const totalPriceDisplay = document.getElementById('bookingTotalPriceText');
-const selectedTripCodeEl = document.getElementById('selectedTripCode');
-const prefillDate = document.getElementById('ferryDepartureDate').value || null;
-
-const ferryTripType = document.getElementById('ferryTripType')?.value || 'one-way';
-let isTwoWay = ferryTripType === 'two-way';
-const selectedReturnTripCodeEl = document.getElementById('selectedReturnTripCode');
-const returnScheduleContainer = document.getElementById('returnScheduleContainer');
-
-const currentUser = JSON.parse(document.getElementById('pageData').dataset.user);
-const ferryModalOverlay = document.querySelector('#modalOverlay');
-const statusEl = document.getElementById('ferryBookingStatus');
-
-const scheduleModalOverlay = document.getElementById('scheduleModalOverlay');
-const scheduleModalBody    = document.getElementById('scheduleModalBody');
-const scheduleModalTitle   = document.getElementById('scheduleModalTitle');
-const departureScheduleBtn = document.getElementById('departureScheduleBtn');
-const returnScheduleBtn    = document.getElementById('returnScheduleBtn');
-
-let currentScheduleType = 'depart';
-let _cachedDepartSchedule = [];
-let _cachedReturnSchedule = [];
-let _cachedPricePerPax = 0;
-
-// Options
+// Fixed const
 const VALID_ROUTES = {
     'HBF': ['BTC', 'SKP'],
     'TMF': ['TNJ', 'BTC'],
@@ -41,21 +14,42 @@ const PORT_GROUPS = {
     'TNJ': 'tanjung-pinang'
 };
 
-function openScheduleModal(type) {
-    currentScheduleType = type;
-    scheduleModalTitle.textContent = type === 'depart' ? 'Select Departure Time' : 'Select Return Time';
-    const data = type === 'depart' ? _cachedDepartSchedule : _cachedReturnSchedule;
-    renderSchedulesIntoModal(data, _cachedPricePerPax);
-    scheduleModalOverlay.classList.remove('hidden');
-}
-function closeScheduleModal() {
-    scheduleModalOverlay.classList.add('hidden');
-}
+// Dom Ref
+const productId = document.getElementById('currentProductId').value;
+const pricePerPaxEl = document.getElementById('pricePerPax');
+const scheduleContainer = document.getElementById('scheduleContainer');
+const totalPriceDisplay = document.getElementById('bookingTotalPriceText');
+const selectedTripCodeEl = document.getElementById('selectedTripCode');
+const prefillDate = document.getElementById('ferryDepartureDate').value || null;
 
-departureScheduleBtn?.addEventListener('click', () => openScheduleModal('depart'));
-returnScheduleBtn?.addEventListener('click',    () => openScheduleModal('return'));
-document.getElementById('scheduleModalClose')?.addEventListener('click', closeScheduleModal);
-scheduleModalOverlay?.addEventListener('click', e => { if (e.target === e.currentTarget) closeScheduleModal(); });
+const ferryTripType = document.getElementById('ferryTripType')?.value || 'one-way';
+const selectedReturnTripCodeEl = document.getElementById('selectedReturnTripCode');
+const returnScheduleContainer = document.getElementById('returnScheduleContainer');
+
+const currentUser = JSON.parse(document.getElementById('pageData').dataset.user);
+const ferryModalOverlay = document.querySelector('#modalOverlay');
+const statusEl = document.getElementById('ferryBookingStatus');
+
+const scheduleModalOverlay = document.getElementById('scheduleModalOverlay');
+const scheduleModalBody    = document.getElementById('scheduleModalBody');
+const scheduleModalTitle   = document.getElementById('scheduleModalTitle');
+const departureScheduleBtn = document.getElementById('departureScheduleBtn');
+const returnScheduleBtn    = document.getElementById('returnScheduleBtn');
+
+const returnPreFill = document.getElementById('ferryReturnDate')?.value || null;
+
+// trips type radio button
+const fromPortSelect = document.getElementById('detailFromPort');
+const toPortSelect = document.getElementById('detailToPort');
+const returnFromPortSelect = document.getElementById('detailReturnFromPort');
+const returnToPortSelect   = document.getElementById('detailReturnToPort');
+
+// Let State
+let currentScheduleType = 'depart';
+let _cachedDepartSchedule = [];
+let _cachedReturnSchedule = [];
+let _cachedPricePerPax = 0;
+let isTwoWay = ferryTripType === 'two-way';
 
 // Validation status
 function showBookingStatus(message, type = 'error') {
@@ -64,9 +58,14 @@ function showBookingStatus(message, type = 'error') {
     statusEl.scrollIntoView({ behavior: 'smooth', block: 'nearest'});
 }
 
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('error') === 'no_seats') {
-    showBookingStatus('Sorry, this trip no longer has enough seats. Please select another departure time.')
+function buildScheduleCardHTML(slot, pricePerPax) {
+    return `
+        <div class="schedule-card" data-trip-code="${slot.TripCode}" data-price="${pricePerPax}">
+            <p class="label-text">${slot.TravelTime}</p>
+            <p class="even-smaller-label">${slot.SeatCategory ?? 'Premium'}</p>
+            <p class="label-text">IDR ${Number(pricePerPax).toLocaleString('id-ID')}</p>
+        </div>
+    `;
 }
 
 // Init flatpickr
@@ -84,8 +83,6 @@ flatpickr('#ferryDepartureDate', {
     }
 });
 
-const returnPreFill = document.getElementById('ferryReturnDate')?.value || null;
-
 flatpickr('#ferryReturnDate', {
     altInput: true,
     altFormat: 'j F Y',
@@ -100,22 +97,7 @@ flatpickr('#ferryReturnDate', {
     }
 })
 
-// Change main image preview
-document.querySelectorAll('.detail-thumbnail').forEach(thumb => {
-  thumb.addEventListener('click', () => {
-    const mainImage = document.querySelector('.detail-main-image');
-    mainImage.src = thumb.src;
-    document.querySelectorAll('.detail-thumbnail').forEach(t => t.classList.remove('active-thumb'));
-    thumb.classList.add('active-thumb');
-  });
-});
-
-// trips type radio button
-const fromPortSelect = document.getElementById('detailFromPort');
-const toPortSelect = document.getElementById('detailToPort');
-const returnFromPortSelect = document.getElementById('detailReturnFromPort');
-const returnToPortSelect   = document.getElementById('detailReturnToPort');
-
+// Port Logic
 function syncPortOptions(fromSel, toSel) {
     const validDests = VALID_ROUTES[fromSel.value] || [];
     Array.from(toSel.options).forEach(opt => {
@@ -143,6 +125,160 @@ if (returnFromPortSelect && returnToPortSelect) {
     syncReturnFromOptions(fromPortSelect, returnFromPortSelect);
     syncPortOptions(returnFromPortSelect, returnToPortSelect);
 }
+
+// Get schedule
+async function fetchSchedules(date, returnDate = '') {
+    
+    departureScheduleBtn?.setAttribute('disabled', '');
+    if (isTwoWay) returnScheduleBtn?.setAttribute('disabled', '');
+
+    try {
+        const params = new URLSearchParams({ date });
+        params.set('fromPort', fromPortSelect?.value || '');
+        params.set('toPort', toPortSelect?.value || '');
+        if (isTwoWay) {
+            params.set('tripType', 'two-way');
+            params.set('returnDate', returnDate);
+            params.set('returnFromPort', returnFromPortSelect?.value || toPortSelect.value);
+            params.set('returnToPort',   returnToPortSelect?.value || fromPortSelect.value);
+        }
+        const res = await fetch(`/ferry/${productId}/schedules?${params}`);
+        const data = await res.json();
+
+        departureScheduleBtn?.removeAttribute('disabled');
+        if (isTwoWay) returnScheduleBtn?.removeAttribute('disabled');
+
+        _cachedDepartSchedule = data.schedule || [];
+        _cachedReturnSchedule = data.returnSchedule || [];
+        _cachedPricePerPax    = data.pricePerPax || 0;
+
+        departureScheduleBtn?.classList.toggle('btn-unavailable', _cachedDepartSchedule.length === 0);
+        if (isTwoWay) returnScheduleBtn?.classList.toggle('btn-unavailable', _cachedReturnSchedule.length === 0)
+        
+    } catch (error) {
+        showBookingStatus('Failed to load schedules. Please try again.');
+    }
+}
+
+function renderSchedulesIntoModal(schedule, pricePerPax) {
+    if (!schedule || schedule.length === 0) {
+        scheduleModalBody.innerHTML = `<p class="label-text">No schedules available for this date.</p>`;
+        return;
+    }
+    scheduleModalBody.innerHTML = schedule.map(slot => buildScheduleCardHTML(slot, pricePerPax)).join('');
+
+    scheduleModalBody.querySelectorAll('.schedule-card').forEach(card => {
+        card.addEventListener('click', () => {
+            if (currentScheduleType === 'depart') selectSchedule(card);
+            else selectReturnSchedule(card);
+            closeScheduleModal();
+        })
+    })
+}
+
+function selectSchedule(card) {
+    document.querySelectorAll('.schedule-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedTripCodeEl.value = card.dataset.tripCode;
+    pricePerPaxEl.value = card.dataset.price
+    recalculateTotal();
+
+    const time = card.querySelector('.label-text').textContent;
+    const cat  = card.querySelector('.even-smaller-label').textContent;
+    document.getElementById('departureScheduleLabel').textContent = `${time} — ${cat}`;
+    departureScheduleBtn?.classList.add('has-selection');
+}
+
+function selectReturnSchedule(card) {
+    scheduleModalBody.querySelectorAll('.schedule-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedReturnTripCodeEl.value = card.dataset.tripCode;
+    
+    const time = card.querySelector('.label-text').textContent;
+    const cat = card.querySelector('.even-smaller-label').textContent;
+    document.getElementById('returnScheduleLabel').textContent = `${time} - ${cat}`;
+    returnScheduleBtn?.classList.add('has-selection');
+}
+
+// Pax Counter
+
+function initPaxCounters() {
+    document.querySelectorAll('.pax-counter').forEach(counter => {
+        const minCount = parseInt(counter.dataset.min) || 0;
+        const display = counter.querySelector('.pax-counter-text');
+        counter.querySelector('.pax-counter-plus').addEventListener('click', () => {
+            display.textContent = parseInt(display.textContent) + 1;
+            recalculateTotal();
+        });
+        counter.querySelector('.pax-counter-minus').addEventListener('click', () => {
+            const current = parseInt(display.textContent);
+            if (current > minCount) {
+                display.textContent = current - 1;
+                recalculateTotal();
+            }
+        });
+    });
+}
+
+function getTotalPax() {
+    return Array.from(document.querySelectorAll('.pax-counter-text')).reduce((sum, el) => sum + parseInt(el.textContent), 0);
+}
+
+function getPaidPax() {
+    let total = 0;
+    document.querySelectorAll('.pax-counter').forEach(counter => {
+        if (counter.dataset.type !== 'infant') {
+            total += parseInt(counter.querySelector('.pax-counter-text').textContent) || 0;
+        }
+    });
+
+    return total;
+}
+
+function recalculateTotal() {
+    const price = parseFloat(pricePerPaxEl.value) || 0;
+    const paidPax = getPaidPax();
+    const totalPax = getTotalPax();
+    const total = price * paidPax;
+    
+    totalPriceDisplay.textContent = `IDR ${total.toLocaleString('id-ID')}`;
+
+    document.getElementById('displayPricePerPax').textContent = price > 0 ? `IDR ${price.toLocaleString('id-ID')}` : '-';
+    document.getElementById('displayTotalPax').textContent = `${totalPax} visitor${totalPax !== 1 ? 's' : ''}`;
+}
+
+// Modals
+function openScheduleModal(type) {
+    currentScheduleType = type;
+    scheduleModalTitle.textContent = type === 'depart' ? 'Select Departure Time' : 'Select Return Time';
+    const data = type === 'depart' ? _cachedDepartSchedule : _cachedReturnSchedule;
+    renderSchedulesIntoModal(data, _cachedPricePerPax);
+    scheduleModalOverlay.classList.remove('hidden');
+}
+function closeScheduleModal() {
+    scheduleModalOverlay.classList.add('hidden');
+}
+
+// Event Listener
+departureScheduleBtn?.addEventListener('click', () => openScheduleModal('depart'));
+returnScheduleBtn?.addEventListener('click',    () => openScheduleModal('return'));
+document.getElementById('scheduleModalClose')?.addEventListener('click', closeScheduleModal);
+scheduleModalOverlay?.addEventListener('click', e => { if (e.target === e.currentTarget) closeScheduleModal(); });
+
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('error') === 'no_seats') {
+    showBookingStatus('Sorry, this trip no longer has enough seats. Please select another departure time.')
+}
+
+// Change main image preview
+document.querySelectorAll('.detail-thumbnail').forEach(thumb => {
+  thumb.addEventListener('click', () => {
+    const mainImage = document.querySelector('.detail-main-image');
+    mainImage.src = thumb.src;
+    document.querySelectorAll('.detail-thumbnail').forEach(t => t.classList.remove('active-thumb'));
+    thumb.classList.add('active-thumb');
+  });
+});
 
 document.querySelectorAll('input[name="detailTripType"]').forEach(radio => {
     radio.addEventListener('change', e => {
@@ -203,175 +339,6 @@ if (prefillDate) {
     const returnPrefill = isTwoWay ? (document.getElementById('ferryReturnDate')?.value || '') : '';
     fetchSchedules(prefillDate, returnPrefill);
 };
-
-// Get schedule
-async function fetchSchedules(date, returnDate = '') {
-    
-    departureScheduleBtn?.setAttribute('disabled', '');
-    if (isTwoWay) returnScheduleBtn?.setAttribute('disabled', '');
-
-    try {
-        const params = new URLSearchParams({ date });
-        params.set('fromPort', fromPortSelect?.value || '');
-        params.set('toPort', toPortSelect?.value || '');
-        if (isTwoWay) {
-            params.set('tripType', 'two-way');
-            params.set('returnDate', returnDate);
-            params.set('returnFromPort', returnFromPortSelect?.value || toPortSelect.value);
-            params.set('returnToPort',   returnToPortSelect?.value || fromPortSelect.value);
-        }
-        const res = await fetch(`/ferry/${productId}/schedules?${params}`);
-        const data = await res.json();
-
-        departureScheduleBtn?.removeAttribute('disabled');
-        if (isTwoWay) returnScheduleBtn?.removeAttribute('disabled');
-
-        _cachedDepartSchedule = data.schedule || [];
-        _cachedReturnSchedule = data.returnSchedule || [];
-        _cachedPricePerPax    = data.pricePerPax || 0;
-
-        departureScheduleBtn?.classList.toggle('btn-unavailable', _cachedDepartSchedule.length === 0);
-        if (isTwoWay) returnScheduleBtn?.classList.toggle('btn-unavailable', _cachedReturnSchedule.length === 0)
-        
-    } catch (error) {
-        showBookingStatus('Failed to load schedules. Please try again.');
-    }
-}
-
-function renderSchedulesIntoModal(schedule, pricePerPax) {
-    if (!schedule || schedule.length === 0) {
-        scheduleModalBody.innerHTML = `<p class="label-text">No schedules available for this date.</p>`;
-        return;
-    }
-    scheduleModalBody.innerHTML = schedule.map(slot => `
-        <div class="schedule-card" data-trip-code="${slot.TripCode}" data-price="${pricePerPax}">
-            <p class="label-text">${slot.TravelTime}</p>
-            <p class="even-smaller-label">${slot.SeatCategory ?? 'Premium'}</p>
-            <p class="label-text">IDR ${Number(pricePerPax).toLocaleString('id-ID')}</p>
-        </div>
-    `).join('');
-
-    scheduleModalBody.querySelectorAll('.schedule-card').forEach(card => {
-        card.addEventListener('click', () => {
-            if (currentScheduleType === 'depart') selectSchedule(card);
-            else selectReturnSchedule(card);
-            closeScheduleModal();
-        })
-    })
-}
-
-function renderSchedules(schedule, pricePerPax) {
-    if (!schedule || schedule.length === 0) {
-        scheduleContainer.innerHTML = '<p class="label-text">No departures available for this date.</p>'
-        return;
-    }
-
-    pricePerPaxEl.value = pricePerPax || 0;
-    recalculateTotal();
-
-    scheduleContainer.innerHTML = schedule.map(slot => `
-        <div class="schedule-card" data-trip-code="${slot.TripCode}" data-price="${pricePerPax}">
-            <p class="label-text">${slot.TravelTime}</p>
-            <p class="even-smaller-label">${slot.SeatCategory ?? 'Premium'}</p>
-            <p class="label-text">IDR ${Number(pricePerPax).toLocaleString('id-ID')}</p>
-        </div>
-    `).join('');
-
-    document.querySelectorAll('.schedule-card').forEach(card => {
-        card.addEventListener('click', () => selectSchedule(card));
-    });
-}
-
-function selectSchedule(card) {
-    document.querySelectorAll('.schedule-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-    selectedTripCodeEl.value = card.dataset.tripCode;
-    pricePerPaxEl.value = card.dataset.price
-    recalculateTotal();
-
-    const time = card.querySelector('.label-text').textContent;
-    const cat  = card.querySelector('.even-smaller-label').textContent;
-    document.getElementById('departureScheduleLabel').textContent = `${time} — ${cat}`;
-    departureScheduleBtn?.classList.add('has-selection');
-}
-
-// Return Schedule
-function renderReturnSchedules(schedule, pricePerPax) {
-    if (!returnScheduleContainer) return;
-
-    if (!schedule || schedule.length === 0) {
-        returnScheduleContainer.innerHTML = '<p class="label-text">No returns available for this date.</p>'
-        return;
-    }
-
-    returnScheduleContainer.innerHTML = schedule.map(slot => `
-        <div class="schedule-card return-schedule-card" data-trip-code="${slot.TripCode}" data-price="${pricePerPax}">
-        <p class="label-text">${slot.TravelTime}</p>
-        <p class="even-smaller-label">${slot.SeatCategory ?? 'Premium'}</p>
-        <p class="label-text">IDR ${Number(pricePerPax).toLocaleString('id-ID')}</p>
-        </div>
-    `).join('');
-    
-    returnScheduleContainer.querySelectorAll('.return-schedule-card').forEach(card => {
-        card.addEventListener('click', () => selectReturnSchedule(card));
-    });
-}
-
-function selectReturnSchedule(card) {
-    scheduleModalBody.querySelectorAll('.schedule-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-    selectedReturnTripCodeEl.value = card.dataset.tripCode;
-    
-    const time = card.querySelector('.label-text').textContent;
-    const cat = card.querySelector('.even-smaller-label').textContent;
-    document.getElementById('returnScheduleLabel').textContent = `${time} - ${cat}`;
-    returnScheduleBtn?.classList.add('has-selection');
-}
-
-document.querySelectorAll('.pax-counter').forEach(counter => {
-    const minCount = parseInt(counter.dataset.min) || 0;
-    const display = counter.querySelector('.pax-counter-text');
-
-    counter.querySelector('.pax-counter-plus').addEventListener('click', () => {
-        display.textContent = parseInt(display.textContent) + 1;
-        recalculateTotal();
-    });
-
-    counter.querySelector('.pax-counter-minus').addEventListener('click', () => {
-        const current = parseInt(display.textContent);
-        if (current > minCount) {
-            display.textContent = current - 1;
-            recalculateTotal();
-        }
-    })
-});
-
-function getTotalPax() {
-    return Array.from(document.querySelectorAll('.pax-counter-text')).reduce((sum, el) => sum + parseInt(el.textContent), 0);
-}
-
-function getPaidPax() {
-    let total = 0;
-    document.querySelectorAll('.pax-counter').forEach(counter => {
-        if (counter.dataset.type !== 'infant') {
-            total += parseInt(counter.querySelector('.pax-counter-text').textContent) || 0;
-        }
-    });
-
-    return total;
-}
-
-function recalculateTotal() {
-    const price = parseFloat(pricePerPaxEl.value) || 0;
-    const paidPax = getPaidPax();
-    const totalPax = getTotalPax();
-    const total = price * paidPax;
-    
-    totalPriceDisplay.textContent = `IDR ${total.toLocaleString('id-ID')}`;
-
-    document.getElementById('displayPricePerPax').textContent = price > 0 ? `IDR ${price.toLocaleString('id-ID')}` : '-';
-    document.getElementById('displayTotalPax').textContent = `${totalPax} visitor${totalPax !== 1 ? 's' : ''}`;
-}
 
 document.getElementById('ferryBookingContinueBtn').addEventListener('click', async () => {
     const date = document.getElementById('ferryDepartureDate').value;
@@ -436,7 +403,7 @@ document.getElementById('ferryBookingContinueBtn').addEventListener('click', asy
                     returnFromPort: returnFromPortSelect?.value,
                     returnToPort: returnToPortSelect?.value
                 }),
-                SeatCategory: document.querySelector('.schedule-card.selected .even-smaller-label')?.textContent || 'Premium',
+                seatCategory: document.querySelector('.schedule-card.selected .even-smaller-label')?.textContent || 'Premium',
                 adults: parseInt(document.getElementById('adultCount').textContent),
                 children: parseInt(document.getElementById('childCount').textContent),
                 infants: parseInt(document.getElementById('infantCount').textContent)
@@ -454,3 +421,5 @@ document.getElementById('ferryBookingContinueBtn').addEventListener('click', asy
         showBookingStatus('Failed to proceed to checkout. Please try again.');
     }
 });
+
+initPaxCounters();

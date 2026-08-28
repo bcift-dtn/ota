@@ -377,6 +377,22 @@ const saveDraftOrder = (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ success: false, message: 'Please log in to continue.' });
   }
+
+  const {productId, productType, totalAmount } = req.body;
+
+  if (!productId || !productType) {
+    return res.status(400).json({success : false, message: 'Invalid order data.'});
+  }
+
+  const allowedTypes = ['ferry', 'activities', 'car_rental'];
+  if (!allowedTypes.includes(productType)) {
+    return res.status(400).json({ success: false, message: 'Invalid product type.' });
+  }
+
+  if (totalAmount !== undefined && (isNaN(totalAmount) || Number(totalAmount) < 0)) {
+    return res.status(400).json({success: false, message: 'Invalid amount.'});
+  }
+
   try {
     req.session.draftOrder = req.body;
     return res.status(200).json({ success: true, message: 'Draft saved' });
