@@ -1,7 +1,7 @@
 const db = require('../config/db');
 
 // New Order
-const createOrder = async ({ userId, draftOrder, basePrice, taxAmount, playformFee, grandTotal }) => {
+const createOrder = async ({ userId, draftOrder, basePrice, taxAmount, platformFee, grandTotal }) => {
     const client = await db.connect();
     try {
         await client.query('BEGIN');

@@ -3,8 +3,9 @@ const BASE_URL = process.env.YOKKE_BASE_URL;
 const CLIENT_ID = process.env.YOKKE_CLIENT_ID;
 const CLIENT_SECRET = process.env.YOKKE_CLIENT_SECRET;
 const API_KEY = process.env.YOKKE_API_KEY;
+
 // === TOKEN CACHE ===
-// Max 3 token requests/minute — NEVER fetch a new token per request
+// Max 3 token requests/minute
 let _cachedToken = null;
 let _tokenExpiresAt = 0;
 const getAccessToken = async () => {
