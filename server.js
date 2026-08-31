@@ -27,7 +27,7 @@ app.use(helmet({
       imgSrc:      ["'self'", "data:", "blob:", "https://cdn.jsdelivr.net"],
       frameSrc:    ["'self'", "https://www.google.com", "https://checkout.yokke.co.id", "https://tst.yokke.co.id:7778"],
       connectSrc:  ["'self'", "https://cdn.jsdelivr.net", "https://unpkg.com", "https://tst.yokke.co.id:7778", "https://api.yokke.co.id:7778"],
-      formAction:  ["'self", "https://checkout.yokke.co.id", "https://tst.yokke.co.id:7778", "https://api.yokke.co.id:7778"],
+      formAction:  ["'self'", "https://checkout.yokke.co.id", "https://tst.yokke.co.id:7778", "https://api.yokke.co.id:7778"],
       upgradeInsecureRequests: null,
     }
   }
