@@ -4,6 +4,9 @@ const { getCarRentalListings, getCarRentalById, getPackagesByProductIds, getCarR
 
 const { getFerryCheckout } = require('./ferryController');
 
+const { createOrder } = require('../models/orderModel');
+const { createInquiry } = require('../services/yokkeService');
+
 const getCarRentals = async (req, res) => {
   const {
     'driver-needs': driverNeeds,
@@ -402,4 +405,63 @@ const saveDraftOrder = (req, res) => {
   }
 }
 
-module.exports = { getCarRentals, getCarRentalDetail, getActivities, getActivitiesDetail, getCheckoutPage, saveDraftOrder };
+const confirmCheckout = async (req, res) => {
+  try {
+    const draftOrder = req.session.draftOrder;
+    const user = req.session.user;
+
+    if (!draftOrder || !user) return res.redirect('/');
+
+    const { grandTotal, basePrice, taxAmount, platformFee, filteredGrandTotal, filteredBasePrice } = draftOrder;
+    const finalTotal = Math.round(grandTotal || filteredGrandTotal || 0);
+    const finalBase = Math.round(basePrice || filteredBasePrice || 0);
+    const finalTax = Math.round(taxAmount || 0);
+    const finalFee = Math.round(platformFee || parseInt(process.env.PLATFORM_FEE) || 5000);
+    
+    const orderId = await createOrder({
+      userId: user.id,
+      draftOrder,
+      basePrice: finalBase,
+      taxAmount: finalTax,
+      platformFee: finalFee,
+      grandTotal: finalTotal 
+    });
+
+    const yokkeOrderId = `MT-${draftOrder.productType?.toUpperCase()}-${orderId}`;
+
+    const itemName = draftOrder.productType === 'ferry' 
+      ? `Ferry ${draftOrder.fromPort} → ${draftOrder.toPort}`
+      : draftOrder.productType === 'activities' 
+      ? `Activities Booking #${orderId}`
+      : `Car Rental booking #${orderId}`;
+
+    const inquiry = await createInquiry({
+      orderId: yokkeOrderId,
+      amount: finalTotal,
+      itemName,
+      quantity: 1,
+      customer: {
+        name: user.full_name,
+        email: user.email
+      }
+    });
+
+    req.session.pendingPayment = {
+      orderId,
+      yokkeOrderId,
+      inquiryId: inquiry.id,
+      checkoutUrl: inquiry.urls?.checkout
+    };
+
+    const { updateOrderPaymentStatus } = require('../models/orderModel');
+    
+    await updateOrderPaymentStatus(orderId, { inquiryId: inquiry.id });
+
+    return res.redirect(inquiry.urls.checkout);
+  } catch (err) {
+    console.error('[CHECKOUT] Confirm error:', err.message);
+    return res.redirect('/products/checkout?error=payment_failed');
+  }
+}
+
+module.exports = { getCarRentals, getCarRentalDetail, getActivities, getActivitiesDetail, getCheckoutPage, saveDraftOrder, confirmCheckout};

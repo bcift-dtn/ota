@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { getCarRentals, getCarRentalDetail, getActivities, getActivitiesDetail, getCheckoutPage, saveDraftOrder } = require('../controllers/productController');
+const { getCarRentals, getCarRentalDetail, getActivities, getActivitiesDetail, getCheckoutPage, saveDraftOrder, confirmCheckout } = require('../controllers/productController');
 
 router.post('/checkout/draft', saveDraftOrder);
+
+router.post('/checkout/confirm', confirmCheckout);
 
 router.get('/car-rental', getCarRentals);
 

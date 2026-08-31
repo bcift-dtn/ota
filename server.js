@@ -13,6 +13,7 @@ const productRoutes = require('./src/routes/productRoutes');
 const userRoutes = require('./src/routes/userRoutes');
 const contactController = require('./src/controllers/contactController');
 const ferryRoutes = require('./src/routes/ferryRoutes');
+const webhookController = require('./src/controllers/webhookController');
 
 // Variable
 const app = express();
@@ -74,6 +75,7 @@ app.use('/ferry', ferryRoutes);
 app.get('/about', (req, res) => res.render('pages/about'));
 app.get('/contact', contactController.renderContactPage);
 app.post('/contact/send', contactController.sendMessage);
+app.post('/api/webhook/yokke', webhookController.handleWebhook);
 app.use((req, res) => {
   res.status(404).render('pages/404', { message: 'Page not found.' });
 });
