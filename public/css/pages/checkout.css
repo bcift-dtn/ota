@@ -410,6 +410,11 @@ h3 {
   justify-content: center;
   margin-bottom: 1.25rem;
 }
+
+.success-icon-badge.error-badge {
+  background-color: #EF4444;
+}
+
 .success-icon-badge svg {
   width: 32px;
   height: 32px;

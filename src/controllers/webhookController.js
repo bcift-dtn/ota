@@ -29,19 +29,24 @@ const handleWebhook = async (req, res) => {
     const body = req.body;
     const type = body?.type;
 
+    console.log(`[WEBHOOK] Incoming ${type}:`, JSON.stringify(body));
+
     // Validate payment
     if (type === 'payment.validate') {
         const dbOrderId = parseDbOrderId(body?.inquiry?.order?.id);
 
         if (!dbOrderId) {
+            console.warn('[WEBHOOK] payment.validate rejected: invalid order ID');
             return res.json({ status: 'nok', validateSignature, inquiry: {} });
         }
 
         const order = await getOrderById(dbOrderId);
         if (!order) {
+            console.warn(`[WEBHOOK] payment.validate rejected: order #${dbOrderId} not found`);
             return res.json({ status: 'nok', validateSignature, inquiry: {} });
         }
 
+        console.log(`[WEBHOOK] payment.validate approved for order #${dbOrderId}`);
         return res.json({ status: 'ok', validateSignature, inquiry: {} })
     }
 
