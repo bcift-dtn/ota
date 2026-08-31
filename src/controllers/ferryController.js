@@ -236,8 +236,16 @@ const getFerryCheckout = async (req, res, draftOrder) => {
         year: 'numeric'
         })
 
+    req.session.draftOrder = {
+        ...draftOrder,
+        basePrice,
+        taxAmount: basePrice * taxRate,
+        platformFee,
+        grandTotal
+    }        
+
     return res.render('pages/checkout', {
-        draftOrder,
+        draftOrder: req.session.draftOrder,
         product,
         isTwoWay,
         PORT_NAMES,

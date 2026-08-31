@@ -359,8 +359,16 @@ const getCheckoutPage = async (req, res) => {
       year: 'numeric'
     });
 
+    req.session.draftOrder = {
+      ...draftOrder,
+      basePrice: filteredBasePrice,
+      taxAmount,
+      platformFee,
+      grandTotal: filteredGrandTotal
+    }
+
     return res.render('pages/checkout', {
-      draftOrder,
+      draftOrder: req.session.draftOrder,
       formattedVisitDate,
       product: rows[0],
       selectedPackage,
@@ -459,7 +467,7 @@ const confirmCheckout = async (req, res) => {
 
     return res.redirect(inquiry.urls.checkout);
   } catch (err) {
-    console.error('[CHECKOUT] Confirm error:', err.message);
+    console.error('[CHECKOUT] Confirm error:', err.response?.data || err.message);
     return res.redirect('/products/checkout?error=payment_failed');
   }
 }
