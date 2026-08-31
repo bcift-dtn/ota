@@ -361,3 +361,304 @@ h3 {
 .iti input {
   width: 100%;
 }
+
+.checkout-result-main {
+  padding: 8rem 1rem 4rem;
+}
+.progress-step.completed .progress-circle {
+  background-color: var(--clr-primary);
+  color: white;
+}
+.progress-line.completed {
+  background-color: var(--clr-primary);
+}
+.result-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.result-left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
+}
+.result-right-column {
+  width: 100%;
+}
+.result-card {
+  background-color: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+/* Confirmed Card */
+.confirmed-card {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+}
+.success-icon-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #0E7490;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+.success-icon-badge svg {
+  width: 32px;
+  height: 32px;
+  stroke-width: 3;
+}
+.result-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--clr-special-font);
+  margin-bottom: 0.5rem;
+}
+.result-subtitle {
+  font-size: 0.875rem;
+  color: var(--clr-label-font);
+  max-width: 460px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.5;
+}
+.booking-id-box {
+  display: inline-block;
+  background-color: #F1F5F9;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+}
+.booking-id-label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #64748B;
+  margin-bottom: 0.25rem;
+}
+.booking-id-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--clr-special-font);
+  letter-spacing: 0.05em;
+}
+/* Result Subgrid */
+.result-subgrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.card-header-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #0E7490;
+  margin-bottom: 0.75rem;
+}
+.card-header-badge .badge-icon {
+  width: 18px;
+  height: 18px;
+}
+.badge-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.package-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--clr-special-font);
+  margin-bottom: 0.25rem;
+}
+.package-date {
+  font-size: 0.875rem;
+  color: var(--clr-label-font);
+  font-weight: 600;
+}
+.voucher-instruction {
+  font-size: 0.8125rem;
+  color: var(--clr-label-font);
+  line-height: 1.45;
+  margin-bottom: 1rem;
+}
+.secret-code-preview {
+  display: flex;
+  justify-content: space-between;
+  background: #F8FAFC;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  color: var(--clr-special-font);
+  margin-bottom: 1rem;
+  border: 1px dashed #CBD5E1;
+}
+.download-voucher-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--clr-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.download-voucher-btn:hover {
+  opacity: 0.9;
+}
+.download-voucher-btn svg {
+  width: 18px;
+  height: 18px;
+}
+/* Payment Summary Card */
+.summary-heading {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--clr-special-font);
+  margin-bottom: 1.25rem;
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+.summary-label {
+  color: var(--clr-label-font);
+}
+.summary-value {
+  font-weight: 600;
+  color: var(--clr-special-font);
+}
+.summary-divider {
+  border-top: 1px dashed #CBD5E1;
+  margin: 1.25rem 0;
+}
+.total-paid-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+.total-paid-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--clr-special-font);
+}
+.total-paid-amount-box {
+  text-align: right;
+}
+.total-paid-amount {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--clr-primary);
+}
+.payment-method-tag {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--clr-label-font);
+  margin-top: 0.2rem;
+}
+.guarantee-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background-color: #F8FAFC;
+  border-radius: 8px;
+  padding: 0.875rem;
+}
+.guarantee-icon svg {
+  width: 20px;
+  height: 20px;
+  color: #0E7490;
+}
+.guarantee-text strong {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--clr-special-font);
+  margin-bottom: 0.2rem;
+}
+.guarantee-text p {
+  font-size: 0.75rem;
+  color: var(--clr-label-font);
+  line-height: 1.35;
+}
+/* Bottom Action Buttons */
+.result-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 480px;
+  margin: 2.5rem auto 0;
+}
+.btn-action-primary {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.875rem 1.5rem;
+  background-color: var(--clr-primary);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: 8px;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: opacity 0.2s ease;
+}
+.btn-action-primary:hover {
+  opacity: 0.9;
+}
+.btn-action-secondary {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.875rem 1.5rem;
+  background-color: white;
+  color: var(--clr-primary);
+  border: 2px solid var(--clr-primary);
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: 8px;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: background-color 0.2s ease;
+}
+.btn-action-secondary:hover {
+  background-color: #F0FDF4;
+}
+
+@media (min-width: 860px) {
+  .result-layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .result-right-column {
+    width: 360px;
+  }
+  .result-subgrid {
+    flex-direction: row;
+  }
+  .result-subgrid .sub-card {
+    flex: 1;
+  }
+  .result-action-buttons {
+    flex-direction: row;
+    justify-content: center;
+  }
+  .result-title {
+    font-size: 1.75rem;
+  }
+}

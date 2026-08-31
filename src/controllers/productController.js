@@ -464,4 +464,69 @@ const confirmCheckout = async (req, res) => {
   }
 }
 
-module.exports = { getCarRentals, getCarRentalDetail, getActivities, getActivitiesDetail, getCheckoutPage, saveDraftOrder, confirmCheckout};
+const getCheckoutResult = async (req, res) => {
+  try {
+    const rawOrderId = req.query.orderId || req.session?.pendingPayment?.yokkeOrderId;
+    if (!rawOrderId) return res.redirect('/');
+
+    const parts = String(rawOrderId).split('-');
+    const dbOrderId = parseInt(parts.at(-1)) || null;
+
+    if (!dbOrderId) return res.redirect('/');
+
+    const { getOrderById } = require('../models/orderModel');
+    const order = await getOrderById(dbOrderId);
+
+    if (!order) return res.status(404).render('pages/404', { message: 'Order not found. '});
+
+    // fetch order items
+    const db = require('../config/db');
+    const itemsRes = await db.query(
+      `
+        SELECT oi.*, p.title as product_title, p.type as product_type
+        FROM ota.order_items oi
+        JOIN ota.products p ON p.id = oi.product_id
+        WHERE oi.order_id = $1 
+      `,
+      [dbOrderId]
+    );
+
+    // fetch secret code
+    const secretRes = await db.query(
+      `
+        SELECT sc.*
+        FROM ota.secret_codes sc
+        JOIN ota.order_items oi ON oi.id = sc.order_item_id
+        WHERE oi.order_id = $1
+      `,
+      [dbOrderId]
+    );
+
+    delete req.session.draftOrder;
+    delete req.session.pendingPayment;
+
+    const isPaid = order.payment_status === 'paid' || order.status === 'paid';
+
+    return res.render('pages/checkout-result', {
+      order,
+      items: itemsRes.rows,
+      secretCode: secretRes.rows,
+      isPaid,
+      rawOrderId
+    });
+  } catch (err) {
+    console.error('[CHECKOUT RESULT] Error:', err.message);
+    return res.redirect('/');
+  }
+};
+
+module.exports = { 
+  getCarRentals, 
+  getCarRentalDetail, 
+  getActivities, 
+  getActivitiesDetail, 
+  getCheckoutPage, 
+  saveDraftOrder, 
+  confirmCheckout,
+  getCheckoutResult
+};

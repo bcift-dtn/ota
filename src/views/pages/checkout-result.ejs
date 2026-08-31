@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Booking Confirmed - MEGATERRA</title>
+
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages/checkout.css" />
+  </head>
+
+  <body>
+    <%- include('../partials/navbar') %>
+
+    <main class="checkout-result-main">
+      <section class="checkout-container">
+        <div class="checkout-progress-wrapper">
+          <div class="progress-step completed">
+            <div class="progress-circle">1</div>
+            <span>Details</span>
+          </div>
+
+          <div class="progress-line completed"></div>
+
+          <div class="progress-step completed">
+            <div class="progress-circle">2</div>
+            <span>Payment</span>
+          </div>
+
+          <div class="progress-line completed"></div>
+
+          <div class="progress-step active">
+            <div class="progress-circle">3</div>
+            <span>Confirmation</span>
+          </div>
+        </div>
+
+        <div class="result-layout">
+          <!-- Left Column -->
+          <div class="result-left-column">
+            <!-- Booking confirmed -->
+            <div class="result-card confirmed-card">
+              <div class="success-icon-badge">
+                <i data-lucide="check"></i>
+              </div>
+
+              <h1 class="result-title">Booking Confirmed!</h1>
+              <p class="result-subtitle">
+                Your reservation for the
+                <strong><%= (items[0] && items[0].product_title) || order.notes ||
+                'selected package' %></strong> is successful. A copy of your voucher has been sent to your email.
+              </p>
+
+              <div class="booking-id-box">
+                <span class="booking-id-label">BOOKING ID</span>
+                <strong class="booking-id-value"><%= rawOrderId %></strong>
+              </div>
+            </div>
+
+            <div class="result-subgrid">
+              <!-- Package Detail -->
+              <div class="result-card sub-card">
+                <div class="card-header-badge">
+                  <i data-lucide="check-circle" class="badge-icon"></i>
+                  <span class="badge-title">PACKAGE DETAIL</span>
+                </div>
+                <h3 class="package-name"><%= (items[0] && items[0].product_title) || 'Selected Package'%></h3>
+                <p class="package-date">
+                  <%= items[0]?.start_date ? new Date(items[0].start_date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) : 'Confirmed Schedule' %>
+                </p>
+              </div>
+
+              <!-- Booking Voucher -->
+              <div class="result-card sub-card">
+                <div class="card-header-badge">
+                  <i data-lucide="file-text" class="badge-icon"></i>
+                  <span class="badge-title">BOOKING VOUCHER</span>
+                </div>
+                <p class="voucher-instruction">
+                  Please present this digital voucher to your driver/counter upon arrival at the pickup point.
+                </p>
+
+                <% if (secretCode && secretCode.length > 0) { %>
+                  <div class="secret-code-preview">
+                    <span>Ref: <strong><%= secretCode[0].reference_id %></strong></span>
+                    <span>Secret: <strong><%= secretCode[0].secret_code %></strong></span>
+                  </div>
+                <% } %>
+
+                <button type="button" class="download-voucher-btn" onclick="window.print()">
+                  <i data-lucide="download"></i>DOWNLOAD VOUCHER
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div class="result-right-column">
+          <div class="result-card summary-card">
+            <h2 class="summary-heading">Payment Summary</h2>
+
+            <div class="summary-row">
+              <span class="summary-label">Base Fare</span>
+              <span class="summary-value">IDR <%= Number(order.base_price || 0).toLocaleString('id-ID') %></span>
+            </div>
+
+            <div class="summary-row">
+              <span class="summary-label">Admin Fee</span>
+              <span class="summary-value">IDR <%= Number((order.platform_fee || 0) + (order.tax_amount || 0)).toLocaleString('id-ID') %></span>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="total-paid-wrapper">
+              <span class="total-paid-label">TOTAL PAID</span>
+              <div class="total-paid-amount-box">
+                <span class="total-paid-amount">IDR <%= Number(order.total_amount || 0).toLocaleString('id-ID') %></span>
+                <span class="payment-method-tag">Paid via <%= order.payment_method || 'Credit Card' %></span>
+              </div>
+            </div>
+
+            <div class="guarantee-box">
+              <div class="guarantee-icon">
+                <i data-lucide="shield-check"></i>
+              </div>
+
+              <div class="guarantee-text">
+                <strong>SwiftGuarantee</strong>
+                <p>Your booking is protected by our professional service guarantee</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Section Button -->
+        <div class="result-action-buttons">
+          <a href="/" class="btn-action-primary">BACK TO HOME</a>
+          <a href="#" class="btn-action-secondary">MY BOOKING</a>
+        </div>
+      </section>
+    </main>
+
+    <%- include('../partials/footer') %>
+    <%- include('../partials/loginModal')%>
+  </body>
+</html>
