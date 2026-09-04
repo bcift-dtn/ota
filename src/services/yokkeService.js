@@ -40,7 +40,6 @@ const createInquiry = async ({ orderId, amount, itemName, quantity, customer }) 
             amount,
             currency: 'IDR',
             referenceUrl: `${APP_BASE_URL}/products/checkout/result?orderId=${orderId}`,
-            notifyUrl: `${APP_BASE_URL}/api/webhook/yokke`,
             order: {
                 id: orderId,
                 items: [{ name: itemName, quantity, amount }]
