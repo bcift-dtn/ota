@@ -28,7 +28,8 @@ const handleWebhook = async (req, res) => {
     const validateSignature = computeValidateSignature(signatureHeader);
     const body = req.body;
     const type = body?.type;
-
+    console.log('testing');
+    console.log('[WEBHOOK HEADERS]', JSON.stringify(req.headers));
     console.log(`[WEBHOOK] Incoming ${type}:`, JSON.stringify(body));
 
     // Validate payment
