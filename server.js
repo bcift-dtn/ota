@@ -46,18 +46,6 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
 // JSON and URL-encoded middleware
-// app.post('/api/webhook/yokke', express.raw({ type: '*/*' }), (req, res) => { 
-//   const raw = req.body.toString('utf8'); 
-//   console.log('[WEBHOOK RAW BYTES]:', raw); 
-//   try { 
-//     req.body = JSON.parse(raw); 
-//     req.rawBody = raw; 
-//     return webhookController.handleWebhook(req, res);
-//   } catch (err) { 
-//     console.error('[WEBHOOK] Failed to parse JSON:', err.message); 
-//     return res.status(200).json({ status: 'nok' }); 
-//   }
-// });
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
