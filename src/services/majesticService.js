@@ -99,6 +99,37 @@ const checkDeposit = () => {
     return mffPost('MFFCheckDeposit');
 }
 
+const bookFerry = ({ orderId, journeyType, isReturnOpenTicket, departTripCode, 
+    departSeatCategory, travelDate, returnTripCode, returnSeatCategory, returnTravelDate, passengers }) => {
+    const passengerPayload = passengers.map(p => ({
+        PassportNo:             p.passportNo,
+        PassportName:           p.passportName,
+        BirthDate:              p.birthDate,
+        BirthPlace:             p.birthPlace,
+        Gender:                 p.gender,
+        Nationality:            p.nationality,
+        PassportExpiredDate:    p.passportExpiredDate,
+        PassportIssueDate:      p.passportIssueDate,
+        PriceCode:              p.priceCode || '',
+    }));
+
+    return mffPost('MFFPassengerBooking', {
+        BookingName:                `MT-FERRY-${orderId}`,
+        TicketCategory:             `Normal`,
+        JourneyType:                String(journeyType),
+        IsReturnOpenTicket:         String(isReturnOpenTicket),
+        DepartTripCode:             departTripCode,
+        DepartSeatCategory:         departSeatCategory,
+        TravelDate:                 travelDate,
+        ReturnTripCode:             returnTripCode || '',
+        ReturnSeatCategory:         returnSeatCategory || '',
+        ReturnTravelDate:           returnTravelDate || '',
+        IncludeDepartTerminalFee:   '1',
+        IncludeReturnTerminalFee:   journeyType === '2' ? '1' : '0',
+        Passenger:                  JSON.stringify(passengerPayload),
+    })
+}
+
 module.exports = {
-    getSchedule, getPriceList, getTripCapacity, checkDeposit, getPriceByTripCode, getCountryList
+    getSchedule, getPriceList, getTripCapacity, checkDeposit, getPriceByTripCode, getCountryList, bookFerry
 };

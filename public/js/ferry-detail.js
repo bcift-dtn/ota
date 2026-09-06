@@ -393,6 +393,8 @@ document.getElementById('ferryBookingContinueBtn').addEventListener('click', asy
             body: JSON.stringify({
                 productId,
                 productType: 'ferry',
+                journeyType: isTwoWay ? '2' : '1',
+                isReturnOpenTicket: '0',
                 tripCode,
                 departureDate: date,
                 fromPort: fromPortSelect?.value,
@@ -401,7 +403,8 @@ document.getElementById('ferryBookingContinueBtn').addEventListener('click', asy
                     returnTripCode: selectedReturnTripCodeEl.value,
                     returnDate: document.getElementById('ferryReturnDate')?.value,
                     returnFromPort: returnFromPortSelect?.value,
-                    returnToPort: returnToPortSelect?.value
+                    returnToPort: returnToPortSelect?.value,
+                    returnSeatCategory: document.querySelector('#returnScheduleContainer .schedule-card.selected .even-smaller-label')?.textContent || 'Premium',
                 }),
                 seatCategory: document.querySelector('.schedule-card.selected .even-smaller-label')?.textContent || 'Premium',
                 adults: parseInt(document.getElementById('adultCount').textContent),

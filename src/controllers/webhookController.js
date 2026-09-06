@@ -67,11 +67,43 @@ const handleWebhook = async (req, res) => {
                     maskedCard: body?.transaction?.paymentSourceData?.cardNumber
                 });
 
-                // Generate Secret Code
-                const order = await getOrderById(dbOrderId);
-                const isFerry = order?.notes === 'ferry';
+                const productTypeRes = await db.query(`
+                    SELECT p.type 
+                    FROM ota.order_items oi
+                    JOIN ota.products p ON p.id = oi.product_id
+                    WHERE oi.order_id = $1
+                    LIMIT 1
+                `, [dbOrderId]);
+                const isFerry = productTypeRes.rows[0]?.type === 'ferry';
 
-                if (!isFerry) {
+                if (isFerry) {
+                    const ferryItemRes = await db.query(
+                        `SELECT id, passengers FROM ota.order_items WHERE order_id = $1 LIMIT 1`,
+                        [dbOrderId]
+                    );
+                    const orderItemId = ferryItemRes.rows[0]?.id;
+                    const stored = ferryItemRes.rows[0]?.passengers || {};
+                    const ferryPassengers = stored.passengers || [];
+                    const snap = stored.ferrySnapshot || {};
+                    if (ferryPassengers.length > 0 && snap.departTripCode) {
+                        const { bookFerry } = require('../services/majesticService');
+                        const mffResult = await bookFerry({
+                            orderId: dbOrderId,
+                            ...snap,
+                            passengers: ferryPassengers,
+                        });
+                        const mffBooking = Array.isArray(mffResult) ? mffResult[0] : mffResult;
+                        if (mffBooking?.BookingCode) {
+                            await db.query(
+                                `UPDATE ota.order_items SET vendor_booking_code = $1, vendor_status = $2 WHERE id = $3`,
+                                [mffBooking.BookingCode, mffBooking.BookingStatus || 'A', orderItemId]
+                            );
+                            console.log(`[MFF] Booking created: ${mffBooking.BookingCode} for order #${dbOrderId}`);
+                        } else {
+                            console.error(`[MFF] Booking failed for order #${dbOrderId}:`, JSON.stringify(mffResult));
+                        }
+                    }
+                } else {
                     const itemRes = await db.query(
                         `SELECT id FROM ota.order_items WHERE order_id = $1 LIMIT 1`,
                         [dbOrderId]
@@ -91,8 +123,6 @@ const handleWebhook = async (req, res) => {
                         );
                     }
                 }
-
-                // Call majestic service here later to generate ticket
             } catch (err) {
                 console.error('[WEBHOOK] payment.received error:', err.message);
             }

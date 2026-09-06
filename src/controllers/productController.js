@@ -418,6 +418,35 @@ const confirmCheckout = async (req, res) => {
     const draftOrder = req.session.draftOrder;
     const user = req.session.user;
 
+    if (draftOrder.productType === 'ferry') {
+      const totalPax = (parseInt(draftOrder.adults) || 0) + (parseInt(draftOrder.children) || 0) + (parseInt(draftOrder.infants) || 0);
+      const passengers = [];
+      for (let i = 1; i <= totalPax; i++) {
+        passengers.push({
+          passportName:         req.body[`passportName_${i}`],
+          passportNo:           req.body[`passportNo_${i}`],
+          gender:               req.body[`gender_${i}`],
+          birthDate:            req.body[`birthDate_${i}`],
+          birthPlace:           req.body[`birthPlace_${i}`],
+          passportIssueDate:    req.body[`passportIssueDate_${i}`],
+          passportExpiredDate:  req.body[`passportExpiredDate_${i}`],
+          nationality:          req.body[`nationality_${i}`],
+        });
+      }
+
+      req.session.draftOrder.passengers = passengers;
+      req.session.draftOrder.ferrySnapshot = {
+        journeyType:          draftOrder.journeyType || '1',
+        isReturnOpenTicket:   draftOrder.isReturnOpenTicket || '0',
+        departTripCode:       draftOrder.tripCode,
+        departSeatCategory:   draftOrder.seatCategory,
+        travelDate:           draftOrder.departureDate,
+        returnTripCode:       draftOrder.returnTripCode || '',
+        returnSeatCategory:   draftOrder.returnSeatCategory || '',
+        returnTravelDate:     draftOrder.returnDate || '',
+      };
+    }
+
     if (!draftOrder || !user) return res.redirect('/');
 
     const { grandTotal, basePrice, taxAmount, platformFee, filteredGrandTotal, filteredBasePrice } = draftOrder;

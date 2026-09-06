@@ -21,8 +21,8 @@ const createOrder = async ({ userId, draftOrder, basePrice, taxAmount, platformF
         await client.query(
             `
                 INSERT INTO ota.order_items
-                    (order_id, product_id, quantity, unit_price, start_date, notes)
-                VALUES ($1, $2, $3, $4, $5, $6)
+                    (order_id, product_id, quantity, unit_price, start_date, notes, passengers)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
             `,
             [
                 orderId,
@@ -30,7 +30,11 @@ const createOrder = async ({ userId, draftOrder, basePrice, taxAmount, platformF
                 (draftOrder.adults || 1) + (draftOrder.children || 0),
                 basePrice,
                 draftOrder.departureDate || draftOrder.visitDate || null,
-                draftOrder.productType
+                draftOrder.productType,
+                draftOrder.passengers ? JSON.stringify({
+                    passengers: draftOrder.passengers,
+                    ferrySnapshot: draftOrder.ferrySnapshot || null
+                }) : null
             ]
         );
 
