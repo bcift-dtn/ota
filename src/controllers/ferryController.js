@@ -152,19 +152,11 @@ const getScheduleByDate = async (req, res) => {
             childIDR = parsePrice(childEntry?.Price || adultEntry?.Price || '0');
         }
         
-        // res.json({ 
-        //     schedule: departTrips,
-        //     returnSchedule: returnTrips,
-        //     pricePerPax: adultIDR,
-        //     childPricePerPax: childIDR
-        // });
-
-        const isTestMode = process.env.NODE_ENV !== 'production';
         res.json({ 
             schedule: departTrips,
             returnSchedule: returnTrips,
-            pricePerPax: isTestMode ? 1 : adultIDR,
-            childPricePerPax: isTestMode ? 1 : childIDR
+            pricePerPax: adultIDR,
+            childPricePerPax: childIDR
         });
     } catch (error) {
         console.error('Schedule fetch error:', error.message);
@@ -226,8 +218,11 @@ const getFerryCheckout = async (req, res, draftOrder) => {
     const adultPrice = priceList.find(p => p.Category?.toLowerCase() === 'adult');
     const childPrice = priceList.find(p => p.Category?.toLowerCase() === 'child');
     
-    const adultIDR = Math.ceil(parsePrice(adultPrice?.Price || 0));
-    const childIDR = Math.ceil(parsePrice(childPrice?.Price || adultPrice?.Price || 0));
+    // const adultIDR = Math.ceil(parsePrice(adultPrice?.Price || 0));
+    // const childIDR = Math.ceil(parsePrice(childPrice?.Price || adultPrice?.Price || 0));
+    const isTestMode = process.env.NODE_ENV !== 'production';
+    const adultIDR = isTestMode ? 1 : Math.ceil(parsePrice(adultPrice?.Price || 0));
+    const childIDR = isTestMode ? 1 : Math.ceil(parsePrice(childPrice?.Price || adultPrice?.Price || 0));
     
     const basePrice = (adultIDR * draftOrder.adults) + (childIDR * draftOrder.children);
     const taxRate = parseFloat(process.env.TAX_RATE) || 0.11;
