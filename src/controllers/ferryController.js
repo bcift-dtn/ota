@@ -152,11 +152,19 @@ const getScheduleByDate = async (req, res) => {
             childIDR = parsePrice(childEntry?.Price || adultEntry?.Price || '0');
         }
         
+        // res.json({ 
+        //     schedule: departTrips,
+        //     returnSchedule: returnTrips,
+        //     pricePerPax: adultIDR,
+        //     childPricePerPax: childIDR
+        // });
+
+        const isTestMode = process.env.NODE_ENV !== 'production';
         res.json({ 
             schedule: departTrips,
             returnSchedule: returnTrips,
-            pricePerPax: adultIDR,
-            childPricePerPax: childIDR
+            pricePerPax: isTestMode ? 1 : adultIDR,
+            childPricePerPax: isTestMode ? 1 : childIDR
         });
     } catch (error) {
         console.error('Schedule fetch error:', error.message);
