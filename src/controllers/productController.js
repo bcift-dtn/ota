@@ -439,7 +439,7 @@ const confirmCheckout = async (req, res) => {
         journeyType:          draftOrder.journeyType || '1',
         isReturnOpenTicket:   draftOrder.isReturnOpenTicket || '0',
         departTripCode:       draftOrder.tripCode,
-        departSeatCategory:   draftOrder.seatCategory,
+        departSeatCategory:   draftOrder.seatCategory || 'Premium',
         travelDate:           draftOrder.departureDate,
         returnTripCode:       draftOrder.returnTripCode || '',
         returnSeatCategory:   draftOrder.returnSeatCategory || '',
