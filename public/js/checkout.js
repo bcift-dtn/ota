@@ -31,7 +31,7 @@ let minExpiryDate = new Date();
 if (departureDateVal) {
     minExpiryDate = new Date(departureDateVal);
 }
-minExpiryDate.setMonth(minExpiryDate.getMonth() + 6);
+minExpiryDate.setDate(minExpiryDate.getDate() + 185);
 
 flatpickr('.expiry-date-picker', {
     altInput: true,
@@ -55,7 +55,7 @@ checkoutForm?.addEventListener('submit', e => {
 
         if (passportNo) {
             if (passportNo.value.trim().length > 10) {
-                errorMessage = `Passenger ${idx}: Passport numebr cannot exceed 10 characters.`;
+                errorMessage = `Passenger ${idx}: Passport number cannot exceed 10 characters.`;
                 break;
             }
         }
@@ -68,7 +68,7 @@ checkoutForm?.addEventListener('submit', e => {
                     month: 'short',
                     year: 'numeric'
                 });
-                errorMessage = `Passenger ${idx}: Passport must be valid for at least 6 months beyong travel date (minimun expiry: ${formattedMin}).`;
+                errorMessage = `Passenger ${idx}: Passport must be valid for at least 6 months beyond travel date (minimum expiry: ${formattedMin}).`;
                 break;
             }
         }

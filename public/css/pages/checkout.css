@@ -683,3 +683,8 @@ h3 {
   color: #721C24;
   border: 1px solid #f5C6CB;
 }
+
+.pending-timer {
+  font-weight: 600;
+  color: #0E7490;
+}

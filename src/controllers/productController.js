@@ -548,8 +548,23 @@ const getCheckoutResult = async (req, res) => {
       `,
       [dbOrderId]
     );
-    const vendorBookingCode = vendorBookingRes.rows[0]?.vendor_booking_code || null;
+    let vendorBookingCode = vendorBookingRes.rows[0]?.vendor_booking_code || null;
     const isFerryOrder = vendorBookingCode !== null || itemsRes.rows[0]?.product_type === 'ferry';
+
+    // Check to see if booking code are generated
+    if (isFerryOrder && !vendorBookingCode) {
+      for (let attempt = 0; attempt < 5; attempt++) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const retryRes = await db.query(
+          `SELECT vendor_booking_code FROM ota.order_items WHERE order_id = $1 LIMIT 1`,
+          [dbOrderId]
+        );
+        if (retryRes.rows[0]?.vendor_booking_code) {
+          vendorBookingCode = retryRes.rows[0].vendor_booking_code;
+          break;
+        }
+      }
+    }
 
     delete req.session.draftOrder;
     delete req.session.pendingPayment;
