@@ -19,7 +19,7 @@ flatpickr('.issue-date-picker', {
   altInput: true,
   altFormat: "j F Y",
   dateFormat: "Y-m-d",
-  maxDate: "today",
+  maxDate: new Date().fp_incr(-1),
   disableMobile: "true",
   allowInput: true,
 });
@@ -71,6 +71,24 @@ checkoutForm?.addEventListener('submit', e => {
                 errorMessage = `Passenger ${idx}: Passport must be valid for at least 6 months beyong travel date (minimun expiry: ${formattedMin}).`;
                 break;
             }
+        }
+
+        const issueDate = document.querySelector(`[name="passportIssueDate_${idx}"]`);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (issueDate && issueDate.value) {
+        const issDate = new Date(issueDate.value);
+        if (issDate >= today) {
+            errorMessage = `Passenger ${idx}: Passport issue date must be before today.`;
+            break;
+        }
+        }
+        if (birthDate && birthDate.value) {
+        const bDate = new Date(birthDate.value);
+        if (bDate >= today) {
+            errorMessage = `Passenger ${idx}: Date of birth must be in the past.`;
+            break;
+        }
         }
     }
 
