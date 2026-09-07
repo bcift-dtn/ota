@@ -141,7 +141,7 @@
                     <% } %>
                   <% } %>
 
-                  <button class="download-voucher-btn" type="button" onclick="window.print()">
+                  <button class="download-voucher-btn" type="button" id="downloadVoucherBtn">
                     <i data-lucide="download"></i>DOWNLOAD VOUCHER
                   </button>
                 </div>
@@ -199,5 +199,7 @@
 
     <%- include('../partials/footer') %>
     <%- include('../partials/loginModal')%>
+
+    <script src="/js/checkout-result.js"></script>
   </body>
 </html>
