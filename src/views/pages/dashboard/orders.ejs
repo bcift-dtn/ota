@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Orders - Dashboard - MEGATERRA</title>
+
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages/dashboard.css" />
+  </head>
+
+  <body>
+    <%- include('../../partials/navbar') %>
+
+    <main>
+      <div class="dashboard-banner">
+        <img
+          src="/images/hero-banners/contact-hero.webp"
+          alt="Dashboard Banner"
+        />
+      </div>
+
+      <section class="dashboard-container">
+        <!-- Sidebar Nav -->
+        <aside class="dashboard-sidebar">
+          <ul class="dashboard-sidebar-nav">
+            <li>
+              <a href="/dashboard/personal-info">
+                <i data-lucide="user"></i> Personal Info
+              </a>
+            </li>
+
+            <li>
+              <a href="/dashboard/account-security">
+                <i data-lucide="lock"></i> Account and security
+              </a>
+            </li>
+
+            <li>
+              <a href="/dashboard/points">
+                <i data-lucide="tickets"></i> My points
+              </a>
+            </li>
+
+            <li>
+              <a href="/dashboard/orders" class="active">
+                <i data-lucide="receipt-text"></i> My Orders
+              </a>
+            </li>
+
+            <li>
+              <a href="/dashboard/status">
+                <i data-lucide="bell"></i> Status
+              </a>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- My Orders Main Content -->
+        <section class="dashboard-content orders-content-wrapper">
+          <div class="orders-header-row">
+            <h2 class="orders-main-title">My Orders</h2>
+
+            <form
+              action="/dashboard/orders"
+              method="GET"
+              class="orders-search-box"
+            >
+              <input type="hidden" name="status" value="<%= currentStatus %>" />
+              <input type="hidden" name="type" value="<%= currentType %>" />
+              <i data-lucide="search" class="search-icon"></i>
+              <input
+                type="text"
+                name="search"
+                class="search-input"
+                placeholder="Search by trip or order ID"
+                value="<%= searchQuery || '' %>"
+              />
+            </form>
+          </div>
+
+          <!-- Status Filter -->
+          <div class="orders-status-tabs">
+            <a
+              href="/dashboard/orders?status=all&type=<%= currentType %>&search=<%= searchQuery %>"
+              class="tab-link <%= currentStatus === 'all' ? 'active' : '' %>"
+            >
+              ALL <span class="tab-badge"><%= counts.all %></span>
+            </a>
+
+            <a
+              href="/dashboard/orders?status=upcoming&type=<%= currentType %>&search=<%= searchQuery %>"
+              class="tab-link <%= currentStatus === 'upcoming' ? 'active' : '' %>"
+            >
+              Upcoming <span class="tab-badge"><%= counts.upcoming %></span>
+            </a>
+
+            <a
+              href="/dashboard/orders?status=completed&type=<%= currentType %>&search=<%= searchQuery %>"
+              class="tab-link <%= currentStatus === 'completed' ? 'active' : '' %>"
+            >
+              Completed <span class="tab-badge"><%= counts.completed %></span>
+            </a>
+
+            <a
+              href="/dashboard/orders?status=cancelled&type=<%= currentType %>&search=<%= searchQuery %>"
+              class="tab-link <%= currentStatus === 'cancelled' ? 'active' : '' %>"
+            >
+              Cancelled <span class="tab-badge"><%= counts.cancelled %></span>
+            </a>
+          </div>
+
+          <!-- product filter -->
+          <div class="orders-category-pills">
+            <a
+              href="/dashboard/orders?status=<%= currentStatus %>&type=all&search=<%= searchQuery %>"
+              class="pill-link <%= currentType === 'all' ? 'active' : '' %>"
+            >
+              All Products
+            </a>
+            <a
+              href="/dashboard/orders?status=<%= currentStatus %>&type=ferry&search=<%= searchQuery %>"
+              class="pill-link <%= currentType === 'ferry' ? 'active' : '' %>"
+            >
+              Ferry
+            </a>
+            <a
+              href="/dashboard/orders?status=<%= currentStatus %>&type=car_rental&search=<%= searchQuery %>"
+              class="pill-link <%= currentType === 'car_rental' ? 'active' : '' %>"
+            >
+              Car Rental
+            </a>
+            <a
+              href="/dashboard/orders?status=<%= currentStatus %>&type=activities&search=<%= searchQuery %>"
+              class="pill-link <%= currentType === 'activities' ? 'active' : '' %>"
+            >
+              Activities
+            </a>
+          </div>
+
+          <!-- Orders card list -->
+          <div class="orders-list">
+            <% if (orders && orders.length > 0) { %> 
+              <% orders.forEach(order => { %> 
+                <%
+                  const isPaid = order.payment_status ==='paid';
+                  const isCancelled = order.status === 'cancelled' || order.payment_status === 'failed';
+                  const orderDate = order.start_date ? new Date(order.start_date) : new Date(order.created_at);
+                  const isPast = order.start_date ? (new Date(order.start_date) < new Date ().setHours(0,0,0,0)) : false;
+                  
+                  // Badge
+                  let badgeText = 'Upcoming';
+                  let badgeClass = 'badge-upcoming';
+
+                  if (isCancelled) {
+                    badgeText = 'Cancelled';
+                    badgeClass = 'badge-cancelled';
+                  } else if (order.status === 'completed' || (isPaid && isPast)) {
+                    badgeText = 'Completed';
+                    badgeClass = 'badge-completed';
+                  } else if (!isPaid) {
+                    badgeText = 'Awaiting payment';
+                    badgeClass = 'badge-awaiting';
+                  }
+
+                  const productTypeUpper = (order.product_type || 'ORDER').toUpperCase();
+                  const rawOrderId = `MT-${productTypeUpper}-${order.id}`;
+                %>
+                
+                <article class="order-card">
+                  <!-- Thumbnail -->
+                  <div class="order-thumbnail-box">
+                    <% if (order.product_image) { %>
+                      <img src="<%= order.product_image %>" alt="<%= order.product_title %>" class="order-thumb-img" />
+                    <% } else if (order.product_type === 'ferry') { %>
+                      <i data-lucide="ship" class="order-thumb-icon"></i>
+                    <% } else if (order.product_type === 'car_rental') { %>
+                      <i data-lucide="car" class="order-thumb-icon"></i>
+                    <% } else { %>
+                      <i data-lucide="compass" class="order-thumb-icon"></i>
+                    <% } %>
+                  </div>
+
+                  <!-- Card Product Information -->
+                  
+
+                  <div class="order-meta-info">
+                    <h3 class="order-product-title"><%= order.product_title %></h3>
+
+                    <div class="order-meta-row">
+                      <span class="meta-item">
+                        <i data-lucide="calendar" class="meta-icon"></i>
+                        <%= orderDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                      </span>
+
+                      <span class="meta-item">
+                        <i data-lucide="users" class="meta-icon"></i>
+                        <%= order.quantity || 1 %> <%= order.product_type === 'car_rental' ? 'Vehicle(s)' : 'Guest(s)' %>
+                      </span>
+                    </div>
+
+                    <span class="order-reference-tag">Order #<%= rawOrderId %></span>
+                  </div>
+
+                  <div class="order-action-col">
+                    <span class="order-badge <%= badgeClass %>"><%= badgeText %></span>
+
+                    <strong class="order-price-val">
+                      IDR <%= Number(order.total_amount || 0).toLocaleString('id-ID') %>
+                    </strong>
+
+                    <% if (badgeText === 'Awaiting payment') { %> 
+                      <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action btn-complete-payment">
+                        Complete payment
+                      </a>
+                    <% } else if (badgeText === 'Completed') { %> 
+                      <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action">
+                        View details
+                      </a>
+                    <% } else { %> 
+                      <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action">
+                        View details
+                      </a>
+                    <% } %>
+                  </div>
+                </article>
+            <% }) %>
+            <% } else { %> 
+              <!-- If no order found -->
+               <div class="orders-empty-state">
+                <i data-lucide="inbox" class="empty-icon"></i>
+                <h3>No orders found</h3>
+                <p>You have no <%= currentStatus === 'all' ? '' : currentStatus %> Booking matching your search.</p>
+                <a href="/" class="btn-empty-explore">Explore Products</a>
+               </div>
+            <% } %>
+          </div>
+
+          <!-- Pagination -->
+          <% if (totalPages > 1) { %> 
+            <nav class="orders-pagination">
+              <% if (currentPage > 1) { %> 
+                <a href="/dashboard/orders?status=<%= currentStatus %>&type=<%= currentType %>&search=<%= searchQuery %>&page=<%= currentPage - 1 %>" class="page-link page-prev">
+                  <i data-lucide="chevron-left"></i> Previous
+                </a>
+              <% } %>
+
+              <div class="page-numbers">
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                  <a
+                    href="/dashboard/orders?status=<%= currentStatus %>&type=<%= currentType %>&search=<%= searchQuery %>&page=<%= i %>"
+                    class="page-num <%= currentPage === i ? 'active' : '' %>"
+                  >
+                    <%= i %>
+                  </a>
+                <% } %>
+              </div>
+
+              <% if (currentPage < totalPages) { %> 
+                <a
+                  href="/dashboard/orders?status=<%= currentStatus %>&type=<%= currentType %>&search=<%= searchQuery %>&page=<%= currentPage + 1 %>"
+                  class="page-link page-next"
+                >
+                  Next <i data-lucide="chevron-right"></i>
+                </a>
+              <% } %>
+            </nav>  
+          <% } %>
+        </section>
+      </section>
+    </main>
+
+    <%- include('../../partials/footer') %>
+    <%- include('../../partials/loginModal') %>
+  </body>
+</html>

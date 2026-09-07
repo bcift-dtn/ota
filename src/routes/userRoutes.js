@@ -10,9 +10,7 @@ router.get('/points', (req, res) => {
     res.render('pages/dashboard/coming-soon', { activeMenu: 'points' });
 })
 
-router.get('/orders', (req, res) => {
-    res.render('pages/dashboard/coming-soon', { activeMenu: 'orders' });
-})
+router.get('/orders', userController.getMyOrders);
 
 router.get('/status', (req, res) => {
     res.render('pages/dashboard/coming-soon', { activeMenu: 'status' });

@@ -182,7 +182,13 @@ const getUserOrders = async ({ userId, status = 'all', productType = 'all', sear
                 p.id AS product_id,
                 p.title AS product_title,
                 p.type AS product_type,
-                p.image_url AS product_image,
+                (
+                    SELECT pi.image_url
+                    FROM ota.product_images pi
+                    WHERE pi.product_id = p.id
+                    ORDER BY pi.is_primary DESC, pi.sort_order ASC
+                    LIMIT 1
+                ) AS product_image,
                 sc.reference_id,
                 sc.secret_code
             FROM ota.orders o

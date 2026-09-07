@@ -1,5 +1,6 @@
 const userModel = require('../models/userModel');
 const bcrypt = require('bcrypt');
+const orderModel = require('../models/orderModel');
 
 const updateProfile = async (req, res) => {
     try {
@@ -55,7 +56,45 @@ const changePassword = async (req, res) => {
     }
 };
 
+const getMyOrders = async (req, res) => {
+    try {
+        const userId = req.session.user?.id;
+        if (!userId) return res.redirect('/');
+
+        const { status = 'all', type = 'all', search = '', page = 1 } = req.query;
+        const currentPage = Math.max(1, parseInt(page) || 1);
+
+        const [counts, ordersData] = await Promise.all([
+            orderModel.getUserOrderCounts(userId),
+            orderModel.getUserOrders({
+                userId,
+                status,
+                productType: type,
+                search,
+                page: currentPage,
+                limit: 10
+            })
+        ]);
+
+        return res.render('pages/dashboard/orders', {
+            activeMenu: 'orders',
+            orders: ordersData.orders,
+            totalOrders: ordersData.totalOrders,
+            totalPages: ordersData.totalPages,
+            currentPage: ordersData.currentPage,
+            counts,
+            currentStatus: status,
+            currentType: type,
+            searchQuery: search
+        });
+    } catch (err) {
+        console.error('[DASHBOARD] Get orders error:', err.message);
+        return res.status(500).render('pages/404', { message: 'failed to load orders.' });
+    }
+};
+
 module.exports = {
     updateProfile,
-    changePassword
-}
+    changePassword,
+    getMyOrders
+};
