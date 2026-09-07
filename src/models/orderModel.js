@@ -76,9 +76,138 @@ const updateOrderPaymentStatus = async (orderId, { status, paymentStatus, inquir
     );
 };
 
+
+// My Order
+const getUserOrderCounts = async (userId) => {
+    const res = await db.query(
+        `
+            SELECT
+                COUNT (*) AS all_count,
+                COUNT (*) FILTER (
+                    WHERE o.payment_status = 'paid'
+                    AND (oi.start_date >= CURRENT_DATE OR oi.start_date IS NULL)
+                    AND o.status NOT IN ('cancelled', 'failed')
+                ) AS upcoming_count,
+                COUNT(*) FILTER (
+                    WHERE o.status = 'completed'
+                    OR (o.payment_status = 'paid' AND oi.start_date < CURRENT_DATE AND o.status NOT IN ('cancelled', 'failed'))
+                ) AS completed_count,
+                COUNT(*) FILTER (
+                    WHERE o.status = 'cancelled' OR o.payment_status = 'failed'
+                ) AS cancelled_count
+            FROM ota.orders o
+            JOIN ota.order_items oi ON oi.order_id = o.id
+            WHERE o.user_id = $1
+        `, [userId]
+    );
+
+    const row = res.rows[0] || {};
+    return {
+        all: parseInt(row.all_count || 0),
+        upcoming: parseInt(row.upcoming_count || 0),
+        completed: parseInt(row.completed_count || 0),
+        cancelled: parseInt(row.cancelled_count || 0)
+    };
+};
+
+const getUserOrders = async ({ userId, status = 'all', productType = 'all', search = '', page = 1, limit = 10 }) => {
+    const offset = (page - 1) * limit;
+    const conditions = ['o.user_id = $1'];
+    const values = [userId];
+    let paramIndex = 2;
+
+    // Status filter
+    if (status === 'upcoming') {
+        conditions.push(`(o.payment_status = 'paid' AND (oi.start_date >= CURRENT_DATE OR oi.start_date IS NULL) AND o.status NOT IN ('cancelled', 'failed'))`);
+    } else if (status === 'completed') {
+        conditions.push(`(o.status = 'completed' OR (o.payment_status = 'paid' AND oi.start_date < CURRENT_DATE AND o.status NOT in ('cancelled', 'failed')))`);
+    } else if (status === 'cancelled') {
+        conditions.push(`(o.status = 'cancelled' OR o.payment_status = 'failed')`);
+    }
+
+    // Product type filter
+    if (productType && productType !== 'all') {
+        conditions.push(`p.type = $${paramIndex}`);
+        values.push(productType);
+        paramIndex++
+    }
+
+    // Search Query
+    if (search && search.trim()) {
+        const cleanSearch = `%${search.trim()}%`;
+        conditions.push(`(
+            p.title ILIKE $${paramIndex}
+            OR CAST(o.id AS TEXT) ILIKE $${paramIndex}
+            OR ('MT-' || UPPER(p.type) || '-' || CAST(o.id AS TEXT)) ILIKE $${paramIndex}
+        )`);
+        values.push(cleanSearch);
+        paramIndex++;
+    }
+
+    const whereClause = conditions.join(' AND ');
+
+    // Total Page Count
+    const countRes = await db.query(
+        `
+            SELECT COUNT (*)
+            FROM ota.orders o
+            JOIN ota.order_items oi ON oi.order_id = o.id
+            JOIN ota.products p ON p.id = oi.product_id
+            WHERE ${whereClause}
+        `, values
+    );
+
+    const totalOrders = parseInt(countRes.rows[0]?.count || 0);
+    const totalPages = Math.ceil(totalOrders / limit) || 1;
+
+    // Fetch paginated orders
+    const dataValues = [...values, limit, offset];
+    const ordersRes = await db.query(
+        `
+            SELECT 
+                o.id,
+                o.total_amount,
+                o.base_price,
+                o.status,
+                o.payment_status,
+                o.payment_method,
+                o.created_at,
+                oi.id AS order_item_id,
+                oi.quantity,
+                oi.unit_price,
+                oi.start_date,
+                oi.notes,
+                oi.passengers,
+                oi.vendor_booking_code,
+                p.id AS product_id,
+                p.title AS product_title,
+                p.type AS product_type,
+                p.image_url AS product_image,
+                sc.reference_id,
+                sc.secret_code
+            FROM ota.orders o
+            JOIN ota.order_items oi ON oi.order_id = o.id
+            JOIN ota.products p ON p.id = oi.product_id
+            LEFT JOIN ota.secret_codes sc ON sc.order_item_id = oi.id
+            WHERE ${whereClause}
+            ORDER BY o.created_at DESC
+            LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
+        `, dataValues
+    );
+
+    return {
+        orders: ordersRes.rows,
+        totalOrders,
+        totalPages,
+        currentPage: page
+    }
+}
+
 module.exports = {
     createOrder,
     getOrderById,
     getOrderByInquiryId,
-    updateOrderPaymentStatus
+    updateOrderPaymentStatus,
+    getUserOrderCounts,
+    getUserOrders
 };
