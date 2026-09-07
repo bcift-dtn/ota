@@ -539,6 +539,18 @@ const getCheckoutResult = async (req, res) => {
       [dbOrderId]
     );
 
+    const vendorBookingRes = await db.query(
+      `
+        SELECT vendor_booking_code 
+        FROM ota.order_items 
+        WHERE order_id = $1 
+        LIMIT 1
+      `,
+      [dbOrderId]
+    );
+    const vendorBookingCode = vendorBookingRes.rows[0]?.vendor_booking_code || null;
+    const isFerryOrder = vendorBookingCode !== null || itemsRes.rows[0]?.product_type === 'ferry';
+
     delete req.session.draftOrder;
     delete req.session.pendingPayment;
 
@@ -549,7 +561,9 @@ const getCheckoutResult = async (req, res) => {
       items: itemsRes.rows,
       secretCode: secretRes.rows,
       isPaid,
-      rawOrderId
+      rawOrderId,
+      vendorBookingCode,
+      isFerryOrder
     });
   } catch (err) {
     console.error('[CHECKOUT RESULT] Error:', err.message);

@@ -49,8 +49,9 @@
         <a href="javascript:history.back()" class="back-link">
           <i data-lucide="arrow-left"></i> Back to Details
         </a>
-        <form action="/products/checkout/confirm" method="POST" class="checkout-layout">
+        <form action="/products/checkout/confirm" method="POST" class="checkout-layout" id="checkoutForm" data-departure-date="<%= draftOrder.departureDate || '' %>">
           <div class="checkout-forms">
+            <div id="checkoutErrorBox" class="checkout-status error"></div>
             <section class="booking-details-section">
               <h2 class="checkout-heading"><i data-lucide="users"></i> Booking Contact</h2>
         
@@ -106,7 +107,7 @@
 
                     <div class="input-group-split-2">
                       <div class="input-group">
-                        <input type="date" class="date-input" id="birthDateInput" name="birthDate_<%= i %>" placeholder="Date of Birth" required>
+                        <input type="date" class="date-input birth-date-picker" id="birthDateInput" name="birthDate_<%= i %>" placeholder="Date of Birth" required>
                       </div>
 
                       <div class="input-group">
@@ -116,11 +117,11 @@
 
                     <div class="input-group-split-2">
                       <div class="input-group">
-                        <input type="date" class="date-input" id="passportIssueInput" name="passportIssueDate_<%= i %>" placeholder="Passport Issue Date" required>
+                        <input type="date" class="date-input issue-date-picker" id="passportIssueInput" name="passportIssueDate_<%= i %>" placeholder="Passport Issue Date" required>
                       </div>
 
                       <div class="input-group">
-                        <input type="date" class="date-input" name="passportExpiredDate_<%= i %>" placeholder="Passport Expiry Date" required>
+                        <input type="date" class="date-input expiry-date-picker" name="passportExpiredDate_<%= i %>" placeholder="Passport Expiry Date" required>
                       </div>
                     </div>
 

@@ -97,15 +97,28 @@
                   <i data-lucide="file-text" class="badge-icon"></i>
                   <span class="badge-title">BOOKING VOUCHER</span>
                 </div>
-                <p class="voucher-instruction">
-                  Please present this digital voucher to your driver/counter upon arrival at the pickup point.
-                </p>
-
-                <% if (secretCode && secretCode.length > 0) { %>
-                  <div class="secret-code-preview">
-                    <span>Ref: <strong><%= secretCode[0].reference_id %></strong></span>
-                    <span>Secret: <strong><%= secretCode[0].secret_code %></strong></span>
-                  </div>
+                
+                <% if (isFerryOrder) { %>
+                  <p class="voucher-instruction">
+                    Present this booking code at the Majestic Fast Ferry counter to exchange for your boarding pass.
+                  </p>
+                  <% if (vendorBookingCode) { %>
+                    <div class="secret-code-preview">
+                      <span>Booking Code: <strong><%= vendorBookingCode %></strong></span>
+                    </div>
+                  <% } else { %>
+                    <p class="voucher-instruction">Booking code issuance is being processed. Please contact support if this persists.</p>
+                  <% } %>
+                <% } else { %>
+                  <p class="voucher-instruction">
+                    Please present this digital voucher to your driver/counter upon arrival at the pickup point.
+                  </p>
+                  <% if (secretCode && secretCode.length > 0) { %>
+                    <div class="secret-code-preview">
+                      <span>Ref: <strong><%= secretCode[0].reference_id %></strong></span>
+                      <span>Secret: <strong><%= secretCode[0].secret_code %></strong></span>
+                    </div>
+                  <% } %>
                 <% } %>
 
                 <button type="button" class="download-voucher-btn" onclick="window.print()">

@@ -218,8 +218,6 @@ const getFerryCheckout = async (req, res, draftOrder) => {
     const adultPrice = priceList.find(p => p.Category?.toLowerCase() === 'adult');
     const childPrice = priceList.find(p => p.Category?.toLowerCase() === 'child');
     
-    // const adultIDR = Math.ceil(parsePrice(adultPrice?.Price || 0));
-    // const childIDR = Math.ceil(parsePrice(childPrice?.Price || adultPrice?.Price || 0));
     const isTestMode = process.env.NODE_ENV !== 'production';
     const adultIDR = isTestMode ? 1 : Math.ceil(parsePrice(adultPrice?.Price || 0));
     const childIDR = isTestMode ? 1 : Math.ceil(parsePrice(childPrice?.Price || adultPrice?.Price || 0));

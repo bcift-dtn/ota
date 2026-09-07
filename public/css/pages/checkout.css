@@ -667,3 +667,19 @@ h3 {
     font-size: 1.75rem;
   }
 }
+
+/* Error Status Message */
+.checkout-status {
+  display: none;
+  padding: 0.85rem 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  font-size: var(--fs-4, 0.95rem);
+}
+
+.checkout-status.error {
+  background-color: #F8D7DA;
+  color: #721C24;
+  border: 1px solid #f5C6CB;
+}
