@@ -61,23 +61,18 @@
         <!-- My Orders Main Content -->
         <section class="dashboard-content orders-content-wrapper">
           <div class="orders-header-row">
-            <h2 class="orders-main-title">My Orders</h2>
+            <div class="orders-header-text">
+              <h2 class="orders-main-title">My Bookings & Trips</h2>
+              <p class="orders-subtitle">
+                Manage upcoming transfers, access e-vouchers, and review your payment transactions.
+              </p>
+            </div>
 
-            <form
-              action="/dashboard/orders"
-              method="GET"
-              class="orders-search-box"
-            >
-              <input type="hidden" name="status" value="<%= currentStatus %>" />
-              <input type="hidden" name="type" value="<%= currentType %>" />
-              <i data-lucide="search" class="search-icon"></i>
-              <input
-                type="text"
-                name="search"
-                class="search-input"
-                placeholder="Search by trip or order ID"
-                value="<%= searchQuery || '' %>"
-              />
+            <form action="/dashboard/orders" method="GET" class="orders-search-box">
+              <input type="hidden" name="status" value="<%= currentStatus %>">
+              <input type="hidden" name="type" value="<%= currentType %>">
+                <i data-lucide="search" class="search-icon"></i>
+              <input type="text" name="search" class="search-input" placeholder="Search by trip or order ID" value="<%= searchQuery || '' %>">
             </form>
           </div>
 
@@ -143,16 +138,16 @@
           <!-- Orders card list -->
           <div class="orders-list">
             <% if (orders && orders.length > 0) { %> 
-              <% orders.forEach(order => { %> 
-                <%
-                  const isPaid = order.payment_status ==='paid';
+              <% orders.forEach(order =>  { %> 
+                <% 
+                  const isPaid = order.payment_status === 'paid';
                   const isCancelled = order.status === 'cancelled' || order.payment_status === 'failed';
                   const orderDate = order.start_date ? new Date(order.start_date) : new Date(order.created_at);
-                  const isPast = order.start_date ? (new Date(order.start_date) < new Date ().setHours(0,0,0,0)) : false;
-                  
-                  // Badge
-                  let badgeText = 'Upcoming';
-                  let badgeClass = 'badge-upcoming';
+                  const isPast = order.start_date ? (new Date(order.start_date) < new Date().setHours(0,0,0,0)) : false;
+
+                  // Status Badge
+                  let badgeText = 'Confirmed & Paid';
+                  let badgeClass = 'badge-confirmed';
 
                   if (isCancelled) {
                     badgeText = 'Cancelled';
@@ -161,80 +156,134 @@
                     badgeText = 'Completed';
                     badgeClass = 'badge-completed';
                   } else if (!isPaid) {
-                    badgeText = 'Awaiting payment';
+                    badgeText = 'Awaiting Payment';
                     badgeClass = 'badge-awaiting';
                   }
 
                   const productTypeUpper = (order.product_type || 'ORDER').toUpperCase();
                   const rawOrderId = `MT-${productTypeUpper}-${order.id}`;
+
+                  // Product Subtitle
+                  let productSubtitle = '';
+                  let journeyType = '1';
+                  let departTime = '';
+                  if (order.product_type === 'ferry' && order.passengers?.ferrySnapshot) {
+                    journeyType = order.passengers.ferrySnapshot.journeyType || '1';
+                    productSubtitle = journeyType === '2' ? 'Round Trip Ferry Transfer' : 'One Way Ferry Transfer';
+                    const tripCode = order.passengers.ferrySnapshot.departTripCode || '';
+                    if (tripCode.length >= 4) {
+                      departTime = `${tripCode.slice(-4, -2)}:${tripCode.slice(-2)} WIB`;
+                    }
+                  } else if (order.product_type === 'car_rental') {
+                    productSubtitle = 'Car Rental Charter';
+                  } else if (order.product_type === 'activities') {
+                    productSubtitle = 'Tour & Activity Package';
+                  }
                 %>
-                
+
                 <article class="order-card">
-                  <!-- Thumbnail -->
-                  <div class="order-thumbnail-box">
-                    <% if (order.product_image) { %>
-                      <img src="<%= order.product_image %>" alt="<%= order.product_title %>" class="order-thumb-img" />
-                    <% } else if (order.product_type === 'ferry') { %>
-                      <i data-lucide="ship" class="order-thumb-icon"></i>
-                    <% } else if (order.product_type === 'car_rental') { %>
-                      <i data-lucide="car" class="order-thumb-icon"></i>
-                    <% } else { %>
-                      <i data-lucide="compass" class="order-thumb-icon"></i>
-                    <% } %>
+                  <div class="order-card-header">
+                    <div class="order-header-left">
+                      <span class="order-status-dot-badge <%= badgeClass %>">
+                        <span class="status-dot"></span> <%= badgeText %>
+                      </span>
+                      <span class="order-reference-code">#<%= rawOrderId %></span>
+                      <span class="order-created-date">
+                        • Booked on <%= new Date(order.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                      </span>
+                    </div>
                   </div>
 
-                  <!-- Card Product Information -->
-                  
+                  <div class="order-card-body">
+                    <div class="order-thumbnail-box">
+                      <% if (order.product_image) { %>
+                        <img src="<%= order.product_image %>" alt="<%= order.product_title %>" class="order-thumb-img" />
+                      <% } else if (order.product_type === 'ferry') { %>
+                        <i data-lucide="ship" class="order-thumb-icon"></i>
+                      <% } else if (order.product_type === 'car_rental') { %>
+                        <i data-lucide="car" class="order-thumb-icon"></i>
+                      <% } else { %>
+                        <i data-lucide="compass" class="order-thumb-icon"></i>
+                      <% } %>
+                    </div>
+                    
+                    <div class="order-body-info">
+                      <h3 class="order-product-title"><%= order.product_title %></h3>
 
-                  <div class="order-meta-info">
-                    <h3 class="order-product-title"><%= order.product_title %></h3>
+                      <% if (productSubtitle) { %>
+                        <p class="order-product-subtitle"><%= productSubtitle %></p>
+                      <% } %>
 
-                    <div class="order-meta-row">
-                      <span class="meta-item">
-                        <i data-lucide="calendar" class="meta-icon"></i>
-                        <%= orderDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %>
-                      </span>
+                      <div class="order-meta-row">
+                        <span class="meta-item">
+                          <i data-lucide="calendar" class="meta-icon"></i>
+                          <%= orderDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                          <%= departTime ? `• ${departTime}` : '' %>
+                        </span>
+                        <span class="meta-item">
+                          <i data-lucide="users" class="meta-icon"></i>
+                          <%= order.quantity || 1 %> <%= order.product_type === 'car_rental' ? 'Vehicle(s)' : 'Guest(s)' %>
+                        </span>
+                      </div>
 
-                      <span class="meta-item">
-                        <i data-lucide="users" class="meta-icon"></i>
-                        <%= order.quantity || 1 %> <%= order.product_type === 'car_rental' ? 'Vehicle(s)' : 'Guest(s)' %>
+                      <div class="order-features-row">
+                        <% if (order.product_type === 'car_rental') { %>
+                          <span class="product-feature-tag">
+                            <i data-lucide="navigation" class="feature-icon"></i> Driver Included
+                          </span>
+                        <% } else if (order.product_type === 'ferry' && journeyType === '2') { %>
+                          <span class="product-feature-tag">
+                            <i data-lucide="repeat" class="feature-icon"></i> Round Trip
+                          </span>
+                        <% } %>
+                      </div>
+                    </div>
+
+                    <div class="order-price-box">
+                      <span class="order-price-label"><%= isPaid ? 'Total Paid' : 'Total Amount' %></span>
+                      <strong class="order-price-val">IDR <%= Number(order.total_amount || 0).toLocaleString('id-ID') %></strong>
+                    </div>
+                  </div>
+
+                  <div class="order-card-footer">
+                    <div class="order-payment-info">
+                      <i data-lucide="credit-card" class="payment-icon"></i>
+                      <span>
+                        <%= order.payment_method === 'online' ? 'Online Payment' : (order.payment_method || 'Online Payment') %>
+                        (<%= isPaid ? 'Paid' : 'Unpaid' %>)
                       </span>
                     </div>
 
-                    <span class="order-reference-tag">Order #<%= rawOrderId %></span>
-                  </div>
-
-                  <div class="order-action-col">
-                    <span class="order-badge <%= badgeClass %>"><%= badgeText %></span>
-
-                    <strong class="order-price-val">
-                      IDR <%= Number(order.total_amount || 0).toLocaleString('id-ID') %>
-                    </strong>
-
-                    <% if (badgeText === 'Awaiting payment') { %> 
-                      <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action btn-complete-payment">
-                        Complete payment
+                    <div class="order-footer-actions">
+                      <a href="/products/checkout/result?orderId=<%= rawOrderId %>&action=reschedule" class="btn-order-action btn-secondary">
+                        <i data-lucide="calendar"></i> Reschedule
                       </a>
-                    <% } else if (badgeText === 'Completed') { %> 
-                      <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action">
-                        View details
+
+                      <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action btn-secondary">
+                        <i data-lucide="receipt"></i> View Receipt
                       </a>
-                    <% } else { %> 
-                      <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action">
-                        View details
+
+                      <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action btn-primary">
+                        <i data-lucide="download"></i> Download E-Voucher
                       </a>
-                    <% } %>
+
+                      <% if (!isCancelled && !isPast) { %>
+                        <a href="/products/checkout/result?orderId=<%= rawOrderId %>&action=cancel" class="btn-order-action btn-cancel">
+                          <i data-lucide="x-circle"></i> Cancel
+                        </a>
+                      <% } %>
+                    </div>
                   </div>
                 </article>
-            <% }) %>
+              <% }) %>
             <% } else { %> 
               <!-- If no order found -->
-               <div class="orders-empty-state">
+              <div class="orders-empty-state">
                 <i data-lucide="inbox" class="empty-icon"></i>
                 <h3>No orders found</h3>
-                <p>You have no <%= currentStatus === 'all' ? '' : currentStatus %> Booking matching your search.</p>
+                <p>You have no <%= currentStatus === 'all' ? '' : currentStatus %> bookings matching your search.</p>
                 <a href="/" class="btn-empty-explore">Explore Products</a>
-               </div>
+              </div>
             <% } %>
           </div>
 
