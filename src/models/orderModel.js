@@ -18,6 +18,23 @@ const createOrder = async ({ userId, draftOrder, basePrice, taxAmount, platformF
 
         const orderId = orderRes.rows[0].id;
 
+        let passengersPayload = null;
+
+        if (draftOrder.productType === 'ferry') {
+            passengersPayload = JSON.stringify({
+                passengers: draftOrder.passengers || [],
+                ferrySnapshot: draftOrder.ferrySnapshot || null
+            });
+        } else if (draftOrder.productType === 'car_rental') {
+            passengersPayload = JSON.stringify({
+                carSnapshot: {
+                    pickupLocation: draftOrder.pickupLocation || null,
+                    slotTime: draftOrder.slotTime || null,
+                    driverOption: draftOrder.driverNeeds || 'with-driver'
+                }
+            });
+        }
+
         await client.query(
             `
                 INSERT INTO ota.order_items
@@ -31,10 +48,7 @@ const createOrder = async ({ userId, draftOrder, basePrice, taxAmount, platformF
                 basePrice,
                 draftOrder.departureDate || draftOrder.visitDate || null,
                 draftOrder.productType,
-                draftOrder.passengers ? JSON.stringify({
-                    passengers: draftOrder.passengers,
-                    ferrySnapshot: draftOrder.ferrySnapshot || null
-                }) : null
+                passengersPayload
             ]
         );
 
@@ -171,6 +185,7 @@ const getUserOrders = async ({ userId, status = 'all', productType = 'all', sear
                 o.status,
                 o.payment_status,
                 o.payment_method,
+                o.masked_card,
                 o.created_at,
                 oi.id AS order_item_id,
                 oi.quantity,
@@ -189,6 +204,13 @@ const getUserOrders = async ({ userId, status = 'all', productType = 'all', sear
                     ORDER BY pi.is_primary DESC, pi.sort_order ASC
                     LIMIT 1
                 ) AS product_image,
+                (
+                    SELECT pp.name
+                    FROM ota.product_packages pp
+                    WHERE pp.product_id = p.id
+                    ORDER BY pp.sort_order ASC
+                    LIMIT 1
+                ) AS package_name,
                 sc.reference_id,
                 sc.secret_code
             FROM ota.orders o

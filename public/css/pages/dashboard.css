@@ -519,8 +519,17 @@
     .order-card-body {
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: flex-start;
         gap: 1.25rem;
+    }
+
+    .order-price-box {
+        grid-column: auto;
+        padding-top: 0;
+        border-top: none;
+        align-items: flex-end;
+        flex-shrink: 0;
+        margin-top: 0.15rem;
     }
 }
 

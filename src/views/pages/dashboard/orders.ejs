@@ -143,18 +143,40 @@
                   const isPaid = order.payment_status === 'paid';
                   const isCancelled = order.status === 'cancelled' || order.payment_status === 'failed';
                   const orderDate = order.start_date ? new Date(order.start_date) : new Date(order.created_at);
-                  const isPast = order.start_date ? (new Date(order.start_date) < new Date().setHours(0,0,0,0)) : false;
+
+                  let departTime = '';
+                  let journeyType = '1';
+                  let tripDateTime = orderDate;
+
+                  if (order.product_type === 'ferry' && order.passengers?.ferrySnapshot) {
+                    journeyType = order.passengers.ferrySnapshot.journeyType || '1';
+                    const tripCode = order.passengers.ferrySnapshot.departTripCode || '';
+                    if (tripCode.length >= 4) {
+                      const hh = tripCode.slice(-4, -2);
+                      const mm = tripCode.slice(-2);
+                      departTime = `${hh}:${mm} WIB`;
+
+                      const travelDateStr = order.passengers.ferrySnapshot.travelDate || orderDate.toISOString().split('T')[0];
+                      tripDateTime = new Date(`${travelDateStr}T${hh}:${mm}:00+07:00`);
+                    }
+                  }
+
+                  const isPast = tripDateTime < new Date();
+
+                  const isFerryPendingVendor = order.product_type === 'ferry' && isPaid && !order.vendor_booking_code;
 
                   // Status Badge
                   let badgeText = 'Confirmed & Paid';
                   let badgeClass = 'badge-confirmed';
-
                   if (isCancelled) {
                     badgeText = 'Cancelled';
                     badgeClass = 'badge-cancelled';
-                  } else if (order.status === 'completed' || (isPaid && isPast)) {
+                  } else if (order.status === 'completed' || (isPaid && isPast && !isFerryPendingVendor)) {
                     badgeText = 'Completed';
                     badgeClass = 'badge-completed';
+                  } else if (isFerryPendingVendor) {
+                    badgeText = 'Booking Pending';
+                    badgeClass = 'badge-awaiting';
                   } else if (!isPaid) {
                     badgeText = 'Awaiting Payment';
                     badgeClass = 'badge-awaiting';
@@ -165,19 +187,18 @@
 
                   // Product Subtitle
                   let productSubtitle = '';
-                  let journeyType = '1';
-                  let departTime = '';
-                  if (order.product_type === 'ferry' && order.passengers?.ferrySnapshot) {
-                    journeyType = order.passengers.ferrySnapshot.journeyType || '1';
+                  if (order.product_type === 'ferry') {
                     productSubtitle = journeyType === '2' ? 'Round Trip Ferry Transfer' : 'One Way Ferry Transfer';
-                    const tripCode = order.passengers.ferrySnapshot.departTripCode || '';
-                    if (tripCode.length >= 4) {
-                      departTime = `${tripCode.slice(-4, -2)}:${tripCode.slice(-2)} WIB`;
-                    }
-                  } else if (order.product_type === 'car_rental') {
-                    productSubtitle = 'Car Rental Charter';
-                  } else if (order.product_type === 'activities') {
-                    productSubtitle = 'Tour & Activity Package';
+                  } else {
+                    productSubtitle = order.package_name || (order.product_type === 'car_rental' ? 'Car Rental' : 'Tour Package');
+                  }
+
+                  let paymentDisplay = 'Online Payment';
+                  if (order.masked_card) {
+                    if (order.masked_card.startsWith('35')) paymentDisplay = 'Credit Card (JCB)';
+                    else if (order.masked_card.startsWith('4')) paymentDisplay = 'Credit Card (Visa)';
+                    else if (order.masked_card.startsWith('5')) paymentDisplay = 'Credit Card (Mastercard)';
+                    else paymentDisplay = 'Credit Card';
                   }
                 %>
 
@@ -249,25 +270,34 @@
                     <div class="order-payment-info">
                       <i data-lucide="credit-card" class="payment-icon"></i>
                       <span>
-                        <%= order.payment_method === 'online' ? 'Online Payment' : (order.payment_method || 'Online Payment') %>
-                        (<%= isPaid ? 'Paid' : 'Unpaid' %>)
+                        <%= paymentDisplay %> (<%= isPaid ? 'Paid' : 'Unpaid' %>)
                       </span>
                     </div>
 
                     <div class="order-footer-actions">
-                      <a href="/products/checkout/result?orderId=<%= rawOrderId %>&action=reschedule" class="btn-order-action btn-secondary">
-                        <i data-lucide="calendar"></i> Reschedule
-                      </a>
+                      <% if (isPaid && !isCancelled && !isPast && order.status !== 'completed') { %>
+                        <a href="/products/checkout/result?orderId=<%= rawOrderId %>&action=reschedule" class="btn-order-action btn-secondary">
+                          <i data-lucide="calendar"></i> Reschedule
+                        </a>
+                      <% } %>
 
                       <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action btn-secondary">
                         <i data-lucide="receipt"></i> View Receipt
                       </a>
 
-                      <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action btn-primary">
-                        <i data-lucide="download"></i> Download E-Voucher
-                      </a>
+                      <% if (!isPaid && !isCancelled) { %>
+                        <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action btn-primary">
+                          Complete Payment
+                        </a>
+                      <% } %>
 
-                      <% if (!isCancelled && !isPast) { %>
+                      <% if (!isFerryPendingVendor && isPaid && !isCancelled) { %>
+                        <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action btn-primary">
+                          <i data-lucide="download"></i> Download E-Voucher
+                        </a>
+                      <% } %>
+
+                      <% if (!isCancelled && !isPast && order.status !== 'completed') { %>
                         <a href="/products/checkout/result?orderId=<%= rawOrderId %>&action=cancel" class="btn-order-action btn-cancel">
                           <i data-lucide="x-circle"></i> Cancel
                         </a>
