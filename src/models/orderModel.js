@@ -231,11 +231,71 @@ const getUserOrders = async ({ userId, status = 'all', productType = 'all', sear
     }
 }
 
+const getOrderWithItemById = async (orderId, userId) => {
+    const res = await db.query(
+        `
+            SELECT
+                o.id, o.user_id, o.total_amount, o.status, o.payment_status,
+                o.transaction_id, o.inquiry_id, o.masked_card,
+                oi.id AS order_item_id, oi.start_date, oi.notes AS product_type,
+                oi.vendor_booking_code, oi.passengers,
+                p.title AS product_title, p.type AS product_type,
+                pp.is_cancelable, pp.is_reschedulable
+            FROM ota.orders o
+            JOIN ota.order_items oi ON oi.order_id = o.id
+            JOIN ota.products p ON p.id = oi.product_id
+            LEFT JOIN ota.product_packages pp ON pp.product_id = p.id
+            WHERE o.id = $1 AND o.user_id = $2
+            LIMIT 1
+        `,
+        [orderId, userId]
+    );
+    return res.rows[0] || null;
+};
+
+const createCancellationRequest = async (orderId, userId, reason, refundAmount, cancelFee) => {
+    const client = await db.connect();
+    try {
+        await client.query('BEGIN');
+
+        await client.query(
+            `INSERT INTO ota.order_cancellations
+                (order_id, requested_by, reason, refund_amount, cancel_fee, status, created_at)
+             VALUES ($1, $2, $3, $4, $5, 'pending', NOW())`,
+            [orderId, userId, reason, refundAmount, cancelFee]
+        );
+        
+        await client.query(
+            `UPDATE ota.orders SET status = 'cancel_requested', updated_at = NOW() WHERE id = $1`,
+            [orderId]
+        );
+
+        await client.query('COMMIT');
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
+};
+
+const getCancellationByOrderId = async (orderId) => {
+    const res = await db.query(
+        `SELECT * FROM ota.order_cancellations WHERE order_id = $1 ORDER BY created_at DESC LIMIT 1`,
+        [orderId]
+    );
+    return res.rows[0] || null;
+};
+
+
 module.exports = {
     createOrder,
     getOrderById,
     getOrderByInquiryId,
     updateOrderPaymentStatus,
     getUserOrderCounts,
-    getUserOrders
+    getUserOrders,
+    getOrderWithItemById,
+    createCancellationRequest,
+    getCancellationByOrderId
 };

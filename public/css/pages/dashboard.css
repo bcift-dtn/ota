@@ -749,16 +749,15 @@
 }
 
 .btn-cancel {
-    border: 1px solid #FCA5A5;
-    background-color: #FFFFFF;
-    color: #DC2626;
+    border: 1px solid #c53030;
+    background-color: #c53030;
+    color: #FFFFFF;
 }
 
 .btn-cancel:hover,
 .btn-cancel:focus {
-    background-color: #FEF2F2;
-    border-color: #EF4444;
-    color: #B91C1C;
+    background-color: #9b2c2c;
+    border-color: #9b2c2c;
     text-decoration: none !important;
 }
 
@@ -857,4 +856,184 @@
     background-color: var(--clr-primary);
     color: #FFFFFF;
     text-decoration: none !important;
+}
+
+/* Cancel Order Page */
+/* ─── Cancel Order Page ─────────────────────────────────── */
+.cancel-confirm-wrapper {
+  background-color: var(--clr-bg);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+.cancel-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-3);
+  color: var(--clr-primary);
+  text-decoration: none;
+  margin-bottom: 1.25rem;
+}
+.cancel-back-link:hover {
+  text-decoration: underline;
+}
+.cancel-confirm-title {
+  font-size: var(--fs-7);
+  font-weight: 700;
+  color: var(--clr-neutral);
+  margin-bottom: 0.4rem;
+}
+.cancel-confirm-subtitle {
+  color: var(--clr-label-font);
+  margin-bottom: 1.75rem;
+}
+.cancel-order-summary {
+  border: 1px solid var(--clr-border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  background: #fff;
+}
+.cancel-order-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.cancel-order-id {
+  font-size: var(--fs-2);
+  font-weight: 600;
+  color: var(--clr-label-font);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.cancel-order-product {
+  font-size: var(--fs-5);
+  font-weight: 700;
+  color: var(--clr-neutral);
+}
+.cancel-order-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-3);
+  color: var(--clr-label-font);
+}
+.cancel-order-date svg {
+  width: 14px;
+  height: 14px;
+}
+/* Refund Breakdown */
+.cancel-refund-breakdown {
+  border: 1px solid var(--clr-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  background: #fff;
+}
+.cancel-refund-title {
+  font-size: var(--fs-4);
+  font-weight: 700;
+  color: var(--clr-neutral);
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--clr-border);
+}
+.cancel-refund-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  font-size: var(--fs-3-5);
+  color: var(--clr-label-font);
+}
+.cancel-fee-row {
+  color: #c53030;
+}
+.cancel-refund-total {
+  font-weight: 700;
+  font-size: var(--fs-4);
+  color: var(--clr-neutral);
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--clr-border);
+}
+.cancel-refund-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--fs-3);
+  color: var(--clr-label-font);
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: var(--clr-accent);
+  border-radius: 8px;
+}
+.cancel-refund-note svg {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+}
+/* Cancel Form */
+.cancel-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.cancel-reason-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.cancel-reason-group label {
+  font-size: var(--fs-3-5);
+  font-weight: 600;
+  color: var(--clr-neutral);
+}
+.cancel-reason-group label span {
+  font-weight: 400;
+  color: var(--clr-label-font);
+}
+.cancel-reason-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--clr-border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--clr-neutral);
+  font-size: var(--fs-3-5);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  resize: vertical;
+}
+.cancel-reason-group textarea:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+}
+
+.cancel-form-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+
+
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.6rem 1.5rem;
+  background: #c53030;
+  color: #fff;
+  font-weight: 600;
+  font-size: var(--fs-3-5);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-danger:hover {
+  background: #9b2c2c;
 }

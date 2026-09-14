@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cancel Order - Dashboard - MEGATERRA</title>
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages/dashboard.css" />
+  </head>
+  <body>
+    <%- include('../../partials/navbar') %>
+
+    <main>
+      <div class="dashboard-banner">
+        <img src="/images/hero-banners/contact-hero.webp" alt="Dashboard Banner" />
+      </div>
+
+      <section class="dashboard-container">
+        <aside class="dashboard-sidebar">
+          <ul class="dashboard-sidebar-nav">
+            <li><a href="/dashboard/personal-info"><i data-lucide="user"></i> Personal Info</a></li>
+            <li><a href="/dashboard/account-security"><i data-lucide="lock"></i> Account and security</a></li>
+            <li><a href="/dashboard/points"><i data-lucide="tickets"></i> My points</a></li>
+            <li><a href="/dashboard/orders" class="active"><i data-lucide="receipt-text"></i> My Orders</a></li>
+            <li><a href="/dashboard/status"><i data-lucide="bell"></i> Status</a></li>
+          </ul>
+        </aside>
+
+        <section class="dashboard-content">
+            <div class="cancel-confirm-wrapper">
+                <div class="cancel-confirm-header">
+                <a href="/dashboard/orders" class="cancel-back-link">
+                    <i data-lucide="arrow-left"></i> Back to My Orders
+                </a>
+                <h2 class="cancel-confirm-title">Cancel Order</h2>
+                <p class="cancel-confirm-subtitle">
+                    Please review the details below before confirming your cancellation.
+                </p>
+                </div>
+
+                <!-- Order Summary Card -->
+                <div class="cancel-order-summary">
+                <div class="cancel-order-meta">
+                    <span class="cancel-order-id">Order #MT-<%= order.product_type.toUpperCase() %>-<%= order.id %></span>
+                    <span class="cancel-order-product"><%= order.product_title %></span>
+                    <% if (order.start_date) { %>
+                    <span class="cancel-order-date">
+                        <i data-lucide="calendar"></i>
+                        <%= new Date(order.start_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+                    </span>
+                    <% } %>
+                </div>
+                </div>
+
+                <!-- Refund Breakdown -->
+                <div class="cancel-refund-breakdown">
+                <h3 class="cancel-refund-title">Refund Summary</h3>
+                <div class="cancel-refund-row">
+                    <span>Amount Paid</span>
+                    <span>IDR <%= Number(order.total_amount).toLocaleString('id-ID') %></span>
+                </div>
+                <% if (isPaid) { %>
+                    <div class="cancel-refund-row cancel-fee-row">
+                    <span>Cancellation Fee (20%)</span>
+                    <span>- IDR <%= Number(cancelFee).toLocaleString('id-ID') %></span>
+                    </div>
+                    <div class="cancel-refund-row cancel-refund-total">
+                    <span>You will receive</span>
+                    <span>IDR <%= Number(refundAmount).toLocaleString('id-ID') %></span>
+                    </div>
+                    <p class="cancel-refund-note">
+                    <i data-lucide="info"></i>
+                    Refund will be processed back to your original payment method within 3–7 business days.
+                    </p>
+                <% } else { %>
+                    <div class="cancel-refund-row cancel-refund-total">
+                    <span>Cancellation Fee</span>
+                    <span>None — order not yet paid</span>
+                    </div>
+                <% } %>
+                </div>
+
+                <!-- Cancel Form -->
+                <form action="/dashboard/orders/<%= order.id %>/cancel" method="POST" class="cancel-form">
+                <div class="cancel-reason-group">
+                    <label for="reason">Reason for cancellation <span>(optional)</span></label>
+                    <textarea id="reason" name="reason" rows="3" placeholder="Tell us why you're cancelling..."></textarea>
+                </div>
+                <div class="cancel-form-actions">
+                    <a href="/dashboard/orders" class="btn-order-action btn-secondary">Keep My Order</a>
+                    <button type="submit" class="btn-danger">Confirm Cancellation</button>
+                </div>
+                </form>
+            </div>
+        </section>
+      </section>
+    </main>
+
+    <%- include('../../partials/footer') %>
+    <%- include('../../partials/loginModal') %>
+  </body>
+</html>

@@ -161,7 +161,14 @@
                     }
                   }
 
-                  const isPast = tripDateTime < new Date();
+                  let isPast;
+                  if (order.product_type === 'ferry') {
+                      isPast = tripDateTime < new Date();
+                  } else {
+                      const endOfDay = new Date(orderDate);
+                      endOfDay.setHours(23, 59, 59, 999);
+                      isPast = endOfDay < new Date();
+                  }
 
                   const isFerryPendingVendor = order.product_type === 'ferry' && isPaid && !order.vendor_booking_code;
 
@@ -286,7 +293,7 @@
                       </a>
 
                       <% if (!isPaid && !isCancelled) { %>
-                        <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action btn-primary">
+                        <a href="/products/<%= order.product_type === 'car_rental' ? 'car-rental' : order.product_type %>/<%= order.product_id %>" class="btn-order-action btn-primary">
                           Complete Payment
                         </a>
                       <% } %>
@@ -298,7 +305,7 @@
                       <% } %>
 
                       <% if (!isCancelled && !isPast && order.status !== 'completed') { %>
-                        <a href="/products/checkout/result?orderId=<%= rawOrderId %>&action=cancel" class="btn-order-action btn-cancel">
+                        <a href="/dashboard/orders/<%= order.id %>/cancel" class="btn-order-action btn-cancel">
                           <i data-lucide="x-circle"></i> Cancel
                         </a>
                       <% } %>

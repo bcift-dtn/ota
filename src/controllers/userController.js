@@ -2,6 +2,8 @@ const userModel = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const orderModel = require('../models/orderModel');
 
+const CANCEL_FEE_RATE = 0.20;
+
 const updateProfile = async (req, res) => {
     try {
         const { fullName, phone, email, address } = req.body;
@@ -93,8 +95,81 @@ const getMyOrders = async (req, res) => {
     }
 };
 
+const getCancelConfirmPage = async (req, res) => {
+    try {
+        const userId = req.session.user?.id;
+        if (!userId) return res.redirect('/');
+
+        const orderId = parseInt(req.params.orderId);
+        const order = await orderModel.getOrderWithItemById(orderId, userId);
+
+        // If no order found
+        if (!order) return res.status(404).render('pages/404', { message: 'Order not found.' });
+
+        // If already cancelled or on request
+        if (['cancelled', 'cancel_requested'].includes(order.status)) {
+            return res.redirect('/dashboard/orders');
+        }
+
+        // cancellable validation
+        if (order.is_cancelable === false) {
+            return res.redirect('/dashboard/orders');
+        }
+
+        const isPaid = order.payment_status === 'paid';
+        const cancelFee = isPaid ? Math.round(order.total_amount * CANCEL_FEE_RATE) : 0;
+        const refundAmount = order.total_amount - cancelFee;
+
+        return res.render('pages/dashboard/cancel-confirm', {
+            activeMenu: 'orders',
+            order,
+            isPaid,
+            cancelFee,
+            refundAmount
+        });
+    } catch (err) {
+        console.error('[CANCEL] Get cancel page error:', err.message);
+        return res.status(500).render('pages/404', { message: 'Server error.' });
+    }
+}
+
+const submitCancelRequest = async (req, res) => {
+    try {
+        const userId = req.session.user?.id;
+        if (!userId) return res.redirect('/');
+
+        const orderId = parseInt(req.params.orderId);
+        const { reason } = req.body;
+
+        const order = await orderModel.getOrderWithItemById(orderId, userId);
+
+        if (!order) return res.status(404).render('pages/404', { message: 'Order not found.' });
+
+        if (['cancelled', 'cancel_requested', 'failed'].includes(order.status)) {
+            return res.redirect('/dashboard/orders');
+        }
+
+        if (order.is_cancelable === false) {
+            return res.redirect('/dashboard/orders');
+        }
+
+        const isPaid = order.payment_status === 'paid';
+        const cancelFee = isPaid ? Math.round(order.total_amount * CANCEL_FEE_RATE) : 0;
+        const refundAmount = order.total_amount - cancelFee;
+
+        await orderModel.createCancellationRequest(orderId, userId, reason || null, refundAmount, cancelFee);
+
+        return res.redirect('/dashboard/orders?cancelled=1');
+    } catch (err) {
+        console.error('[CANCEL] Submit cancel request error:', err.message);
+        return res.status(500).render('pages/404', { message: 'Server error.' });
+    }
+}
+
 module.exports = {
     updateProfile,
     changePassword,
-    getMyOrders
+    getMyOrders,
+    getCancelConfirmPage,
+    submitCancelRequest
 };
