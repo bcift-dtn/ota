@@ -107,7 +107,7 @@ const getUserOrderCounts = async (userId) => {
                     OR (o.payment_status = 'paid' AND oi.start_date < CURRENT_DATE AND o.status NOT IN ('cancelled', 'failed'))
                 ) AS completed_count,
                 COUNT(*) FILTER (
-                    WHERE o.status = 'cancelled' OR o.payment_status = 'failed'
+                    WHERE o.status IN ('cancelled', 'cancel_requested') OR o.payment_status = 'failed'
                 ) AS cancelled_count
             FROM ota.orders o
             JOIN ota.order_items oi ON oi.order_id = o.id
@@ -136,7 +136,7 @@ const getUserOrders = async ({ userId, status = 'all', productType = 'all', sear
     } else if (status === 'completed') {
         conditions.push(`(o.status = 'completed' OR (o.payment_status = 'paid' AND oi.start_date < CURRENT_DATE AND o.status NOT in ('cancelled', 'failed')))`);
     } else if (status === 'cancelled') {
-        conditions.push(`(o.status = 'cancelled' OR o.payment_status = 'failed')`);
+        conditions.push(`(o.status IN ('cancelled', 'cancel_requested') OR o.payment_status = 'failed')`);
     }
 
     // Product type filter
@@ -287,6 +287,37 @@ const getCancellationByOrderId = async (orderId) => {
     return res.rows[0] || null;
 };
 
+const getPendingCancellations = async () => {
+    const res = await db.query(
+        `
+        SELECT
+            oc.id AS cancel_id,
+            oc.order_id,
+            oc.reason,
+            oc.refund_amount,
+            oc.cancel_fee,
+            oc.status AS cancel_status,
+            oc.created_at AS requested_at,
+            o.total_amount,
+            o.payment_status,
+            o.transaction_id,
+            p.title AS product_title,
+            p.type AS product_type,
+            u.full_name AS customer_name,
+            u.email AS customer_email
+        FROM ota.order_cancellations oc
+        JOIN ota.orders o ON o.id = oc.order_id
+        JOIN ota.order_items oi ON oi.order_id = o.id
+        JOIN ota.products p ON p.id = oi.product_id
+        JOIN ota.users u ON u.id = o.user_id
+        WHERE oc.status = 'pending'
+        ORDER BY oc.created_at DESC
+        `
+    );
+    return res.rows;
+};
+
+
 
 module.exports = {
     createOrder,
@@ -297,5 +328,6 @@ module.exports = {
     getUserOrders,
     getOrderWithItemById,
     createCancellationRequest,
-    getCancellationByOrderId
+    getCancellationByOrderId,
+    getPendingCancellations
 };

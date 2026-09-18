@@ -63,7 +63,7 @@ const getMyOrders = async (req, res) => {
         const userId = req.session.user?.id;
         if (!userId) return res.redirect('/');
 
-        const { status = 'all', type = 'all', search = '', page = 1 } = req.query;
+        const { status = 'all', type = 'all', search = '', page = 1, cancelled = '' } = req.query;
         const currentPage = Math.max(1, parseInt(page) || 1);
 
         const [counts, ordersData] = await Promise.all([
@@ -87,7 +87,8 @@ const getMyOrders = async (req, res) => {
             counts,
             currentStatus: status,
             currentType: type,
-            searchQuery: search
+            searchQuery: search,
+            cancelled: cancelled === '1'
         });
     } catch (err) {
         console.error('[DASHBOARD] Get orders error:', err.message);

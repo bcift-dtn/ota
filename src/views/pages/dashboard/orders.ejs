@@ -60,6 +60,12 @@
 
         <!-- My Orders Main Content -->
         <section class="dashboard-content orders-content-wrapper">
+          <% if (cancelled) { %> 
+            <div class="orders-flash-success">
+              <i data-lucide="check-circle"></i>
+              Your cancellation request has been submitted. We'll process it within 1–2 business days.
+            </div>
+          <% } %>
           <div class="orders-header-row">
             <div class="orders-header-text">
               <h2 class="orders-main-title">My Bookings & Trips</h2>
@@ -141,7 +147,7 @@
               <% orders.forEach(order =>  { %> 
                 <% 
                   const isPaid = order.payment_status === 'paid';
-                  const isCancelled = order.status === 'cancelled' || order.payment_status === 'failed';
+                  const isCancelled = ['cancelled', 'cancel_requested'].includes(order.status) || order.payment_status === 'failed';
                   const orderDate = order.start_date ? new Date(order.start_date) : new Date(order.created_at);
 
                   let departTime = '';
@@ -176,8 +182,13 @@
                   let badgeText = 'Confirmed & Paid';
                   let badgeClass = 'badge-confirmed';
                   if (isCancelled) {
-                    badgeText = 'Cancelled';
-                    badgeClass = 'badge-cancelled';
+                    if (order.status === 'cancel_requested') {
+                      badgeText = 'Cancel Requested';
+                      badgeClass = 'badge-awaiting';
+                    } else {
+                      badgeText = 'Cancelled';
+                      badgeClass = 'badge-cancelled';
+                    }
                   } else if (order.status === 'completed' || (isPaid && isPast && !isFerryPendingVendor)) {
                     badgeText = 'Completed';
                     badgeClass = 'badge-completed';
