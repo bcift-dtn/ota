@@ -15,9 +15,6 @@
 
     <main class="admin-main">
       <aside class="admin-sidebar">
-        <div class="admin-sidebar-logo">
-          <span>Admin Panel</span>
-        </div>
         <ul class="admin-sidebar-nav">
           <li>
             <a
@@ -69,25 +66,25 @@
                 <% requests.forEach(cancelReq => { %>
                   <tr>
                     <td>
-                      <span class="admin-order-id">#MT-<%= req.product_type.toUpperCase() %>-<%= req.order_id %></span>
+                      <span class="admin-order-id">#MT-<%= cancelReq.product_type.toUpperCase() %>-<%= cancelReq.order_id %></span>
                     </td>
                     <td>
-                      <span class="admin-customer-name"><%= req.customer_name %></span>
-                      <span class="admin-customer-email"><%= req.customer_email %></span>
+                      <span class="admin-customer-name"><%= cancelReq.customer_name %></span>
+                      <span class="admin-customer-email"><%= cancelReq.customer_email %></span>
                     </td>
-                    <td><%= req.product_title %></td>
-                    <td>IDR <%= Number(req.total_amount).toLocaleString('id-ID') %></td>
-                    <td class="admin-fee-cell">IDR <%= Number(req.cancel_fee).toLocaleString('id-ID') %></td>
-                    <td class="admin-refund-cell">IDR <%= Number(req.refund_amount).toLocaleString('id-ID') %></td>
-                    <td class="admin-reason-cell"><%= req.reason || '—' %></td>
+                    <td><%= cancelReq.product_title %></td>
+                    <td>IDR <%= Number(cancelReq.total_amount).toLocaleString('id-ID') %></td>
+                    <td class="admin-fee-cell">IDR <%= Number(cancelReq.cancel_fee).toLocaleString('id-ID') %></td>
+                    <td class="admin-refund-cell">IDR <%= Number(cancelReq.refund_amount).toLocaleString('id-ID') %></td>
+                    <td class="admin-reason-cell"><%= cancelReq.reason || '—' %></td>
                     <td>
-                      <%= new Date(req.requested_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                      <%= new Date(cancelReq.requested_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %>
                     </td>
                     <td class="admin-action-cell">
-                      <form action="/admin/cancel-requests/<%= req.cancel_id %>/approve" method="POST" class="admin-action-form">
+                      <form action="/admin/cancel-requests/<%= cancelReq.cancel_id %>/approve" method="POST" class="admin-action-form">
                         <button type="submit" class="btn-admin-approve">Approve</button>
                       </form>
-                      <form action="/admin/cancel-requests/<%= req.cancel_id %>/reject" method="POST" class="admin-action-form">
+                      <form action="/admin/cancel-requests/<%= cancelReq.cancel_id %>/reject" method="POST" class="admin-action-form">
                         <button type="submit" class="btn-admin-reject">Reject</button>
                       </form>
                     </td>

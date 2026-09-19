@@ -1,0 +1,260 @@
+/* Admin Layout */
+.admin-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 6rem var(--spacing-horizontal-1) 3rem; /* 6rem accounts for fixed navbar */
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    min-height: calc(100vh - 4.5rem);
+}
+
+@media (min-width: 992px) {
+    .admin-main {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+}
+
+/* Sidebar */
+.admin-sidebar {
+    background: var(--clr-bg);
+    border: 1px solid var(--clr-border);
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+
+@media (min-width: 992px) {
+    .admin-sidebar {
+        width: 16rem;
+        flex-shrink: 0;
+        position: sticky;
+        top: 6rem;
+    }
+}
+
+.admin-sidebar-logo {
+    padding: 0 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--clr-border);
+    font-size: var(--fs-4);
+    font-weight: 700;
+    color: var(--clr-primary);
+}
+
+.admin-sidebar-nav {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.admin-sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    color: var(--clr-label-font);
+    text-decoration: none;
+    font-size: var(--fs-3);
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.admin-sidebar-nav a:hover {
+    background-color: var(--clr-accent);
+    color: var(--clr-primary);
+}
+
+.admin-sidebar-nav a.active {
+    background-color: var(--clr-primary);
+    color: white;
+}
+
+.admin-sidebar-nav a i,
+.admin-sidebar-nav a svg {
+    width: 18px;
+    height: 18px;
+}
+
+
+
+
+/* Content Section */
+.admin-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.admin-page-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.admin-page-title {
+    font-size: var(--fs-6);
+    color: var(--clr-neutral);
+}
+
+.admin-badge-count {
+    background: #FEF3C7;
+    color: #92400E;
+    font-size: var(--fs-2);
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 9999px;
+}
+
+/* Empty State */
+.admin-empty-state {
+    background: var(--clr-bg);
+    border: 1px dashed var(--clr-border);
+    border-radius: 12px;
+    padding: 4rem 2rem;
+    text-align: center;
+    color: var(--clr-label-font);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.admin-empty-state i,
+.admin-empty-state svg {
+    width: 40px;
+    height: 40px;
+    color: var(--clr-border);
+}
+
+
+
+
+
+/* Table Wrapper */
+.admin-table-wrapper {
+    background: var(--clr-bg);
+    border: 1px solid var(--clr-border);
+    border-radius: 12px;
+    overflow-x: auto;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--fs-3);
+    text-align: left;
+}
+
+.admin-table thead {
+    background-color: var(--clr-accent);
+    border-bottom: 1px solid var(--clr-border);
+}
+
+.admin-table th {
+    padding: 0.85rem 1rem;
+    font-size: var(--fs-2);
+    font-weight: 700;
+    color: var(--clr-label-font);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.admin-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--clr-accent);
+    color: var(--clr-neutral);
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #F9FAFB;
+}
+
+.admin-order-id {
+    font-weight: 700;
+    color: var(--clr-primary);
+    white-space: nowrap;
+}
+
+.admin-customer-name {
+    display: block;
+    font-weight: 600;
+}
+
+.admin-customer-email {
+    display: block;
+    font-size: var(--fs-2);
+    color: var(--clr-label-font);
+}
+
+.admin-fee-cell {
+    color: #DC2626;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.admin-refund-cell {
+    color: #059669;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.admin-reason-cell {
+    max-width: 180px;
+    word-break: break-word;
+    color: var(--clr-label-font);
+}
+
+/* Actions */
+.admin-action-cell {
+    white-space: nowrap;
+}
+
+.admin-action-form {
+    display: inline-block;
+    margin-right: 0.35rem;
+}
+
+.btn-admin-approve,
+.btn-admin-reject {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: var(--fs-2);
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s;
+}
+
+.btn-admin-approve {
+    background-color: #059669;
+    color: white;
+}
+
+.btn-admin-approve:hover {
+    opacity: 0.9;
+}
+
+.btn-admin-reject {
+    background-color: #DC2626;
+    color: white;
+}
+
+.btn-admin-reject:hover {
+    opacity: 0.9;
+}

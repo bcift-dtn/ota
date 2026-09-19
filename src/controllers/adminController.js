@@ -13,6 +13,32 @@ const getCancelRequests = async (req, res) => {
     }
 };
 
+const approveCancelRequest = async (req, res) => {
+    try {
+        const cancelId = req.params.id;
+        const adminId = req.session.user.id;
+        await orderModel.approveCancellation(cancelId, adminId);
+        return res.redirect('/admin/cancel-requests');
+    } catch (err) {
+        console.error('[ADMIN] Approve cancel error:', err.message);
+        return res.redirect('/admin/cancel-requests');
+    }
+};
+
+const rejectCancelRequest = async (req, res) => {
+    try {
+        const cancelId = req.params.id;
+        const adminId = req.session.user.id;
+        await orderModel.rejectCancellation(cancelId, adminId);
+        return res.redirect('/admin/cancel-requests');
+    } catch (err) {
+        console.error('[ADMIN] Reject cancel error:', err.message);
+        return res.redirect('/admin/cancel-requests');
+    }
+};
+
 module.exports = {
-    getCancelRequests
+    getCancelRequests,
+    approveCancelRequest,
+    rejectCancelRequest
 };

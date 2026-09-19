@@ -317,7 +317,80 @@ const getPendingCancellations = async () => {
     return res.rows;
 };
 
+const approveCancellation = async (cancelId, adminId) => {
+    const client = await db.connect();
+    try {
+        await client.query('BEGIN');
 
+        // Mark cancellation as approved
+        const cancelRes = await client.query(
+            `UPDATE ota.order_cancellations
+             SET status = 'approved', reviewed_by = $2, reviewed_at = NOW()
+             WHERE id = $1 AND status = 'pending'
+             RETURNING order_id`,
+            [cancelId, adminId]
+        );
+
+        if (cancelRes.rowCount === 0) {
+            throw new Error('Cancellation request not found or already processed.');
+        }
+
+        const orderId = cancelRes.rows[0].order_id;
+
+        // Mark order as cancelled
+        await client.query(
+            `UPDATE ota.orders SET status = 'cancelled', updated_at = NOW() WHERE id = $1`,
+            [orderId]
+        );
+
+        await client.query('COMMIT');
+        return { orderId };
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
+};
+
+const rejectCancellation = async (cancelId, adminId) => {
+    const client = await db.connect();
+    try {
+        await client.query('BEGIN');
+
+        // Mark cancellation as rejected
+        const cancelRes = await client.query(
+            `UPDATE ota.order_cancellations
+             SET status = 'rejected', reviewed_by = $2, reviewed_at = NOW()
+             WHERE id = $1 AND status = 'pending'
+             RETURNING order_id`,
+            [cancelId, adminId]
+        );
+
+        if (cancelRes.rowCount === 0) {
+            throw new Error('Cancellation request not found or already processed.');
+        }
+
+        const orderId = cancelRes.rows[0].order_id;
+
+        // Revert order status back to paid (or pending if not yet paid)
+        await client.query(
+            `UPDATE ota.orders
+             SET status = CASE WHEN payment_status IN ('SUCCESS', 'SETTLED') THEN 'paid' ELSE 'pending' END,
+                 updated_at = NOW()
+             WHERE id = $1`,
+            [orderId]
+        );
+
+        await client.query('COMMIT');
+        return { orderId };
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
+};
 
 module.exports = {
     createOrder,
@@ -329,5 +402,7 @@ module.exports = {
     getOrderWithItemById,
     createCancellationRequest,
     getCancellationByOrderId,
-    getPendingCancellations
+    getPendingCancellations,
+    approveCancellation,
+    rejectCancellation
 };

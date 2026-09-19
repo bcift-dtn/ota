@@ -8,4 +8,8 @@ router.use(requireAdmin);
 
 router.get('/cancel-requests', adminController.getCancelRequests);
 
+router.post('/cancel-requests/:id/approve', adminController.approveCancelRequest);
+
+router.post('/cancel-requests/:id/reject', adminController.rejectCancelRequest);
+
 module.exports = router;
