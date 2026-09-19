@@ -35,6 +35,7 @@ const createOrder = async ({ userId, draftOrder, basePrice, taxAmount, platformF
             });
         } else if (draftOrder.productType === 'activities') {
             passengersPayload = JSON.stringify({
+                packageId: draftOrder.packageId || null,
                 passengers: draftOrder.passengers || [],
                 paxBreakdown: draftOrder.paxBreakdown || []
             });
@@ -453,7 +454,10 @@ const getOrderInvoiceData = async (orderId, userId) => {
         JOIN ota.users u ON u.id = o.user_id
         JOIN ota.order_items oi ON oi.order_id = o.id
         JOIN ota.products p ON p.id = oi.product_id
-        LEFT JOIN ota.product_packages pp ON pp.product_id = p.id
+        LEFT JOIN ota.product_packages pp ON (
+            (oi.passengers->>'packageId' IS NOT NULL AND pp.id = CAST(oi.passengers->>'packageId' AS INTEGER))
+            OR (oi.passengers->>'packageId' IS NULL AND pp.product_id = p.id)
+        )
         WHERE o.id = $1 AND o.user_id = $2
         LIMIT 1
         `,

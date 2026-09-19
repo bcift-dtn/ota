@@ -204,13 +204,33 @@ const generateInvoicePDF = (order, res) => {
     y += rowHeight;
 
     // Table Row Item
+    let addonsTotal = 0;
+    if (order.addons && order.addons.length > 0) {
+        order.addons.forEach(ad => {
+            addonsTotal += Number(ad.unit_price) * Number(ad.quantity);
+        });
+    }
+
+    // Package price
+    const totalBase = Number(order.base_price || order.total_amount);
+    const packageTotal = Math.max(0, totalBase - addonsTotal);
+
+    // If unit_price * quantity exceeds package total, correct the quantity/price
+    let packageQty = order.quantity || 1;
+    let packageUnitPrice = Number(order.unit_price || packageTotal);
+
+    if (packageUnitPrice * packageQty > packageTotal || packageUnitPrice === totalBase) {
+        packageQty = 1;
+        packageUnitPrice = packageTotal;
+    }
+
     const rows = [
         {
             name: order.product_title,
             desc: order.package_name || (order.product_type === 'car_rental' ? 'Car Rental' : 'Tour Package'),
-            qty: order.quantity || 1,
-            price: order.unit_price || order.base_price,
-            amount: (order.quantity || 1) * (order.unit_price || order.base_price)
+            qty: packageQty,
+            price: packageUnitPrice,
+            amount: packageTotal
         }
     ];
 
@@ -249,19 +269,30 @@ const generateInvoicePDF = (order, res) => {
     const totalsLeft = cols[4].x;
     const totalsWidth = cols[4].width + cols[5].width;
 
-    doc.rect(totalsLeft, y, totalsWidth, rowHeight).strokeColor('#000000').lineWidth(1).stroke();
-    doc.font('Helvetica-Bold').fontSize(8.5).fillColor('#000000');
-    doc.text('Sub Total', cols[4].x + 3, y + 7, { width: cols[4].width - 6, align: 'left' });
-    doc.text(formatCurrency(order.base_price || order.total_amount), cols[5].x + 3, y + 7, { width: cols[5].width - 6, align: 'right' });
-    doc.moveTo(cols[5].x, y).lineTo(cols[5].x, y + rowHeight).stroke();
+    const drawSummaryRow = (label, amount, isBold = false) => {
+        doc.rect(totalsLeft, y, totalsWidth, rowHeight).strokeColor('#000000').lineWidth(1).stroke();
+        doc.font(isBold ? 'Helvetica-Bold' : 'Helvetica').fontSize(8.5).fillColor('#000000');
+        doc.text(label, cols[4].x + 3, y + 7, { width: cols[4].width - 6, align: 'left' });
+        doc.text(formatCurrency(amount), cols[5].x + 3, y + 7, { width: cols[5].width - 6, align: 'right' });
+        doc.moveTo(cols[5].x, y).lineTo(cols[5].x, y + rowHeight).stroke();
+        y += rowHeight;
+    };
 
-    y += rowHeight;
+    // 1. Sub Total
+    drawSummaryRow('Sub Total', totalBase, true);
 
-    // Grand Total Row
-    doc.rect(totalsLeft, y, totalsWidth, rowHeight).strokeColor('#000000').lineWidth(1).stroke();
-    doc.text('Grand Total', cols[4].x + 3, y + 7, { width: cols[4].width - 6, align: 'left' });
-    doc.text(formatCurrency(order.total_amount), cols[5].x + 3, y + 7, { width: cols[5].width - 6, align: 'right' });
-    doc.moveTo(cols[5].x, y).lineTo(cols[5].x, y + rowHeight).stroke();
+    // 2. Tax (if any)
+    if (Number(order.tax_amount) > 0) {
+        drawSummaryRow('Tax (11%)', order.tax_amount);
+    }
+
+    // 3. Platform Fee (if any)
+    if (Number(order.platform_fee) > 0) {
+        drawSummaryRow('Platform Fee', order.platform_fee);
+    }
+    
+    // 4. Grand Total
+    drawSummaryRow('Grand Total', order.total_amount, true);
 
     // End Document
     doc.end();
