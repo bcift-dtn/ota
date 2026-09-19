@@ -1,6 +1,7 @@
 const userModel = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const orderModel = require('../models/orderModel');
+const invoiceService = require('../services/invoiceService');
 
 const CANCEL_FEE_RATE = 0.20;
 
@@ -167,10 +168,34 @@ const submitCancelRequest = async (req, res) => {
     }
 }
 
+const downloadInvoice = async (req, res) => { 
+    try {
+        const orderId = req.params.orderId;
+        const userId = req.session.user.id;
+
+        const order = await orderModel.getOrderInvoiceData(orderId, userId);
+        if (!order) {
+            return res.status(404).render('pages/404', { message: 'Order not found.' });
+        }
+
+        const invoiceFilename = `Invoice-MT-${(order.product_type || 'ORDER').toUpperCase()}-${order.order_id}.pdf`;
+
+        res.setHeader('Content-Type', 'application/pdf');
+        // 'inline' lets the browser preview it immediately with a download button
+        res.setHeader('Content-Disposition', `inline; filename="${invoiceFilename}"`);
+
+        invoiceService.generateInvoicePDF(order, res);
+    } catch (error) {
+        console.error('[INVOICE] Generate invoice error:', error);
+        return res.status(500).render('pages/404', { message: 'Failed to generate invoice.' });
+    }
+}
+
 module.exports = {
     updateProfile,
     changePassword,
     getMyOrders,
     getCancelConfirmPage,
-    submitCancelRequest
+    submitCancelRequest,
+    downloadInvoice
 };

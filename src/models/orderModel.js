@@ -33,24 +33,50 @@ const createOrder = async ({ userId, draftOrder, basePrice, taxAmount, platformF
                     driverOption: draftOrder.driverNeeds || 'with-driver'
                 }
             });
+        } else if (draftOrder.productType === 'activities') {
+            passengersPayload = JSON.stringify({
+                passengers: draftOrder.passengers || [],
+                paxBreakdown: draftOrder.paxBreakdown || []
+            });
         }
 
-        await client.query(
+        const orderItemRes = await client.query(
             `
                 INSERT INTO ota.order_items
                     (order_id, product_id, quantity, unit_price, start_date, notes, passengers)
                 VALUES ($1, $2, $3, $4, $5, $6, $7)
+                RETURNING id
             `,
             [
                 orderId,
                 draftOrder.productId,
-                (draftOrder.adults || 1) + (draftOrder.children || 0),
+                draftOrder.totalPax || ((draftOrder.adults || 1) + (draftOrder.children || 0)),
                 basePrice,
                 draftOrder.departureDate || draftOrder.visitDate || null,
                 draftOrder.productType,
                 passengersPayload
             ]
         );
+
+        const orderItemId = orderItemRes.rows[0].id;
+        // Insert Addons if any were selected
+        if (draftOrder.addons && draftOrder.addons.length > 0) {
+            for (const addon of draftOrder.addons) {
+                const addonPriceRes = await client.query(
+                    `SELECT price FROM ota.product_addons WHERE id = $1`,
+                    [parseInt(addon.id)]
+                );
+                const unitPrice = addonPriceRes.rows[0]?.price || 0;
+                await client.query(
+                    `
+                    INSERT INTO ota.order_item_addons
+                        (order_item_id, addon_id, quantity, unit_price)
+                    VALUES ($1, $2, $3, $4)
+                    `,
+                    [orderItemId, parseInt(addon.id), parseInt(addon.quantity) || 1, unitPrice]
+                );
+            }
+        }
 
         await client.query('COMMIT');
         return orderId;
@@ -392,6 +418,70 @@ const rejectCancellation = async (cancelId, adminId) => {
     }
 };
 
+const getOrderInvoiceData = async (orderId, userId) => { 
+    const orderRes = await db.query(
+        `
+        SELECT
+            o.id AS order_id,
+            o.user_id,
+            o.total_amount,
+            o.base_price,
+            o.tax_amount,
+            o.platform_fee,
+            o.status AS order_status,
+            o.payment_method,
+            o.payment_status,
+            o.transaction_id,
+            o.paid_at,
+            o.created_at AS booking_date,
+            u.full_name AS customer_name,
+            u.email AS customer_email,
+            u.phone AS customer_phone,
+            oi.id AS order_item_id,
+            oi.quantity,
+            oi.unit_price,
+            oi.start_date,
+            oi.end_date,
+            oi.passengers,
+            p.id AS product_id,
+            p.title AS product_title,
+            p.type AS product_type,
+            p.location AS product_location,
+            pp.name AS package_name,
+            pp.duration_hours
+        FROM ota.orders o
+        JOIN ota.users u ON u.id = o.user_id
+        JOIN ota.order_items oi ON oi.order_id = o.id
+        JOIN ota.products p ON p.id = oi.product_id
+        LEFT JOIN ota.product_packages pp ON pp.product_id = p.id
+        WHERE o.id = $1 AND o.user_id = $2
+        LIMIT 1
+        `,
+        [orderId, userId]
+    );
+
+    if (orderRes.rows.length === 0) return null;
+
+    const invoiceData = orderRes.rows[0];
+
+    // Fetch any purchased addons for this item
+    const addonsRes = await db.query(
+        `
+        SELECT
+            oia.quantity,
+            oia.unit_price,
+            pa.name AS addon_name
+        FROM ota.order_item_addons oia
+        JOIN ota.product_addons pa ON pa.id = oia.addon_id
+        WHERE oia.order_item_id = $1
+        `,
+        [invoiceData.order_item_id]
+    );
+
+    invoiceData.addons = addonsRes.rows;
+    return invoiceData;
+}
+
 module.exports = {
     createOrder,
     getOrderById,
@@ -404,5 +494,6 @@ module.exports = {
     getCancellationByOrderId,
     getPendingCancellations,
     approveCancellation,
-    rejectCancellation
+    rejectCancellation,
+    getOrderInvoiceData
 };

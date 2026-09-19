@@ -299,7 +299,7 @@
                         </a>
                       <% } %>
 
-                      <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action btn-secondary">
+                      <a href="/dashboard/orders/<%= order.id %>/invoice" target="_blank" class="btn-order-action btn-secondary">
                         <i data-lucide="receipt"></i> View Receipt
                       </a>
 

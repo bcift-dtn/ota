@@ -16,6 +16,8 @@ router.get('/status', (req, res) => {
     res.render('pages/dashboard/coming-soon', { activeMenu: 'status' });
 })
 
+router.get('/orders/:orderId/invoice', userController.downloadInvoice);
+
 router.get('/orders/:orderId/cancel', userController.getCancelConfirmPage);
 
 router.post('/orders/:orderId/cancel', userController.submitCancelRequest);

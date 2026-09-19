@@ -445,6 +445,21 @@ const confirmCheckout = async (req, res) => {
         returnSeatCategory:   draftOrder.returnSeatCategory || '',
         returnTravelDate:     draftOrder.returnDate || '',
       };
+    } else {
+      const totalPax = parseInt(draftOrder.totalPax) || 1;
+      const passengers = [];
+      for (let i = 1; i <= totalPax; i++) {
+        const title = req.body[`visitorTitle_${i}`] || '';
+        const name = req.body[`visitorName_${i}`] || '';
+        if (name) {
+          passengers.push({
+            title,
+            name: `${title ? title + '. ' : ''}${name}`.trim(),
+            rawName: name
+          });
+        }
+      }
+      req.session.draftOrder.passengers = passengers;
     }
 
     if (!draftOrder || !user) return res.redirect('/');
