@@ -189,6 +189,9 @@
                       badgeText = 'Cancelled';
                       badgeClass = 'badge-cancelled';
                     }
+                  } else if (order.status === 'reschedule_requested') {
+                    badgeText = 'Reschedule Requested';
+                    badgeClass = 'badge-awaiting';
                   } else if (order.status === 'completed' || (isPaid && isPast && !isFerryPendingVendor)) {
                     badgeText = 'Completed';
                     badgeClass = 'badge-completed';
@@ -293,8 +296,8 @@
                     </div>
 
                     <div class="order-footer-actions">
-                      <% if (isPaid && !isCancelled && !isPast && order.status !== 'completed') { %>
-                        <a href="/products/checkout/result?orderId=<%= rawOrderId %>&action=reschedule" class="btn-order-action btn-secondary">
+                      <% if (isPaid && !isCancelled && !isPast && order.status !== 'completed' && order.status !== 'reschedule_requested' && order.product_type !== 'ferry' && order.is_reschedulable) { %>
+                        <a href="/dashboard/orders/<%= order.id %>/reschedule" class="btn-order-action btn-secondary">
                           <i data-lucide="calendar"></i> Reschedule
                         </a>
                       <% } %>

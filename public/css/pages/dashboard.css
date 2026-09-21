@@ -1020,6 +1020,22 @@
   border-color: var(--clr-primary);
 }
 
+.cancel-reason-group input[type="date"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--clr-border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--clr-neutral);
+  font-size: var(--fs-3-5);
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.cancel-reason-group input[type="date"]:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+}
+
 .cancel-form-actions {
   display: flex;
   gap: 0.75rem;

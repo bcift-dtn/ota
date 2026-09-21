@@ -22,6 +22,10 @@ router.get('/orders/:orderId/cancel', userController.getCancelConfirmPage);
 
 router.post('/orders/:orderId/cancel', userController.submitCancelRequest);
 
+router.get('/orders/:orderId/reschedule', userController.getReschedulePage);
+
+router.post('/orders/:orderId/reschedule', userController.submitRescheduleRequest);
+
 router.post('/update-profile', userController.updateProfile);
 
 router.post('/change-password', userController.changePassword);

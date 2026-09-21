@@ -191,7 +191,79 @@ const downloadInvoice = async (req, res) => {
     }
 }
 
+const getReschedulePage = async (req, res) => {
+    try { 
+        const userId = req.session.user?.id;
+        if (!userId) return res.redirect('/');
 
+        const orderId = parseInt(req.params.orderId);
+        const order = await orderModel.getOrderWithItemById(orderId, userId);
+
+        if (!order) return res.status(404).render('pages/404', { message: 'Order not found.' });
+
+        // Only paid orders with 'paid' status can be rescheduled
+        if (order.status !== 'paid' || order.payment_status !== 'paid') {
+            return res.redirect('/dashboard/orders');
+        }
+
+        // Ferry tickets & non-reschedulable items cannot be rescheduled
+        if (order.is_reschedulable === false || order.product_type === 'ferry') {
+            return res.redirect('/dashboard/orders');
+        }
+
+        return res.render('pages/dashboard/reschedule-confirm', {
+            activeMenu: 'orders',
+            order
+        });
+    } catch (err) {
+        console.error('[RESCHEDULE] Get reschedule page error:', err.message);
+        return res.status(500).render('pages/404', { message: 'Server error.' });
+    }
+}
+
+const submitRescheduleRequest = async (req, res) => { 
+    try {
+        const userId = req.session.user?.id;
+        if (!userId) return res.redirect('/');
+
+        const orderId = parseInt(req.params.orderId);
+        const { newDate, newSlotTime, reason } = req.body;
+
+        if (!newDate) {
+            return res.redirect(`/dashboard/orders/${orderId}/reschedule?error=date_required`);
+        }
+
+        const order = await orderModel.getOrderWithItemById(orderId, userId);
+
+        if (!order) return res.status(404).render('pages/404', { message: 'Order not found.' });
+
+        if (order.status !== 'paid' || order.payment_status !== 'paid') {
+            return res.redirect('/dashboard/orders');
+        }
+
+        if (order.is_reschedulable === false || order.product_type === 'ferry') {
+            return res.redirect('/dashboard/orders');
+        }
+
+        const oldDate = order.start_date;
+        const oldSlotTime = null;
+
+        await orderModel.createRescheduleRequest(
+            orderId,
+            userId,
+            oldDate,
+            newDate,
+            oldSlotTime,
+            newSlotTime || null,
+            reason || null
+        );
+
+        return res.redirect('/dashboard/orders?rescheduled=1');
+    } catch (err) {
+        console.error('[RESCHEDULE] Submit reschedule request error:', err.message);
+        return res.status(500).render('pages/404', { message: 'Server error.' });
+    }
+}
 
 module.exports = {
     updateProfile,
@@ -199,5 +271,7 @@ module.exports = {
     getMyOrders,
     getCancelConfirmPage,
     submitCancelRequest,
-    downloadInvoice
+    downloadInvoice,
+    getReschedulePage,
+    submitRescheduleRequest
 };

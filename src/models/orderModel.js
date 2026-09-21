@@ -238,6 +238,13 @@ const getUserOrders = async ({ userId, status = 'all', productType = 'all', sear
                     ORDER BY pp.sort_order ASC
                     LIMIT 1
                 ) AS package_name,
+                (
+                    SELECT pp.is_reschedulable
+                    FROM ota.product_packages pp
+                    WHERE pp.product_id = p.id
+                    ORDER BY pp.sort_order ASC
+                    LIMIT 1
+                ) AS is_reschedulable,
                 sc.reference_id,
                 sc.secret_code
             FROM ota.orders o
