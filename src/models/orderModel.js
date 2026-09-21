@@ -486,6 +486,142 @@ const getOrderInvoiceData = async (orderId, userId) => {
     return invoiceData;
 }
 
+// Reschedule
+const createRescheduleRequest = async (orderId, userId, oldDate, newDate, oldSlotTime, newSlotTime, reason) => {
+    const client = await db.connect();
+    try { 
+        await client.query('BEGIN');
+
+        await client.query(
+            `INSERT INTO ota.order_reschedules
+                (order_id, requested_by, old_date, new_date, old_slot_time, new_slot_time, reason, status, created_at)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, 'pending', NOW())`,
+            [orderId, userId, oldDate, newDate, oldSlotTime || null, newSlotTime || null, reason || null]
+        );
+
+        await client.query(
+            `UPDATE ota.orders SET status = 'reschedule_requested', updated_at = NOW() WHERE id = $1`,
+            [orderId]
+        );
+
+        await client.query('COMMIT');
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
+};
+
+const getPendingReschedules = async () => { 
+    const res = await db.query(
+        `
+        SELECT
+            ors.id AS reschedule_id,
+            ors.order_id,
+            ors.old_date,
+            ors.new_date,
+            ors.old_slot_time,
+            ors.new_slot_time,
+            ors.reason,
+            ors.status AS reschedule_status,
+            ors.created_at AS requested_at,
+            o.total_amount,
+            o.payment_status,
+            p.title AS product_title,
+            p.type AS product_type,
+            u.full_name AS customer_name,
+            u.email AS customer_email
+        FROM ota.order_reschedules ors
+        JOIN ota.orders o ON o.id = ors.order_id
+        JOIN ota.order_items oi ON oi.order_id = o.id
+        JOIN ota.products p ON p.id = oi.product_id
+        JOIN ota.users u ON u.id = o.user_id
+        WHERE ors.status = 'pending'
+        ORDER BY ors.created_at DESC
+        `
+    );
+    return res.rows;
+}
+
+const approveReschedule = async (rescheduleId, adminId) => { 
+    const client = await db.connect();
+    try { 
+        await client.query('BEGIN');
+
+        // Mark reschedule as approved and get new details
+        const reschRes = await client.query(
+            `UPDATE ota.order_reschedules
+             SET status = 'approved', reviewed_by = $2, reviewed_at = NOW()
+             WHERE id = $1 AND status = 'pending'
+             RETURNING order_id, new_date, new_slot_time`,
+            [rescheduleId, adminId]
+        );
+
+        if (reschRes.rowCount === 0) {
+            throw new Error('Reschedule request not found or already processed.');
+        }
+
+        const { order_id, new_date, new_slot_time } = reschRes.rows[0];
+
+        // Update order_items start_date to the new date
+        await client.query(
+            `UPDATE ota.order_items SET start_date = $2 WHERE order_id = $1`,
+            [order_id, new_date]
+        );
+
+        // Revert order status back to 'paid'
+        await client.query(
+            `UPDATE ota.orders SET status = 'paid', updated_at = NOW() WHERE id = $1`,
+            [order_id]
+        );
+
+        await client.query('COMMIT');
+        return { orderId: order_id };
+    } catch (err) { 
+        await client.query('ROLLBACK');
+        throw err;
+    } finally { 
+        client.release();
+    }
+};
+
+const rejectReschedule = async (rescheduleId, adminId) => { 
+    const client = await db.connect();
+    try {
+        await client.query('BEGIN');
+
+        // Mark reschedule as rejected
+        const reschRes = await client.query(
+            `UPDATE ota.order_reschedules
+             SET status = 'rejected', reviewed_by = $2, reviewed_at = NOW()
+             WHERE id = $1 AND status = 'pending'
+             RETURNING order_id`,
+            [rescheduleId, adminId]
+        );
+
+        if (reschRes.rowCount === 0) {
+            throw new Error('Reschedule request not found or already processed.');
+        }
+
+        const orderId = reschRes.rows[0].order_id;
+
+        // Revert order status back to 'paid'
+        await client.query(
+            `UPDATE ota.orders SET status = 'paid', updated_at = NOW() WHERE id = $1`,
+            [orderId]
+        );
+
+        await client.query('COMMIT');
+        return { orderId };
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
+};
+
 module.exports = {
     createOrder,
     getOrderById,
@@ -499,5 +635,9 @@ module.exports = {
     getPendingCancellations,
     approveCancellation,
     rejectCancellation,
-    getOrderInvoiceData
+    getOrderInvoiceData,
+    createRescheduleRequest,
+    getPendingReschedules,
+    approveReschedule,
+    rejectReschedule,
 };
