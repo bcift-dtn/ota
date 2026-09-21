@@ -66,12 +66,20 @@
               <div class="cancel-order-meta">
                 <span class="cancel-order-id">Order #MT-<%= (order.product_type || 'ORDER').toUpperCase() %>-<%= order.id %></span>
                 <span class="cancel-order-product"><%= order.product_title %></span>
-                <% if (order.start_date) { %>
-                  <span class="cancel-order-date">
-                    <i data-lucide="calendar"></i>
-                    Current Date: <%= new Date(order.start_date).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) %>
-                  </span>
-                <% } %>
+                <div style="display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 0.25rem;">
+                  <% if (order.start_date) { %>
+                    <span class="cancel-order-date">
+                      <i data-lucide="calendar"></i>
+                      Current Date: <%= new Date(order.start_date).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) %>
+                    </span>
+                  <% } %>
+                  <% if (typeof currentSlotTime !== 'undefined' && currentSlotTime) { %>
+                    <span class="cancel-order-date">
+                      <i data-lucide="clock"></i>
+                      Current Time: <%= currentSlotTime %>
+                    </span>
+                  <% } %>
+                </div>
               </div>
             </div>
 
@@ -96,6 +104,7 @@
               const minDateStr = tomorrow.toISOString().split('T')[0];
             %>
             <form action="/dashboard/orders/<%= order.id %>/reschedule" method="POST" class="cancel-form">
+              <!-- New Date -->
               <div class="cancel-reason-group">
                 <label for="newDate">New Preferred Date <span style="color: #c53030;">*</span></label>
                 <input 
@@ -107,6 +116,32 @@
                   class="reschedule-date-input"
                 />
               </div>
+
+              <!-- New Pickup Time (Car Rental) -->
+              <% if (order.product_type === 'car_rental') { %>
+                <div class="cancel-reason-group">
+                  <label for="newSlotTime">New Pickup Time <span style="color: #c53030;">*</span></label>
+                  <input 
+                    type="time" 
+                    id="newSlotTime" 
+                    name="newSlotTime" 
+                    value="<%= currentSlotTime || '09:00' %>" 
+                    required 
+                  />
+                </div>
+              <% } %>
+
+              <!-- New Slot Time (Activities) -->
+              <% if (order.product_type === 'activities' && typeof availableSlots !== 'undefined' && availableSlots.length > 0) { %>
+                <div class="cancel-reason-group">
+                  <label for="newSlotTime">New Slot Time <span style="color: #c53030;">*</span></label>
+                  <select id="newSlotTime" name="newSlotTime" required>
+                    <% availableSlots.forEach(slot => { %>
+                      <option value="<%= slot %>" <%= currentSlotTime === slot ? 'selected' : '' %>><%= slot %></option>
+                    <% }) %>
+                  </select>
+                </div>
+              <% } %>
 
               <div class="cancel-reason-group">
                 <label for="reason">Reason for Rescheduling <span>(optional)</span></label>

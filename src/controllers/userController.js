@@ -210,10 +210,20 @@ const getReschedulePage = async (req, res) => {
         if (order.is_reschedulable === false || order.product_type === 'ferry') {
             return res.redirect('/dashboard/orders');
         }
+        
+        const currentSlotTime = order.passengers?.carSnapshot?.slotTime || order.passengers?.slotTime || null;
 
+        let availableSlots = [];
+        if (order.product_type === 'activities') {
+            const packageId = order.passengers?.packageId;
+            availableSlots = await orderModel.getAvailableTimeSlots(order.product_id, packageId);
+        }
+        
         return res.render('pages/dashboard/reschedule-confirm', {
             activeMenu: 'orders',
-            order
+            order,
+            currentSlotTime,
+            availableSlots
         });
     } catch (err) {
         console.error('[RESCHEDULE] Get reschedule page error:', err.message);
@@ -246,7 +256,7 @@ const submitRescheduleRequest = async (req, res) => {
         }
 
         const oldDate = order.start_date;
-        const oldSlotTime = null;
+        const oldSlotTime = order.passengers?.carSnapshot?.slotTime || order.passengers?.slotTime || null;
 
         await orderModel.createRescheduleRequest(
             orderId,

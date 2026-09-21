@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cancel Requests - Admin - MEGATERRA</title>
+    <title>Reschedule Requests - Admin - MEGATERRA</title>
     <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="/css/layout.css" />
     <link rel="stylesheet" href="/css/components.css" />
@@ -33,7 +33,10 @@
             </a>
           </li>
           <li>
-            <a href="/admin/reschedule-requests" class="<%= activeMenu === 'reschedule-requests' ? 'active' : '' %>">
+            <a
+              href="/admin/reschedule-requests"
+              class="<%= activeMenu === 'reschedule-requests' ? 'active' : '' %>"
+            >
               <i data-lucide="calendar"></i> Reschedule Requests
             </a>
           </li>
@@ -42,54 +45,64 @@
 
       <section class="admin-content">
         <div class="admin-page-header">
-          <h1 class="admin-page-title">Cancel Requests</h1>
+          <h1 class="admin-page-title">Reschedule Requests</h1>
           <span class="admin-badge-count"><%= requests.length %> Pending</span>
         </div>
 
-         <% if (requests.length === 0) { %>
+        <% if (requests.length === 0) { %>
           <div class="admin-empty-state">
             <i data-lucide="inbox"></i>
-            <p>No pending cancellation requests.</p>
+            <p>No pending reschedule requests.</p>
           </div>
         <% } else { %> 
-            <div class="admin-table-wrapper">
+          <div class="admin-table-wrapper">
             <table class="admin-table">
               <thead>
                 <tr>
                   <th>Order</th>
                   <th>Customer</th>
                   <th>Product</th>
-                  <th>Total Paid</th>
-                  <th>Cancel Fee</th>
-                  <th>Refund Amount</th>
+                  <th>Current Schedule</th>
+                  <th>Requested Schedule</th>
                   <th>Reason</th>
                   <th>Requested</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                <% requests.forEach(cancelReq => { %>
+                <% requests.forEach(r => { %>
                   <tr>
                     <td>
-                      <span class="admin-order-id">#MT-<%= cancelReq.product_type.toUpperCase() %>-<%= cancelReq.order_id %></span>
+                      <span class="admin-order-id">#MT-<%= (r.product_type || 'ORDER').toUpperCase() %>-<%= r.order_id %></span>
                     </td>
                     <td>
-                      <span class="admin-customer-name"><%= cancelReq.customer_name %></span>
-                      <span class="admin-customer-email"><%= cancelReq.customer_email %></span>
+                      <span class="admin-customer-name"><%= r.customer_name %></span>
+                      <span class="admin-customer-email"><%= r.customer_email %></span>
                     </td>
-                    <td><%= cancelReq.product_title %></td>
-                    <td>IDR <%= Number(cancelReq.total_amount).toLocaleString('id-ID') %></td>
-                    <td class="admin-fee-cell">IDR <%= Number(cancelReq.cancel_fee).toLocaleString('id-ID') %></td>
-                    <td class="admin-refund-cell">IDR <%= Number(cancelReq.refund_amount).toLocaleString('id-ID') %></td>
-                    <td class="admin-reason-cell"><%= cancelReq.reason || '—' %></td>
+                    <td><%= r.product_title %></td>
                     <td>
-                      <%= new Date(cancelReq.requested_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                      <div><%= r.old_date ? new Date(r.old_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—' %></div>
+                      <% if (r.old_slot_time) { %>
+                        <small style="color: var(--clr-label-font);"><%= r.old_slot_time %></small>
+                      <% } %>
+                    </td>
+                    <td>
+                      <div style="font-weight: 600; color: var(--clr-primary);">
+                        <%= r.new_date ? new Date(r.new_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—' %>
+                      </div>
+                      <% if (r.new_slot_time) { %>
+                        <small style="color: var(--clr-label-font); font-weight: 600;"><%= r.new_slot_time %></small>
+                      <% } %>
+                    </td>
+                    <td class="admin-reason-cell"><%= r.reason || '—' %></td>
+                    <td>
+                      <%= new Date(r.requested_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %>
                     </td>
                     <td class="admin-action-cell">
-                      <form action="/admin/cancel-requests/<%= cancelReq.cancel_id %>/approve" method="POST" class="admin-action-form">
+                      <form action="/admin/reschedule-requests/<%= r.reschedule_id %>/approve" method="POST" class="admin-action-form">
                         <button type="submit" class="btn-admin-approve">Approve</button>
                       </form>
-                      <form action="/admin/cancel-requests/<%= cancelReq.cancel_id %>/reject" method="POST" class="admin-action-form">
+                      <form action="/admin/reschedule-requests/<%= r.reschedule_id %>/reject" method="POST" class="admin-action-form">
                         <button type="submit" class="btn-admin-reject">Reject</button>
                       </form>
                     </td>

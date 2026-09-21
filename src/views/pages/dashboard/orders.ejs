@@ -318,7 +318,7 @@
                         </a>
                       <% } %>
 
-                      <% if (!isCancelled && !isPast && order.status !== 'completed') { %>
+                      <% if (!isCancelled && !isPast && order.status !== 'completed' && order.status !== 'reschedule_requested') { %>
                         <a href="/dashboard/orders/<%= order.id %>/cancel" class="btn-order-action btn-cancel">
                           <i data-lucide="x-circle"></i> Cancel
                         </a>

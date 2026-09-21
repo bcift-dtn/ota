@@ -273,6 +273,7 @@ const getOrderWithItemById = async (orderId, userId) => {
                 o.transaction_id, o.inquiry_id, o.masked_card,
                 oi.id AS order_item_id, oi.start_date, oi.notes AS product_type,
                 oi.vendor_booking_code, oi.passengers,
+                p.id AS product_id,
                 p.title AS product_title, p.type AS product_type,
                 pp.is_cancelable, pp.is_reschedulable
             FROM ota.orders o
@@ -571,11 +572,25 @@ const approveReschedule = async (rescheduleId, adminId) => {
 
         const { order_id, new_date, new_slot_time } = reschRes.rows[0];
 
-        // Update order_items start_date to the new date
-        await client.query(
-            `UPDATE ota.order_items SET start_date = $2 WHERE order_id = $1`,
-            [order_id, new_date]
-        );
+        // Update order_items start_date and new slot time in passengers if provided
+        if (new_slot_time) {
+            const itemRes = await client.query(`SELECT passengers FROM ota.order_items WHERE order_id = $1`, [order_id]);
+            const passengers = itemRes.rows[0]?.passengers || {};
+            if (passengers.carSnapshot) {
+                passengers.carSnapshot.slotTime = new_slot_time;
+            } else {
+                passengers.slotTime = new_slot_time;
+            }
+            await client.query(
+                `UPDATE ota.order_items SET start_date = $2, passengers = $3 WHERE order_id = $1`,
+                [order_id, new_date, JSON.stringify(passengers)]
+            );
+        } else {
+            await client.query(
+                `UPDATE ota.order_items SET start_date = $2 WHERE order_id = $1`,
+                [order_id, new_date]
+            );
+        }
 
         // Revert order status back to 'paid'
         await client.query(
@@ -629,6 +644,18 @@ const rejectReschedule = async (rescheduleId, adminId) => {
     }
 };
 
+const getAvailableTimeSlots = async (productId, packageId) => {
+    const res = await db.query(
+        `SELECT DISTINCT pts.time_string
+         FROM ota.package_time_slots pts
+         JOIN ota.product_packages pp ON pp.id = pts.package_id
+         WHERE pp.product_id = $1 OR pts.package_id = $2
+         ORDER BY pts.time_string ASC`,
+        [productId, packageId || 0]
+    );
+    return res.rows.map(r => r.time_string);
+};
+
 module.exports = {
     createOrder,
     getOrderById,
@@ -647,4 +674,5 @@ module.exports = {
     getPendingReschedules,
     approveReschedule,
     rejectReschedule,
+    getAvailableTimeSlots
 };
