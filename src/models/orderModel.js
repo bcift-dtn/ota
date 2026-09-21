@@ -411,7 +411,7 @@ const rejectCancellation = async (cancelId, adminId) => {
         // Revert order status back to paid (or pending if not yet paid)
         await client.query(
             `UPDATE ota.orders
-             SET status = CASE WHEN payment_status IN ('SUCCESS', 'SETTLED') THEN 'paid' ELSE 'pending' END,
+             SET status = CASE WHEN payment_status IN ('paid', 'SUCCESS', 'SETTLED') THEN 'paid' ELSE 'pending' END,
                  updated_at = NOW()
              WHERE id = $1`,
             [orderId]

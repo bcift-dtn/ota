@@ -63,7 +63,13 @@
           <% if (cancelled) { %> 
             <div class="orders-flash-success">
               <i data-lucide="check-circle"></i>
-              Your cancellation request has been submitted. We'll process it within 1–2 business days.
+              <span>Your cancellation request has been submitted. We'll process it within 1–2 business days.</span>
+            </div>
+          <% } %>
+          <% if (typeof rescheduled !== 'undefined' && rescheduled) { %> 
+            <div class="orders-flash-success">
+              <i data-lucide="check-circle"></i>
+              <span>Your reschedule request has been submitted. Our team will review and update your schedule shortly.</span>
             </div>
           <% } %>
           <div class="orders-header-row">

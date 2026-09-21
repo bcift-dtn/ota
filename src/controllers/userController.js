@@ -64,7 +64,7 @@ const getMyOrders = async (req, res) => {
         const userId = req.session.user?.id;
         if (!userId) return res.redirect('/');
 
-        const { status = 'all', type = 'all', search = '', page = 1, cancelled = '' } = req.query;
+        const { status = 'all', type = 'all', search = '', page = 1, cancelled = '', rescheduled = '' } = req.query;
         const currentPage = Math.max(1, parseInt(page) || 1);
 
         const [counts, ordersData] = await Promise.all([
@@ -89,7 +89,8 @@ const getMyOrders = async (req, res) => {
             currentStatus: status,
             currentType: type,
             searchQuery: search,
-            cancelled: cancelled === '1'
+            cancelled: cancelled === '1',
+            rescheduled: rescheduled === '1'
         });
     } catch (err) {
         console.error('[DASHBOARD] Get orders error:', err.message);
@@ -218,7 +219,7 @@ const getReschedulePage = async (req, res) => {
             const packageId = order.passengers?.packageId;
             availableSlots = await orderModel.getAvailableTimeSlots(order.product_id, packageId);
         }
-        
+
         return res.render('pages/dashboard/reschedule-confirm', {
             activeMenu: 'orders',
             order,
