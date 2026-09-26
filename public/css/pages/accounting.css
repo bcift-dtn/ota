@@ -1,0 +1,477 @@
+/* Accounting & Settlement Page */
+.accounting-main {
+  background-color: #FFFFFF;
+  min-height: calc(100vh - 160px);
+  padding: 2.5rem 2rem 5rem;
+}
+
+.accounting-container {
+  max-width: 1260px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Page Header */
+.accounting-header {
+  margin-bottom: -0.25rem;
+}
+
+.accounting-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1A202C;
+  letter-spacing: -0.02em;
+}
+
+/* KPI Metrics Cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.kpi-card {
+  background: #FFFFFF;
+  border: 1px solid #F0F2F5;
+  border-radius: 16px;
+  padding: 1.6rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.kpi-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+.kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #718096;
+  text-transform: uppercase;
+}
+
+.kpi-icon-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kpi-icon-badge svg {
+  width: 20px;
+  height: 20px;
+}
+
+.kpi-bank {
+  background-color: #E6F4F1;
+  color: #00798C;
+}
+
+.kpi-commission {
+  background-color: #E2F3F5;
+  color: #00798C;
+}
+
+.kpi-tax {
+  background-color: #F1F3F5;
+  color: #546E7A;
+}
+
+.kpi-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1A202C;
+  letter-spacing: -0.02em;
+}
+
+.kpi-teal-value {
+  color: #00798C;
+}
+
+.kpi-footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #718096;
+}
+
+.kpi-footer-icon {
+  width: 15px;
+  height: 15px;
+  color: #718096;
+}
+
+.kpi-teal-icon {
+  color: #00798C;
+}
+
+.kpi-teal-text {
+  color: #00798C;
+}
+
+/* Filter & Search Bar */
+.settlement-filter-bar {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.search-input-box {
+  position: relative;
+  flex: 1;
+  width: 280px;
+}
+
+@media (min-width: 750px) {
+  .search-input-box {
+    min-width: 580px;
+  }
+}
+
+.search-input-box input {
+  width: 100%;
+  padding: 0.65rem 1rem 0.65rem 2.6rem;
+  border: none;
+  border-radius: 10px;
+  background: #F1F4F7;
+  font-size: 13px;
+  font-family: inherit;
+  color: #2D3748;
+}
+
+.search-input-box input::placeholder {
+  color: #A0AEC0;
+}
+
+.search-input-box input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 95, 96, 0.15);
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.95rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: #A0AEC0;
+}
+
+.filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filter-pill-select {
+  padding: 0.65rem 2rem 0.65rem 1rem;
+  border: none;
+  border-radius: 10px;
+  background-color: #F1F4F7;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  color: #2D3748;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  transition: background-color 0.15s;
+}
+
+.filter-pill-select:hover {
+  background-color: #E9EDF2;
+}
+
+.filter-pill-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 95, 96, 0.15);
+}
+
+.btn-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.65rem 1.15rem;
+  background-color: #005F60;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-export:hover {
+  background-color: #004D4E;
+}
+
+.btn-export svg {
+  width: 15px;
+  height: 15px;
+}
+
+
+/* Settlement Table */
+.settlement-table-container {
+  width: 100%;
+}
+
+.table-scroll-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.settlement-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+
+.settlement-table thead tr {
+  background-color: #F1F4F7;
+}
+
+.settlement-table th {
+  padding: 1rem 1.25rem;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4A5568;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border: none;
+}
+
+.settlement-table thead th:first-child {
+  border-top-left-radius: 10px;
+  padding-left: 1.5rem;
+}
+
+.settlement-table thead th:last-child {
+  border-top-right-radius: 10px;
+  padding-right: 1.5rem;
+}
+
+.settlement-table tbody tr {
+  border-bottom: 1px solid #EDF2F7;
+  transition: background-color 0.15s;
+}
+
+.settlement-table tbody tr:hover {
+  background-color: #FBFDFD;
+}
+
+.settlement-table td {
+  padding: 1.25rem 1.25rem;
+  font-size: 13.5px;
+  color: #2D3748;
+  vertical-align: middle;
+  white-space: nowrap;
+  border-bottom: 1px solid #EDF2F7;
+}
+
+.settlement-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.settlement-table td:first-child {
+  padding-left: 1.5rem;
+}
+
+.settlement-table td:last-child {
+  padding-right: 1.5rem;
+}
+
+/* Invoice & Vendor */
+.invoice-vendor-box {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.invoice-vendor-box .product-title {
+  font-weight: 500;
+  color: #1A202C;
+}
+
+.invoice-vendor-box .invoice-number {
+  font-size: 11px;
+  color: #A0AEC0;
+  letter-spacing: 0.02em;
+}
+
+.cell-date {
+  color: #718096;
+  font-size: 13px;
+}
+
+.cell-gross {
+  color: #1A202C;
+  font-weight: 500;
+}
+
+.cell-fee {
+  color: #00798C;
+  font-weight: 500;
+}
+
+.cell-net {
+  font-weight: 700;
+  color: #1A202C;
+}
+
+
+/* Status Badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.35rem 0.85rem;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-reconciled {
+  background-color: #E6F4EA;
+  color: #137333;
+}
+
+.status-reconciled .status-dot {
+  background-color: #137333;
+}
+
+.status-pending {
+  background-color: #FEE8D6;
+  color: #C05621;
+}
+
+.status-pending .status-dot {
+  background-color: #C05621;
+}
+
+.status-in-review {
+  background-color: #FDE8E8;
+  color: #C5221F;
+}
+
+.status-in-review .status-dot {
+  background-color: #C5221F;
+}
+
+/* Empty State */
+.settlement-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 1.5rem;
+  color: #A0AEC0;
+}
+
+.settlement-empty-state svg {
+  width: 44px;
+  height: 44px;
+  stroke-width: 1.5;
+}
+
+
+/* Pagination Row */
+.table-pagination-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: #F1F4F5;
+
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+@media (min-width: 462px) {
+  .table-pagination-row {
+    justify-content: space-between;
+  }
+}
+
+
+.pagination-info {
+  font-size: 13px;
+  color: #718096;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.page-num, .page-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 0.4rem;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4A5568;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.page-num:hover, .page-arrow:hover {
+  background-color: #F1F4F7;
+}
+
+.page-num.active {
+  background-color: #005F60;
+  color: #FFFFFF;
+}
+
+.page-arrow svg {
+  width: 15px;
+  height: 15px;
+}
+
+.page-ellipsis {
+  font-size: 13px;
+  color: #A0AEC0;
+  padding: 0 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}

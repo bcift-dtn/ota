@@ -15,6 +15,7 @@ const contactController = require('./src/controllers/contactController');
 const ferryRoutes = require('./src/routes/ferryRoutes');
 const webhookController = require('./src/controllers/webhookController');
 const adminRoutes = require('./src/routes/adminRoutes');
+const accountingRoutes = require('./src/routes/accountingRoutes');
 
 // Variable
 const app = express();
@@ -75,6 +76,7 @@ app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
 app.use('/dashboard', userRoutes);
 app.use('/admin', adminRoutes);
+app.use('/accounting', accountingRoutes);
 app.use('/ferry', ferryRoutes);
 app.get('/about', (req, res) => res.render('pages/about'));
 app.get('/contact', contactController.renderContactPage);

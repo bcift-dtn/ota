@@ -21,6 +21,9 @@
             <% if (user?.isAdmin) { %>
               <li><a href="/admin/cancel-requests"><i data-lucide="shield"></i> Admin Dashboard</a></li>
             <% } %>
+            <% if (user?.isAccounting || user?.isAdmin) { %>
+              <li><a href="/accounting"><i data-lucide="landmark"></i> Accounting & Settlement</a></li>
+            <% } %>
             <li><a href="/dashboard/orders"><i data-lucide="receipt-text"></i> My Orders</a></li>
             <li><a href="/dashboard/status"><i data-lucide="bell"></i> Status</a></li>
             <li class="logout">
@@ -76,6 +79,9 @@
         <li><a href="/dashboard/points"><i data-lucide="tickets"></i> My Points <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
         <% if (user?.isAdmin) { %>
           <li><a href="/admin/cancel-requests"><i data-lucide="shield"></i> Admin Dashboard <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
+        <% } %>
+        <% if (user?.isAccounting || user?.isAdmin) { %>
+          <li><a href="/accounting"><i data-lucide="landmark"></i> Accounting & Settlement <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
         <% } %>
         <li><a href="/dashboard/orders"><i data-lucide="receipt-text"></i> My Orders <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>
         <li><a href="/dashboard/status"><i data-lucide="bell"></i> Status <i data-lucide="chevron-right" class="drawer-chevron"></i></a></li>

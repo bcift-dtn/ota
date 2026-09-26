@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accounting & Financial Settlement - MEGATERRA</title>
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages/accounting.css" />
+  </head>
+
+  <body>
+    <%- include('../../partials/navbar') %>
+    
+    <main class="accounting-main">
+      <div class="accounting-container">
+        <!-- Page Header -->
+        <header class="accounting-header">
+          <h1 class="accounting-title">Accounting & Financial Settlement</h1>
+        </header>
+
+        <!-- KPI Metrics Grid -->
+        <section class="kpi-grid">
+          <!-- Card 1: Net Settlement -->
+          <article class="kpi-card">
+            <div class="kpi-card-header">
+              <span class="kpi-label">NET SETTLEMENT</span>
+              <div class="kpi-icon-badge kpi-bank">
+                <i data-lucide="landmark"></i>
+              </div>
+            </div>
+            <div class="kpi-value">
+              IDR <%= Number(metrics?.net_settlement || 0).toLocaleString('id-ID') %>
+            </div>
+            <div class="kpi-footer">
+              <i data-lucide="check-circle-2" class="kpi-footer-icon kpi-teal-icon"></i>
+              <span><%= metrics?.vendors_count || 0 %> vendors ready for payout</span>
+            </div>
+          </article>
+
+          <!-- Card 2: Platform Commission -->
+          <article class="kpi-card">
+            <div class="kpi-card-header">
+              <span class="kpi-label">PLATFORM COMMISSION</span>
+              <div class="kpi-icon-badge kpi-commission">
+                <i data-lucide="badge-percent"></i>
+              </div>
+            </div>
+            <div class="kpi-value kpi-teal-value">
+              IDR <%= Number(metrics?.platform_commission || 0).toLocaleString('id-ID') %>
+            </div>
+            <div class="kpi-footer">
+              <i data-lucide="trending-up" class="kpi-footer-icon kpi-teal-icon"></i>
+              <span class="kpi-teal-text">Total platform fees earned</span>
+            </div>
+          </article>
+
+          <!-- Card 3: Tax & PPN Withheld -->
+          <article class="kpi-card">
+            <div class="kpi-card-header">
+              <span class="kpi-label">TAX & PPN WITHHELD</span>
+              <div class="kpi-icon-badge kpi-tax">
+                <i data-lucide="shield-check"></i>
+              </div>
+            </div>
+            <div class="kpi-value">
+              IDR <%= Number(metrics?.tax_withheld || 0).toLocaleString('id-ID') %>
+            </div>
+            <div class="kpi-footer">
+              <i data-lucide="check-square" class="kpi-footer-icon"></i>
+              <span>11% VAT batched for DJP</span>
+            </div>
+          </article>
+        </section>
+
+        <!-- Filter & Search Bar -->
+        <form action="/accounting" method="GET" class="settlement-filter-bar">
+          <div class="search-input-box">
+            <i data-lucide="search" class="search-icon"></i>
+            <input 
+              type="text" 
+              name="search" 
+              placeholder="Search invoice, vendor, or ID..." 
+              value="<%= searchQuery %>" 
+            />
+          </div>
+
+          <div class="filter-controls">
+            <!-- Month Filter -->
+            <% 
+              const now = new Date();
+              const currentM = now.getMonth() + 1;
+              const currentY = now.getFullYear();
+              const monthsList = [
+                { num: 1, name: 'January' }, { num: 2, name: 'February' },
+                { num: 3, name: 'March' }, { num: 4, name: 'April' },
+                { num: 5, name: 'May' }, { num: 6, name: 'June' },
+                { num: 7, name: 'July' }, { num: 8, name: 'August' },
+                { num: 9, name: 'September' }, { num: 10, name: 'October' },
+                { num: 11, name: 'November' }, { num: 12, name: 'December' }
+              ];
+            %>
+            <select name="month" onchange="this.form.submit()" class="filter-pill-select">
+              <option value="">All Months</option>
+              <% monthsList.forEach(m => { %>
+                <option 
+                  value="<%= m.num %>" 
+                  <%= currentMonth == m.num ? 'selected' : '' %>
+                >
+                  <%= m.name %> (<%= currentYear || currentY %>)
+                </option>
+              <% }) %>
+            </select>
+            <input type="hidden" name="year" value="<%= currentYear || currentY %>" />
+
+            <!-- Settlement Status Filter -->
+            <select name="status" onchange="this.form.submit()" class="filter-pill-select">
+              <option value="all" <%= currentStatus === 'all' ? 'selected' : '' %>>All Statuses</option>
+              <option value="reconciled" <%= currentStatus === 'reconciled' ? 'selected' : '' %>>Reconciled</option>
+              <option value="pending" <%= currentStatus === 'pending' ? 'selected' : '' %>>Pending</option>
+              <option value="in_review" <%= currentStatus === 'in_review' ? 'selected' : '' %>>In Review</option>
+            </select>
+
+            <!-- Product Filter (All Products) -->
+            <select name="type" onchange="this.form.submit()" class="filter-pill-select">
+              <option value="all" <%= currentType === 'all' ? 'selected' : '' %>>All Products</option>
+              <option value="car_rental" <%= currentType === 'car_rental' ? 'selected' : '' %>>Car Rental</option>
+              <option value="activities" <%= currentType === 'activities' ? 'selected' : '' %>>Activities & Tours</option>
+              <option value="ferry" <%= currentType === 'ferry' ? 'selected' : '' %>>Ferry Tickets</option>
+            </select>
+
+            <!-- Export Button -->
+            <a href="/accounting/export" class="btn-export">
+              <i data-lucide="download"></i>
+              Export (.CSV)
+            </a>
+          </div>
+        </form>
+
+        <!-- Settlement Table Section -->
+        <section class="settlement-table-container">
+          <% if (!orders || orders.length === 0) { %>
+            <div class="settlement-empty-state">
+              <i data-lucide="inbox"></i>
+              <p>No settlement records found matching your filters.</p>
+            </div>
+          <% } else { %>
+            <div class="table-scroll-wrapper">
+              <table class="settlement-table">
+                <thead>
+                  <tr>
+                    <th>INVOICE & VENDOR</th>
+                    <th>DATE</th>
+                    <th>GROSS AMOUNT</th>
+                    <th>TAX (PPN 11%)</th>
+                    <th>PLATFORM FEE</th>
+                    <th>PG FEE</th>
+                    <th>NET PAYABLE</th>
+                    <th>STATUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% orders.forEach(item => { %>
+                    <% 
+                      let statusClass = 'status-pending';
+                      let statusLabel = 'Pending';
+                      if (item.settlement_status === 'reconciled') {
+                        statusClass = 'status-reconciled';
+                        statusLabel = 'Reconciled';
+                      } else if (item.settlement_status === 'in_review') {
+                        statusClass = 'status-in-review';
+                        statusLabel = 'In Review';
+                      }
+                    %>
+                    <tr>
+                      <td class="cell-invoice-vendor">
+                        <div class="invoice-vendor-box">
+                          <span class="product-title"><%= item.vendor_name %> - <%= item.product_title %></span>
+                          <span class="invoice-number">#<%= item.invoice_code %></span>
+                        </div>
+                      </td>
+                      <td class="cell-date">
+                        <%= new Date(item.order_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %>,
+                        <%= new Date(item.order_date).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }) %>
+                      </td>
+                      <td class="cell-gross">
+                        IDR <%= Number(item.gross_amount).toLocaleString('id-ID') %>
+                      </td>
+                      <td class="cell-fee">
+                        IDR <%= Number(item.tax_amount).toLocaleString('id-ID') %>
+                      </td>
+                      <td class="cell-fee">
+                        IDR <%= Number(item.platform_fee).toLocaleString('id-ID') %>
+                      </td>
+                      <td class="cell-fee">
+                        IDR <%= Number(item.pg_fee).toLocaleString('id-ID') %>
+                      </td>
+                      <td class="cell-net">
+                        IDR <%= Number(item.net_payable).toLocaleString('id-ID') %>
+                      </td>
+                      <td class="cell-status">
+                        <span class="status-badge <%= statusClass %>">
+                          <span class="status-dot"></span>
+                          <%= statusLabel %>
+                        </span>
+                      </td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Table Pagination -->
+            <footer class="table-pagination-row">
+              <span class="pagination-info">
+                Showing <%= (currentPage - 1) * 10 + 1 %>–<%= Math.min(currentPage * 10, totalOrders) %> of <%= totalOrders.toLocaleString('id-ID') %> entries
+              </span>
+
+              <% if (totalPages > 1) { %>
+                <nav class="pagination-controls">
+                  <% if (currentPage > 1) { %>
+                    <a href="/accounting?page=<%= currentPage - 1 %>&search=<%= searchQuery %>&month=<%= currentMonth %>&year=<%= currentYear %>&status=<%= currentStatus %>&type=<%= currentType %>" class="page-arrow" aria-label="Previous">
+                      <i data-lucide="chevron-left"></i>
+                    </a>
+                  <% } %>
+
+                  <% for (let i = 1; i <= totalPages; i++) { %>
+                    <% if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) { %>
+                      <a 
+                        href="/accounting?page=<%= i %>&search=<%= searchQuery %>&month=<%= currentMonth %>&year=<%= currentYear %>&status=<%= currentStatus %>&type=<%= currentType %>" 
+                        class="page-num <%= currentPage === i ? 'active' : '' %>"
+                      >
+                        <%= i %>
+                      </a>
+                    <% } else if (i === currentPage - 2 || i === currentPage + 2) { %>
+                      <span class="page-ellipsis">...</span>
+                    <% } %>
+                  <% } %>
+
+                  <% if (currentPage < totalPages) { %>
+                    <a href="/accounting?page=<%= currentPage + 1 %>&search=<%= searchQuery %>&month=<%= currentMonth %>&year=<%= currentYear %>&status=<%= currentStatus %>&type=<%= currentType %>" class="page-arrow" aria-label="Next">
+                      <i data-lucide="chevron-right"></i>
+                    </a>
+                  <% } %>
+                </nav>
+              <% } %>
+            </footer>
+          <% } %>
+        </section>
+      </div>
+    </main>
+
+    <%- include('../../partials/footer') %>
+    <%- include('../../partials/loginModal') %>
+  </body>
+</html>

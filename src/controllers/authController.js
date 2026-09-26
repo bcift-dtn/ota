@@ -62,8 +62,10 @@ const loginUser = async (req, res) => {
         isUser: user.is_user,
         isAgent: user.is_agent,
         isSeller: user.is_seller,
-        isAdmin: user.is_admin
+        isAdmin: user.is_admin,
+        isAccounting: user.is_accounting || user.is_admin
       };
+
 
       if (rememberMe) {
         req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30;
