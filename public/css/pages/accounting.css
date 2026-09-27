@@ -170,6 +170,149 @@
   color: #A0AEC0;
 }
 
+/* Period Filter */
+.period-picker-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.period-trigger-btn {
+  text-align: left;
+  min-width: 160px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.period-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 120;
+  display: flex;
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  min-width: 300px;
+}
+
+.period-popover.hidden {
+  display: none;
+}
+
+/* Left Column: Years */
+.period-years-col {
+  width: 110px;
+  background-color: #F8FAFC;
+  border-right: 1px solid #EDF2F7;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.period-year-btn {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4A5568;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.period-year-btn:hover {
+  background-color: #EDF2F7;
+  color: #1A202C;
+}
+
+.period-year-btn.active {
+  background-color: #005F60;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.period-year-btn.selected-all {
+  font-weight: 600;
+  color: #005F60;
+}
+
+.period-divider-h {
+  height: 1px;
+  background-color: #E2E8F0;
+  margin: 4px 6px;
+}
+
+/* Right Column: Months Pane */
+.period-months-col {
+  flex: 1;
+  padding: 10px;
+  background-color: #FFFFFF;
+  min-width: 180px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.period-month-pane {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.period-month-pane.active {
+  display: flex;
+}
+
+.month-pane-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #A0AEC0;
+  padding: 4px 8px 8px;
+}
+
+.period-month-btn {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #2D3748;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.15s;
+}
+
+.period-month-btn:hover {
+  background-color: #F1F4F7;
+  color: #1A202C;
+}
+
+.period-month-btn.active {
+  background-color: #E6F4F1;
+  color: #005F60;
+  font-weight: 600;
+}
+
+.period-month-btn .check-icon {
+  width: 14px;
+  height: 14px;
+  color: #005F60;
+}
+
+/* Other Filter */
 .filter-controls {
   display: flex;
   align-items: center;

@@ -4,33 +4,41 @@ const getSettlementDashboard = async (req, res) => {
     try {
         const {
             search = '',
-            month = '',
-            year = '',
+            period = '',
             status = 'all',
             type = 'all',
             page = 1
         } = req.query;
 
+        let filterMonth = null;
+        let filterYear = null;
+        if (period && period.includes('-')) {
+            const [m, y] = period.split('-');
+            filterMonth = parseInt(m) || null;
+            filterYear = parseInt(y) || null;
+        }
+
         const currentPage = Math.max(1, parseInt(page) || 1);
 
         // Fetch metrics and paginated orders in parallel
-        const [metrics, ordersData] = await Promise.all([
+        const [metrics, ordersData, availablePeriods] = await Promise.all([
             accountingModel.getSettlementMetrics({
                 search,
-                month: month ? parseInt(month) : null,
-                year: year ? parseInt(year) : null,
+                month: filterMonth,
+                year: filterYear,
                 status,
                 productType: type
             }),
             accountingModel.getSettlementOrders({
                 search,
-                month: month ? parseInt(month) : null,
-                year: year ? parseInt(year) : null,
+                month: filterMonth,
+                year: filterYear,
                 status,
                 productType: type,
                 page: currentPage,
                 limit: 10
-            })
+            }),
+            accountingModel.getAvailablePeriods()
         ]);
 
         return res.render('pages/accounting/settlement', {
@@ -41,8 +49,8 @@ const getSettlementDashboard = async (req, res) => {
             totalPages: ordersData.totalPages,
             currentPage: ordersData.currentPage,
             searchQuery: search,
-            currentMonth: month,
-            currentYear: year,
+            currentPeriod: period,
+            availablePeriods,
             currentStatus: status,
             currentType: type
         });

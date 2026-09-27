@@ -89,33 +89,80 @@
           <div class="filter-controls">
             <!-- Month Filter -->
             <% 
-              const now = new Date();
-              const currentM = now.getMonth() + 1;
-              const currentY = now.getFullYear();
-              const monthsList = [
-                { num: 1, name: 'January' }, { num: 2, name: 'February' },
-                { num: 3, name: 'March' }, { num: 4, name: 'April' },
-                { num: 5, name: 'May' }, { num: 6, name: 'June' },
-                { num: 7, name: 'July' }, { num: 8, name: 'August' },
-                { num: 9, name: 'September' }, { num: 10, name: 'October' },
-                { num: 11, name: 'November' }, { num: 12, name: 'December' }
-              ];
+              const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+              const yearsGroup = {};
+              (availablePeriods || []).forEach(p => {
+                if (!yearsGroup[p.year]) yearsGroup[p.year] = [];
+                yearsGroup[p.year].push(p.month);
+              });
+              const availableYears = Object.keys(yearsGroup).sort((a, b) => b - a);
+              // Determine current selected label & active tab year
+              let selectedLabel = 'All Time';
+              let activeTabYear = availableYears[0] || new Date().getFullYear();
+              if (currentPeriod && currentPeriod.includes('-')) {
+                const [pm, py] = currentPeriod.split('-');
+                selectedLabel = `${monthNames[parseInt(pm)]} ${py}`;
+                activeTabYear = py;
+              }
             %>
-            <select name="month" onchange="this.form.submit()" class="filter-pill-select">
-              <option value="">All Months</option>
-              <% monthsList.forEach(m => { %>
-                <option 
-                  value="<%= m.num %>" 
-                  <%= currentMonth == m.num ? 'selected' : '' %>
-                >
-                  <%= m.name %> (<%= currentYear || currentY %>)
-                </option>
-              <% }) %>
-            </select>
-            <input type="hidden" name="year" value="<%= currentYear || currentY %>" />
+
+            <div class="period-picker-wrapper">
+              <button type="button" class="filter-pill-select period-trigger-btn" id="periodTriggerBtn">
+                <span id="periodTriggerLabel"><%= selectedLabel %></span>
+              </button>
+
+              <input type="hidden" name="period" id="periodInput" value="<%= currentPeriod %>" />
+
+              <div class="period-popover hidden" id="periodPopover">
+                <div class="period-years-col">
+                  <button 
+                    type="button" 
+                    class="period-year-btn <%= !currentPeriod ? 'selected-all' : '' %>" 
+                    data-all-time="true"
+                  >
+                    All Time
+                  </button>
+
+                  <div class="period-divider-h"></div>
+
+                  <% availableYears.forEach(yr => { %>
+                    <button 
+                      type="button" 
+                      class="period-year-btn <%= activeTabYear == yr ? 'active' : '' %>" 
+                      data-year="<%= yr %>"
+                    >
+                      <%= yr %>
+                    </button>
+                  <% }) %>
+                </div>
+
+                <div class="period-months-col">
+                  <% availableYears.forEach(yr => { %>
+                    <div class="period-month-pane <%= activeTabYear == yr ? 'active' : '' %>" data-pane-year="<%= yr %>">
+                      <div class="month-pane-title"><%= yr %> Transactions</div>
+                      <% (yearsGroup[yr] || []).forEach(m => { %>
+                        <% const periodVal = `${m}-${yr}`; %>
+                        <button 
+                          type="button" 
+                          class="period-month-btn <%= currentPeriod === periodVal ? 'active' : '' %>" 
+                          data-period="<%= periodVal %>"
+                          data-label="<%= monthNames[m] %> <%= yr %>"
+                        >
+                          <span><%= monthNames[m] %></span>
+                          <% if (currentPeriod === periodVal) { %>
+                            <i data-lucide="check" class="check-icon"></i>
+                          <% } %>
+                        </button>
+                      <% }) %>
+                    </div>
+                  <% }) %>
+                </div>
+              </div>
+            </div>
+
 
             <!-- Settlement Status Filter -->
-            <select name="status" onchange="this.form.submit()" class="filter-pill-select">
+            <select name="status" class="filter-pill-select" id="statusSelect">
               <option value="all" <%= currentStatus === 'all' ? 'selected' : '' %>>All Statuses</option>
               <option value="reconciled" <%= currentStatus === 'reconciled' ? 'selected' : '' %>>Reconciled</option>
               <option value="pending" <%= currentStatus === 'pending' ? 'selected' : '' %>>Pending</option>
@@ -123,7 +170,7 @@
             </select>
 
             <!-- Product Filter (All Products) -->
-            <select name="type" onchange="this.form.submit()" class="filter-pill-select">
+            <select name="type" class="filter-pill-select" id="typeSelect">
               <option value="all" <%= currentType === 'all' ? 'selected' : '' %>>All Products</option>
               <option value="car_rental" <%= currentType === 'car_rental' ? 'selected' : '' %>>Car Rental</option>
               <option value="activities" <%= currentType === 'activities' ? 'selected' : '' %>>Activities & Tours</option>
@@ -220,7 +267,7 @@
               <% if (totalPages > 1) { %>
                 <nav class="pagination-controls">
                   <% if (currentPage > 1) { %>
-                    <a href="/accounting?page=<%= currentPage - 1 %>&search=<%= searchQuery %>&month=<%= currentMonth %>&year=<%= currentYear %>&status=<%= currentStatus %>&type=<%= currentType %>" class="page-arrow" aria-label="Previous">
+                    <a href="/accounting?page=<%= currentPage - 1 %>&search=<%= searchQuery %>&period=<%= currentPeriod %>&status=<%= currentStatus %>&type=<%= currentType %>" class="page-arrow" aria-label="Previous">
                       <i data-lucide="chevron-left"></i>
                     </a>
                   <% } %>
@@ -228,7 +275,7 @@
                   <% for (let i = 1; i <= totalPages; i++) { %>
                     <% if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) { %>
                       <a 
-                        href="/accounting?page=<%= i %>&search=<%= searchQuery %>&month=<%= currentMonth %>&year=<%= currentYear %>&status=<%= currentStatus %>&type=<%= currentType %>" 
+                        href="/accounting?page=<%= i %>&search=<%= searchQuery %>&period=<%= currentPeriod %>&status=<%= currentStatus %>&type=<%= currentType %>" 
                         class="page-num <%= currentPage === i ? 'active' : '' %>"
                       >
                         <%= i %>
@@ -239,7 +286,7 @@
                   <% } %>
 
                   <% if (currentPage < totalPages) { %>
-                    <a href="/accounting?page=<%= currentPage + 1 %>&search=<%= searchQuery %>&month=<%= currentMonth %>&year=<%= currentYear %>&status=<%= currentStatus %>&type=<%= currentType %>" class="page-arrow" aria-label="Next">
+                    <a href="/accounting?page=<%= currentPage + 1 %>&search=<%= searchQuery %>&period=<%= currentPeriod %>&status=<%= currentStatus %>&type=<%= currentType %>" class="page-arrow" aria-label="Next">
                       <i data-lucide="chevron-right"></i>
                     </a>
                   <% } %>
@@ -253,5 +300,6 @@
 
     <%- include('../../partials/footer') %>
     <%- include('../../partials/loginModal') %>
+    <script src="/js/accounting.js"></script>
   </body>
 </html>
