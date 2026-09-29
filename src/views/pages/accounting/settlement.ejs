@@ -178,7 +178,10 @@
             </select>
 
             <!-- Export Button -->
-            <a href="/accounting/export" class="btn-export">
+            <a 
+              href="/accounting/export?search=<%= encodeURIComponent(searchQuery || '') %>&period=<%= currentPeriod || '' %>&status=<%= currentStatus || 'all' %>&type=<%= currentType || 'all' %>" 
+              class="btn-export"
+            >
               <i data-lucide="download"></i>
               Export (.CSV)
             </a>

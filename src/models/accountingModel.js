@@ -41,7 +41,6 @@ const getSettlementMetrics = async ({ month, year, productType, status, search }
 }
 
 const getSettlementOrders = async ({ search = '', month, year, status = 'all', productType = 'all', page = 1, limit = 10 }) => { 
-    const offset = (page - 1) * limit;
     const conditions = ["o.payment_status = 'paid'", "o.status NOT IN ('cancelled', 'failed')"];
     const values = [];
     let idx = 1;
@@ -92,10 +91,18 @@ const getSettlementOrders = async ({ search = '', month, year, status = 'all', p
     );
 
     const totalOrders = parseInt(countRes.rows[0]?.count || 0);
-    const totalPages = Math.ceil(totalOrders / limit) || 1;
+    const totalPages = limit ? (Math.ceil(totalOrders / limit) || 1) : 1;
+
+    // Build pagination clause (only if limit is provided)
+    const dataValues = [...values];
+    let paginationClause = '';
+    if (limit) {
+        const offset = (page - 1) * limit;
+        dataValues.push(limit, offset);
+        paginationClause = `LIMIT $${idx++} OFFSET $${idx++}`;
+    }
 
     // Fetch Rows
-    const dataValues = [...values, limit, offset];
     const dataRes = await db.query(
         `
         SELECT
@@ -118,10 +125,11 @@ const getSettlementOrders = async ({ search = '', month, year, status = 'all', p
         LEFT JOIN ota.seller_profiles sp ON sp.user_id = seller_u.id
         WHERE ${whereClause}
         ORDER BY o.created_at DESC
-        LIMIT $${idx} OFFSET $${idx + 1}
+        ${paginationClause}
         `,
         dataValues
     );
+
 
     return {
         orders: dataRes.rows,
@@ -129,7 +137,7 @@ const getSettlementOrders = async ({ search = '', month, year, status = 'all', p
         totalPages,
         currentPage: page
     };
-}
+};
 
 const getAvailablePeriods = async () => {
     const query = `
