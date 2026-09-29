@@ -29,7 +29,7 @@ const getSettlementMetrics = async ({ month, year, productType, status, search }
             COALESCE(SUM(o.base_price - COALESCE(o.pg_fee, 0)), 0) AS net_settlement,
             COALESCE(SUM(o.platform_fee), 0) AS platform_commission,
             COALESCE(SUM(o.tax_amount), 0) AS tax_withheld,
-            COUNT(DISTINCT p.seller_id) AS vendors_count
+            COUNT(DISTINCT p.seller_id) FILTER (WHERE o.settlement_status = 'ready_for_payout') AS vendors_ready_count
         FROM ota.orders o
         JOIN ota.order_items oi ON oi.order_id = o.id
         JOIN ota.products p ON p.id = oi.product_id
@@ -153,8 +153,29 @@ const getAvailablePeriods = async () => {
     return res.rows;
 };
 
+const updateSettlementStatus = async (orderId, status) => {
+    const validStatuses = ['awaiting_redemption', 'ready_for_payout', 'in_review', 'reconciled'];
+    if (!validStatuses.includes(status)) {
+        throw new Error('Invalid settlement status');
+    }
+
+    const settledAtClause = status === 'reconciled' ? 'NOW()' : 'NULL';
+
+    const query = `
+        UPDATE ota.orders
+        SET settlement_status = $1,
+            settled_at = ${settledAtClause},
+            updated_at = NOW()
+        WHERE id = $2
+        RETURNING id, settlement_status, settled_at;
+    `;
+    const res = await db.query(query, [status, orderId]);
+    return res.rows[0];
+};
+
 module.exports = {
     getSettlementMetrics,
     getSettlementOrders,
-    getAvailablePeriods
+    getAvailablePeriods,
+    updateSettlementStatus
 };

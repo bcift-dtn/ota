@@ -74,4 +74,44 @@ document.addEventListener('DOMContentLoaded', () => {
             filterForm.submit();
         });
     });
+
+    // Settlement Status Quick Updater
+    const statusSelects = document.querySelectorAll('.status-select-badge');
+    statusSelects.forEach(select => {
+        select.addEventListener('change', async (e) => {
+            const orderId = select.dataset.orderId;
+            const newStatus = select.value;
+            const wrapper = select.closest('.status-badge-wrapper');
+
+            // Visual feedback: brief opacity
+            wrapper.style.opacity = '0.5';
+
+            try {
+                const res = await fetch(`/accounting/orders/${orderId}/status`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    // Remove all old status classes
+                    wrapper.classList.remove(
+                        'status-pending', 
+                        'status-awaiting-redemption', 
+                        'status-ready-for-payout', 
+                        'status-reconciled', 
+                        'status-in-review'
+                    );
+                    wrapper.classList.add(`status-${newStatus.replaceAll('_', '-')}`);
+                } else {
+                    alert(data.message || 'Failed to update status');
+                }
+            } catch (err) {
+                console.error('Failed to update settlement status:', err);
+                alert('Connection error while updating status.');
+            } finally {
+                wrapper.style.opacity = '1';
+            }
+        });
+    });
 });

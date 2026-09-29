@@ -136,7 +136,7 @@
 
 @media (min-width: 750px) {
   .search-input-box {
-    min-width: 580px;
+    min-width: 300px;
   }
 }
 
@@ -484,6 +484,79 @@
 
 
 /* Status Badges */
+.status-badge-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.25rem 0.65rem 0.25rem 0.75rem;
+  border-radius: 50px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.status-select-badge {
+  background: transparent;
+  border: none;
+  font-size: 11px;
+  font-weight: 600;
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  padding-right: 14px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+
+.status-select-badge option {
+  background-color: #FFFFFF;
+  color: #1A202C;
+  font-weight: 500;
+}
+
+/* Awaiting Redemption */
+.status-awaiting-redemption .status-dot {
+  background-color: #64748B;
+}
+
+.status-awaiting-redemption {
+  background-color: #F1F3F5;
+  color: #64748B;
+}
+
+/* Ready for payout */
+.status-ready-for-payout {
+  background-color: #FEF3C7;
+  color: #B45309;
+}
+
+.status-ready-for-payout .status-dot {
+  background-color: #D97706;
+}
+
+/* Reconciled */
+.status-reconciled {
+  background-color: #E6F4EA;
+  color: #137333;
+}
+
+.status-reconciled .status-dot {
+  background-color: #137333;
+}
+
+/* In Review */
+.status-in-review {
+  background-color: #FDE8E8;
+  color: #C5221F;
+}
+
+.status-in-review .status-dot {
+  background-color: #C5221F;
+}
+
+
 .status-badge {
   display: inline-flex;
   align-items: center;

@@ -9,4 +9,7 @@ router.use(requireAccounting);
 router.get('/', accountingController.getSettlementDashboard);
 router.get('/export', accountingController.exportSettlementCSV);
 
+router.patch('/orders/:orderId/status', accountingController.updateSettlementStatus);
+
+
 module.exports = router;

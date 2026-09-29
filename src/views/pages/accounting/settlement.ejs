@@ -35,7 +35,7 @@
             </div>
             <div class="kpi-footer">
               <i data-lucide="check-circle-2" class="kpi-footer-icon kpi-teal-icon"></i>
-              <span><%= metrics?.vendors_count || 0 %> vendors ready for payout</span>
+              <span><%= metrics?.vendors_ready_count || 0 %> vendors ready for payout</span>
             </div>
           </article>
 
@@ -164,8 +164,9 @@
             <!-- Settlement Status Filter -->
             <select name="status" class="filter-pill-select" id="statusSelect">
               <option value="all" <%= currentStatus === 'all' ? 'selected' : '' %>>All Statuses</option>
+              <option value="ready_for_payout" <%= currentStatus === 'ready_for_payout' ? 'selected' : '' %>>Ready for Payout</option>
+              <option value="awaiting_redemption" <%= currentStatus === 'awaiting_redemption' ? 'selected' : '' %>>Awaiting Redemption</option>
               <option value="reconciled" <%= currentStatus === 'reconciled' ? 'selected' : '' %>>Reconciled</option>
-              <option value="pending" <%= currentStatus === 'pending' ? 'selected' : '' %>>Pending</option>
               <option value="in_review" <%= currentStatus === 'in_review' ? 'selected' : '' %>>In Review</option>
             </select>
 
@@ -213,15 +214,10 @@
                 <tbody>
                   <% orders.forEach(item => { %>
                     <% 
-                      let statusClass = 'status-pending';
-                      let statusLabel = 'Pending';
-                      if (item.settlement_status === 'reconciled') {
-                        statusClass = 'status-reconciled';
-                        statusLabel = 'Reconciled';
-                      } else if (item.settlement_status === 'in_review') {
-                        statusClass = 'status-in-review';
-                        statusLabel = 'In Review';
-                      }
+                      let statusClass = 'status-awaiting-redemption';
+                      if (item.settlement_status === 'ready_for_payout') statusClass = 'status-ready-for-payout';
+                      else if (item.settlement_status === 'reconciled') statusClass = 'status-reconciled';
+                      else if (item.settlement_status === 'in_review') statusClass = 'status-in-review';
                     %>
                     <tr>
                       <td class="cell-invoice-vendor">
@@ -250,10 +246,23 @@
                         IDR <%= Number(item.net_payable).toLocaleString('id-ID') %>
                       </td>
                       <td class="cell-status">
-                        <span class="status-badge <%= statusClass %>">
+                        <div class="status-badge-wrapper <%= statusClass %>">
                           <span class="status-dot"></span>
-                          <%= statusLabel %>
-                        </span>
+                          <% if (item.settlement_status === 'awaiting_redemption') { %>
+                            <span class="status-locked-label" title="Locked: Waiting for seller to redeem secret code">
+                              Awaiting Redemption
+                            </span>
+                          <% } else { %>
+                            <select 
+                              class="status-select-badge" 
+                              data-order-id="<%= item.order_id %>"
+                            >
+                              <option value="ready_for_payout" <%= item.settlement_status === 'ready_for_payout' ? 'selected' : '' %>>Ready for Payout</option>
+                              <option value="reconciled" <%= item.settlement_status === 'reconciled' ? 'selected' : '' %>>Reconciled</option>
+                              <option value="in_review" <%= item.settlement_status === 'in_review' ? 'selected' : '' %>>In Review</option>
+                            </select>
+                          <% } %>
+                        </div>
                       </td>
                     </tr>
                   <% }) %>

@@ -133,8 +133,9 @@ const exportSettlementCSV = async (req, res) => {
 
         // 4. Data Rows
         ordersData.orders.forEach(item => {
-            let statusLabel = 'Pending';
-            if (item.settlement_status === 'reconciled') statusLabel = 'Reconciled';
+            let statusLabel = 'Awaiting Redemption';
+            if (item.settlement_status === 'ready_for_payout') statusLabel = 'Ready for Payout';
+            else if (item.settlement_status === 'reconciled') statusLabel = 'Reconciled';
             else if (item.settlement_status === 'in_review') statusLabel = 'In Review';
 
             rows.push([
@@ -163,8 +164,31 @@ const exportSettlementCSV = async (req, res) => {
     }
 };
 
+const updateSettlementStatus = async (req, res) => { 
+    try {
+        const { orderId } = req.params;
+        const { status } = req.body;
+
+        const updated = await accountingModel.updateSettlementStatus(orderId, status);
+        if (!updated) {
+            return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+
+        return res.status(200).json({
+            success: true,
+            orderId: updated.id,
+            status: updated.settlement_status,
+            settledAt: updated.settled_at
+        });
+    } catch (err) {
+        console.error('[ACCOUNTING] Update status error:', err.message);
+        return res.status(500).json({ success: false, message: err.message || 'Failed to update settlement status' });
+    }
+}
+
 module.exports = {
     getSettlementDashboard,
-    exportSettlementCSV
+    exportSettlementCSV,
+    updateSettlementStatus
 };
 
