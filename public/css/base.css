@@ -156,6 +156,15 @@ a:hover {
   text-decoration: underline;
 }
 
+button,
+button:hover,
+a[class*="btn"],
+a[class*="btn"]:hover,
+a[class*="page-"],
+a[class*="page-"]:hover {
+  text-decoration: none !important;
+}
+
 .hidden {
   display: none !important;
 }

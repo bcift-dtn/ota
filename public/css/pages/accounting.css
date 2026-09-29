@@ -516,6 +516,14 @@
   font-weight: 500;
 }
 
+.status-locked-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: inherit;
+  cursor: not-allowed;
+  user-select: none;
+}
+
 /* Awaiting Redemption */
 .status-awaiting-redemption .status-dot {
   background-color: #64748B;
