@@ -186,9 +186,30 @@ const updateSettlementStatus = async (req, res) => {
     }
 }
 
+const updateBatchSettlementStatus = async (req, res) => { 
+    try {
+        const { orderIds, status } = req.body;
+        if (!Array.isArray(orderIds) || orderIds.length === 0) {
+            return res.status(400).json({ success: false, message: 'No orders selected' });
+        }
+
+        const updatedRows = await accountingModel.updateBatchSettlementStatus(orderIds, status);
+
+        return res.status(200).json({
+            success: true,
+            updatedCount: updatedRows.length,
+            updatedRows
+        });
+    } catch (err) {
+        console.error('[ACCOUNTING] Batch status error:', err.message);
+        return res.status(500).json({ success: false, message: err.message || 'Failed to update batch status' });
+    }
+}
+
 module.exports = {
     getSettlementDashboard,
     exportSettlementCSV,
-    updateSettlementStatus
+    updateSettlementStatus,
+    updateBatchSettlementStatus
 };
 

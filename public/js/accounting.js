@@ -114,4 +114,99 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    const rowCheckboxes = document.querySelectorAll('.row-checkbox:not(:disabled)');
+    const batchActionBar = document.getElementById('batchActionBar');
+    const batchCountBadge = document.getElementById('batchCountBadge');
+    const btnBatchReconcile = document.getElementById('btnBatchReconcile');
+    const btnBatchReview = document.getElementById('btnBatchReview');
+    const btnBatchClear = document.getElementById('btnBatchClear');
+
+    const updateBatchBarState = () => {
+        const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+        const count = checkedBoxes.length;
+        if (count > 0) {
+            batchCountBadge.textContent = count;
+            batchActionBar.classList.remove('hidden');
+        } else {
+            batchActionBar.classList.add('hidden');
+        }
+        if (selectAllCheckbox) {
+            selectAllCheckbox.checked = (rowCheckboxes.length > 0 && count === rowCheckboxes.length);
+        }
+    };
+
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', () => {
+            rowCheckboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
+            updateBatchBarState();
+        });
+    }
+
+    rowCheckboxes.forEach(cb => {
+        cb.addEventListener('change', updateBatchBarState);
+    });
+
+    if (btnBatchClear) {
+        btnBatchClear.addEventListener('click', () => {
+            rowCheckboxes.forEach(cb => cb.checked = false);
+            if (selectAllCheckbox) selectAllCheckbox.checked = false;
+            updateBatchBarState();
+        });
+    }
+
+    const executeBatchUpdate = async (targetStatus) => {
+        const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+        const orderIds = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
+
+        if (orderIds.length === 0) return;
+
+        batchActionBar.style.opacity = '0.5';
+
+        try {
+            const res = await fetch('/accounting/orders/batch-status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderIds, status: targetStatus })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                // Instantly update badge appearance for all modified rows
+                orderIds.forEach(id => {
+                    const rowCb = document.querySelector(`.row-checkbox[value="${id}"]`);
+                    if (rowCb) {
+                        const tr = rowCb.closest('tr');
+                        const wrapper = tr.querySelector('.status-badge-wrapper');
+                        const select = tr.querySelector('.status-select-badge');
+                        if (wrapper && select) {
+                            wrapper.classList.remove('status-pending', 'status-awaiting-redemption', 'status-ready-for-payout', 'status-reconciled', 'status-in-review');
+                            wrapper.classList.add(`status-${targetStatus.replaceAll('_', '-')}`);
+                            select.value = targetStatus;
+                        }
+                        rowCb.checked = false;
+                    }
+                });
+
+                if (selectAllCheckbox) selectAllCheckbox.checked = false;
+                updateBatchBarState();
+            } else {
+                alert(data.message || 'Batch update failed');
+            }
+        } catch (err) {
+            console.error('Batch update error:', err);
+            alert('Connection error during batch update.');
+        } finally {
+            batchActionBar.style.opacity = '1';
+        }
+    };
+
+    if (btnBatchReconcile) {
+        btnBatchReconcile.addEventListener('click', () => executeBatchUpdate('reconciled'));
+    }
+    
+    if (btnBatchReview) {
+        btnBatchReview.addEventListener('click', () => executeBatchUpdate('in_review'));
+    }
 });

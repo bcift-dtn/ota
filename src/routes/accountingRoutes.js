@@ -11,5 +11,7 @@ router.get('/export', accountingController.exportSettlementCSV);
 
 router.patch('/orders/:orderId/status', accountingController.updateSettlementStatus);
 
+router.post('/orders/batch-status', accountingController.updateBatchSettlementStatus);
+
 
 module.exports = router;

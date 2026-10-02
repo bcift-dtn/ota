@@ -699,3 +699,170 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Checkboxes */
+.cell-checkbox {
+  width: 44px;
+  text-align: center;
+  padding-left: 1.25rem !important;
+  padding-right: 0.5rem !important;
+}
+
+.custom-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #005F60;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.custom-checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+/* Floating Action Bar for multiple status update */
+.batch-action-bar {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.batch-bar-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: var(--clr-primary);
+  color: #FFFFFF;
+  padding: 0.65rem 1.15rem;
+  border-radius: 50px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+
+.batch-count-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  padding-right: 0.75rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.batch-count-badge {
+  background-color: rgba(255, 255, 255, 0.22);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 50px;
+}
+
+.batch-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.btn-batch-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-batch-action svg {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-batch-reconcile {
+  background-color: #10B981;
+  color: #FFFFFF;
+}
+
+.btn-batch-reconcile:hover {
+  background-color: #059669;
+}
+
+.btn-batch-review {
+  background-color: #EF4444;
+  color: #FFFFFF;
+}
+
+.btn-batch-review:hover {
+  background-color: #DC2626;
+}
+
+.btn-batch-clear {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  transition: color 0.15s;
+}
+
+.btn-batch-clear:hover {
+  color: #FFFFFF;
+}
+
+@media (max-width: 520px) {
+  .batch-action-bar {
+    bottom: 1rem;
+    width: calc(100% - 1.25rem);
+    max-width: 380px;
+  }
+  
+  .batch-bar-content {
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 16px;
+    justify-content: space-between;
+  }
+
+  .batch-count-info {
+    gap: 5px;
+    font-size: 11px;
+    padding-right: 0.5rem;
+  }
+
+  .batch-actions-group {
+    gap: 0.35rem;
+  }
+
+  .btn-batch-action {
+    padding: 0.45rem 0.65rem;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .btn-batch-action svg {
+    display: none;
+  }
+}

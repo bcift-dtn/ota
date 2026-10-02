@@ -201,6 +201,9 @@
               <table class="settlement-table">
                 <thead>
                   <tr>
+                    <th class="cell-checkbox">
+                      <input type="checkbox" id="selectAllCheckbox" class="custom-checkbox" title="Select all" />
+                    </th>
                     <th>INVOICE & VENDOR</th>
                     <th>DATE</th>
                     <th>GROSS AMOUNT</th>
@@ -220,6 +223,14 @@
                       else if (item.settlement_status === 'in_review') statusClass = 'status-in-review';
                     %>
                     <tr>
+                      <td class="cell-checkbox">
+                        <input
+                          type="checkbox" 
+                          class="row-checkbox custom-checkbox" 
+                          value="<%= item.order_id %>"
+                          <%= item.settlement_status === 'awaiting_redemption' ? 'disabled title="Locked: awaiting seller redemption"' : '' %>
+                        />
+                      </td>
                       <td class="cell-invoice-vendor">
                         <div class="invoice-vendor-box">
                           <span class="product-title"><%= item.vendor_name %> - <%= item.product_title %></span>
@@ -308,6 +319,29 @@
           <% } %>
         </section>
       </div>
+
+      <aside class="batch-action-bar hidden" id="batchActionBar">
+        <div class="batch-bar-content">
+          <div class="batch-count-info">
+            <span class="batch-count-badge" id="batchCountBadge">0</span>
+            <span class="batch-count-label">Selected</span>
+          </div>
+          
+          <div class="batch-actions-group">
+            <button type="button" class="btn-batch-action btn-batch-reconcile" id="btnBatchReconcile" title="Mark selected as reconciled">
+              <i data-lucide="check-circle-2"></i>
+              <span>Reconcile</span>
+            </button>
+            <button type="button" class="btn-batch-action btn-batch-review" id="btnBatchReview" title="Mark selected as in review">
+              <i data-lucide="alert-circle"></i>
+              <span>In Review</span>
+            </button>
+            <button type="button" class="btn-batch-clear" id="btnBatchClear" title="Deselect all">
+              ✕
+            </button>
+          </div>
+        </div>
+      </aside>
     </main>
 
     <%- include('../../partials/footer') %>

@@ -173,9 +173,36 @@ const updateSettlementStatus = async (orderId, status) => {
     return res.rows[0];
 };
 
+const updateBatchSettlementStatus = async (orderIds, status) => { 
+    const validStatuses = ['ready_for_payout', 'in_review', 'reconciled'];
+    if (!validStatuses.includes(status)) {
+        throw new Error('Invalid settlement status');
+    }
+
+    if (!Array.isArray(orderIds) || orderIds.length === 0) {
+        return [];
+    }
+
+    const settledAtClause = status === 'reconciled' ? 'NOW()' : 'NULL';
+
+    const query = `
+        UPDATE ota.orders
+        SET settlement_status = $1,
+            settled_at = ${settledAtClause},
+            updated_at = NOW()
+        WHERE id = ANY($2::int[])
+          AND settlement_status != 'awaiting_redemption'
+        RETURNING id, settlement_status, settled_at;
+    `;
+
+    const res = await db.query(query, [status, orderIds]);
+    return res.rows;
+}
+
 module.exports = {
     getSettlementMetrics,
     getSettlementOrders,
     getAvailablePeriods,
-    updateSettlementStatus
+    updateSettlementStatus,
+    updateBatchSettlementStatus
 };
