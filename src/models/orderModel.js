@@ -656,6 +656,100 @@ const getAvailableTimeSlots = async (productId, packageId) => {
     return res.rows.map(r => r.time_string);
 };
 
+const getAdminTransactions = async ({ search, status, startDate, endDate, page = 1, limit = 25 } = {}) => {
+    const conditions = [];
+    const values = [];
+    let idx = 1;
+
+    // Filter by Status
+    if (status && status !== 'all') {
+        conditions.push(`o.status = $${idx++}`);
+        values.push(status);
+    }
+
+    // Filter by Date Range (created_at)
+    if (startDate) {
+        conditions.push(`o.created_at >= $${idx++}::date`);
+        values.push(startDate);
+    }
+    if (endDate) {
+        conditions.push(`o.created_at <= ($${idx++}::date + INTERVAL '1 day')`);
+        values.push(endDate);
+    }
+
+    // Search by Order ID, Customer, Vendor, or Service Title
+    if (search && search.trim()) {
+        const clean = `%${search.trim()}%`;
+        conditions.push(`(
+            CAST(o.id AS TEXT) ILIKE $${idx}
+            OR ('#TRX-' || o.id::text) ILIKE $${idx}
+            OR u.full_name ILIKE $${idx}
+            OR u.email ILIKE $${idx}
+            OR p.title ILIKE $${idx}
+            OR COALESCE(sp.company_name, seller_u.full_name) ILIKE $${idx}
+        )`);
+        values.push(clean);
+        idx++;
+    }
+
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+    // Total Count for Pagination
+    const countRes = await db.query(
+        `SELECT COUNT(DISTINCT o.id) AS total
+         FROM ota.orders o
+         LEFT JOIN ota.users u ON u.id = o.user_id
+         LEFT JOIN ota.order_items oi ON oi.order_id = o.id
+         LEFT JOIN ota.products p ON p.id = oi.product_id
+         LEFT JOIN ota.users seller_u ON seller_u.id = p.seller_id
+         LEFT JOIN ota.seller_profiles sp ON sp.user_id = seller_u.id
+         ${whereClause}`,
+        values
+    );
+
+    const totalCount = parseInt(countRes.rows[0]?.total || 0, 10);
+    const offset = (page - 1) * limit;
+
+    // Fetch Paginated Rows
+    const dataValues = [...values, limit, offset];
+    const dataRes = await db.query(
+        `SELECT 
+            o.id,
+            o.total_amount,
+            o.status,
+            o.payment_status,
+            o.created_at,
+            u.full_name AS customer_name,
+            u.email AS customer_email,
+            p.title AS service_title,
+            p.type AS product_type,
+            COALESCE(
+                (SELECT pp.name FROM ota.product_packages pp WHERE pp.product_id = p.id ORDER BY pp.sort_order ASC LIMIT 1),
+                'Standard'
+            ) AS package_name,
+            COALESCE(sp.company_name, seller_u.full_name, 'Direct MEGATERRA') AS vendor_name
+         FROM ota.orders o
+         LEFT JOIN ota.users u ON u.id = o.user_id
+         LEFT JOIN ota.order_items oi ON oi.order_id = o.id
+         LEFT JOIN ota.products p ON p.id = oi.product_id
+         LEFT JOIN ota.users seller_u ON seller_u.id = p.seller_id
+         LEFT JOIN ota.seller_profiles sp ON sp.user_id = seller_u.id
+         ${whereClause}
+         GROUP BY o.id, u.full_name, u.email, p.id, p.title, p.type, sp.company_name, seller_u.full_name
+         ORDER BY o.id DESC
+         LIMIT $${idx++} OFFSET $${idx++}`,
+        dataValues
+    );
+
+    return {
+        transactions: dataRes.rows,
+        totalCount,
+        totalPages: Math.ceil(totalCount / limit) || 1,
+        currentPage: page,
+        limit
+    };
+}
+
 module.exports = {
     createOrder,
     getOrderById,
@@ -674,5 +768,6 @@ module.exports = {
     getPendingReschedules,
     approveReschedule,
     rejectReschedule,
-    getAvailableTimeSlots
+    getAvailableTimeSlots,
+    getAdminTransactions
 };

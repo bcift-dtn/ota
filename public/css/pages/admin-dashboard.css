@@ -258,3 +258,411 @@
 .btn-admin-reject:hover {
     opacity: 0.9;
 }
+
+/* Transaction Page */
+/* Header Row & Manual Entry Button */
+.admin-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+
+.btn-manual-entry {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--clr-primary);
+    color: white;
+    font-size: var(--fs-2);
+    font-weight: 700;
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-manual-entry:hover {
+    background-color: var(--clr-active-font);
+    transform: translateY(-1px);
+}
+
+.btn-manual-entry svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Filter Bar */
+.admin-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    background: var(--clr-bg);
+    border: 1px solid var(--clr-border);
+    border-radius: 10px;
+    padding: 0.75rem;
+}
+
+.admin-search-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 240px;
+}
+
+.admin-search-icon {
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--clr-placeholder);
+    pointer-events: none;
+}
+
+.admin-search-input {
+    width: 100%;
+    padding: 0.6rem 0.75rem 0.6rem 2.4rem;
+    border: 1px solid var(--clr-border);
+    border-radius: 8px;
+    font-size: var(--fs-3);
+    color: var(--clr-title-font);
+    background-color: #fafbfc;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.admin-search-input:focus {
+    border-color: var(--clr-primary);
+    background-color: white;
+}
+
+/* Date filter */
+.admin-filter-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--clr-border);
+    border-radius: 8px;
+    padding: 0.35rem 0.65rem;
+    background-color: #fafbfc;
+}
+
+.admin-filter-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--clr-placeholder);
+}
+
+.admin-date-input {
+    border: none;
+    background: transparent;
+    font-size: var(--fs-2);
+    color: var(--clr-label-font);
+    outline: none;
+}
+
+.admin-date-sep {
+    color: var(--clr-placeholder);
+    font-size: var(--fs-2);
+}
+
+/* Status select */
+.admin-select-wrapper {
+    position: relative;
+}
+
+.admin-filter-select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 0.55rem 2.25rem 0.55rem 0.85rem;
+    border: 1px solid var(--clr-border);
+    border-radius: 8px;
+    background: #fafbfc url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234B5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.75rem center;
+    background-size: 14px;
+    font-size: var(--fs-3);
+    font-weight: 500;
+    color: var(--clr-neutral);
+    outline: none;
+    cursor: pointer;
+}
+
+.admin-btn-reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.55rem 0.85rem;
+    color: var(--clr-primary);
+    font-size: var(--fs-2);
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.admin-btn-reset:hover {
+    background-color: var(--clr-accent);
+}
+
+.admin-btn-reset svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Table */
+.admin-table-card {
+    background: #FFFFFF;
+    border: 1px solid #EDF2F7;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+.table-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.trx-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+}
+
+.trx-table thead tr {
+    background-color: #F1F4F7;
+}
+
+.trx-table th {
+    padding: 1rem 1.25rem;
+    font-size: 11px;
+    font-weight: 700;
+    color: #4A5568;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    border: none;
+}
+
+.trx-table tbody tr {
+    border-bottom: 1px solid #EDF2F7;
+    transition: background-color 0.15s;
+}
+
+.trx-table tbody tr:hover {
+    background-color: #FBFDFD;
+}
+
+.trx-table td {
+    padding: 1.15rem 1.25rem;
+    font-size: 13.5px;
+    color: #2D3748;
+    vertical-align: middle;
+    border-bottom: 1px solid #EDF2F7;
+}
+
+.trx-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.trx-id {
+    display: block;
+    font-weight: 700;
+    font-size: var(--fs-3);
+    color: var(--clr-title-font);
+}
+
+.trx-name {
+    display: block;
+    font-weight: 600;
+    font-size: var(--fs-3);
+    color: var(--clr-title-font);
+}
+
+.trx-sub {
+    display: block;
+    font-size: var(--fs-1);
+    color: #718096;
+    margin-top: 0.2rem;
+}
+
+.trx-vendor {
+    font-size: var(--fs-3);
+    font-weight: 600;
+    color: var(--clr-label-font);
+}
+
+.trx-amount {
+    font-size: var(--fs-3);
+    font-weight: 700;
+    color: var(--clr-title-font);
+    white-space: nowrap;
+}
+
+/* Status Badges */
+.trx-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    font-size: var(--fs-2);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.status-completed {
+    background-color: #e6f4ea;
+    color: #137333;
+}
+
+.status-completed .status-dot {
+    background-color: #137333;
+}
+
+.status-processing {
+    background-color: #e8f0fe;
+    color: #1a73e8;
+}
+
+.status-processing .status-dot {
+    background-color: #1a73e8;
+}
+
+.status-disputed {
+    background-color: #fce8e6;
+    color: #c5221f;
+}
+
+.status-disputed .status-dot {
+    background-color: #c5221f;
+}
+
+.status-cancelled {
+    background-color: #f1f3f4;
+    color: #5f6368;
+}
+
+.status-cancelled .status-dot {
+    background-color: #8e8e93;
+}
+
+.status-pending {
+    background-color: rgba(245, 158, 11, 0.12);
+    color: #b45309;
+}
+
+.status-pending .status-dot {
+    background-color: #f59e0b;
+}
+
+/* Table Pagination Row */
+.table-pagination-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background-color: #F1F4F5;
+    border-top: 1px solid #EDF2F7;
+}
+
+.trx-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.trx-limit-picker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.trx-limit-label {
+    font-size: 13px;
+    color: #718096;
+    font-weight: 500;
+}
+
+.trx-limit-select {
+    padding: 0.35rem 1.75rem 0.35rem 0.65rem;
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E0;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2D3748;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.trx-limit-select:focus {
+    border-color: #005F60;
+}
+
+.pagination-info {
+    font-size: 13px;
+    color: #718096;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.page-num, 
+.page-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 0.4rem;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4A5568;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.page-num:hover, 
+.page-arrow:hover {
+    background-color: #E2E8F0;
+}
+
+.page-num.active {
+    background-color: #005F60;
+    color: #FFFFFF;
+}
+
+.page-arrow svg {
+    width: 15px;
+    height: 15px;
+}
+
+.page-ellipsis {
+    font-size: 13px;
+    color: #A0AEC0;
+    padding: 0 0.25rem;
+}

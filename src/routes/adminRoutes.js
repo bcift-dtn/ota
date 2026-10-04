@@ -18,4 +18,6 @@ router.post('/reschedule-requests/:id/approve', adminController.approveReschedul
 
 router.post('/reschedule-requests/:id/reject', adminController.rejectRescheduleRequest);
 
+router.get('/transactions', adminController.getTransactions);
+
 module.exports = router;

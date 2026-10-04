@@ -75,11 +75,52 @@ const rejectRescheduleRequest = async (req, res) => {
     }
 };
 
+const getTransactions = async (req, res) => {
+    try { 
+        const page = parseInt(req.query.page, 10) || 1;
+        const limit = parseInt(req.query.limit, 10) || 25;
+        const search = req.query.search || '';
+        const status = req.query.status || 'all';
+        const startDate = req.query.startDate || '';
+        const endDate = req.query.endDate || '';
+
+        const data = await orderModel.getAdminTransactions({
+            search,
+            status,
+            startDate,
+            endDate,
+            page,
+            limit
+        });
+
+        return res.render('pages/admin-dashboard/transactions', {
+            activeMenu: 'transactions',
+            transactions: data.transactions,
+            pagination: {
+                totalCount: data.totalCount,
+                totalPages: data.totalPages,
+                currentPage: data.currentPage,
+                limit: data.limit
+            },
+            filters: {
+                search,
+                status,
+                startDate,
+                endDate
+            }
+        });
+    } catch (err) {
+        console.error('[ADMIN] Get transactions error:', err.message);
+        return res.status(500).render('pages/404', { message: 'Failed to load transactions.' });
+    }
+}
+
 module.exports = {
     getCancelRequests,
     approveCancelRequest,
     rejectCancelRequest,
     getRescheduleRequests,
     approveRescheduleRequest,
-    rejectRescheduleRequest
+    rejectRescheduleRequest,
+    getTransactions
 };
