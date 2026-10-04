@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/layout.css" />
     <link rel="stylesheet" href="/css/components.css" />
     <link rel="stylesheet" href="/css/pages/admin-dashboard.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
   </head>
   <body>
     <%- include('../../partials/navbar') %>
@@ -64,7 +65,10 @@
 
         <!-- Filter Bar -->
         <form action="/admin/transactions" method="GET" class="admin-filter-bar">
-          <!-- Search input -->
+          <!-- Hidden Limit to preserve row count when filtering -->
+          <input type="hidden" name="limit" value="<%= pagination.limit %>" />
+
+          <!-- Search Input -->
           <div class="admin-search-wrapper">
             <i data-lucide="search" class="admin-search-icon"></i>
             <input 
@@ -84,6 +88,7 @@
               name="startDate" 
               value="<%= filters.startDate %>" 
               class="admin-date-input" 
+              placeholder="Start Date"
               title="Start Date"
             />
             <span class="admin-date-sep">–</span>
@@ -92,21 +97,26 @@
               name="endDate" 
               value="<%= filters.endDate %>" 
               class="admin-date-input" 
+              placeholder="End Date"
               title="End Date"
             />
           </div>
 
           <!-- Status Select -->
           <div class="admin-select-wrapper">
-            <select name="status" class="admin-filter-select" onchange="this.form.submit()">
+            <select name="status" class="admin-filter-select">
               <option value="all" <%= filters.status === 'all' ? 'selected' : '' %>>All Statuses</option>
-              <option value="completed" <%= filters.status === 'completed' ? 'selected' : '' %>>Completed</option>
-              <option value="paid" <%= filters.status === 'paid' ? 'selected' : '' %>>Processing</option>
-              <option value="disputed" <%= filters.status === 'disputed' ? 'selected' : '' %>>Disputed</option>
+              <option value="paid" <%= (filters.status === 'paid' || filters.status === 'completed') ? 'selected' : '' %>>Paid / Completed</option>
               <option value="pending" <%= filters.status === 'pending' ? 'selected' : '' %>>Pending</option>
               <option value="cancelled" <%= filters.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+              <option value="disputed" <%= filters.status === 'disputed' ? 'selected' : '' %>>Disputed</option>
             </select>
           </div>
+
+          <!-- Explicit Filter Button -->
+          <button type="submit" class="admin-btn-filter">
+            <i data-lucide="filter"></i> FILTER
+          </button>
 
           <!-- Reset Filter Button -->
           <a href="/admin/transactions" class="admin-btn-reset">
@@ -138,7 +148,7 @@
                   <% transactions.forEach(tx => { %>
                     <tr>
                       <td class="trx-col-main">
-                        <span class="trx-id">#TRX-<%= String(tx.id).padStart(5, '0') %></span>
+                        <span class="trx-id">#MT-<%= (tx.product_type || 'ORDER').toUpperCase() %>-<%= tx.id %></span>
                         <span class="trx-sub">
                           <%= new Date(tx.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) %>, 
                           <%= new Date(tx.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) %> WIB
@@ -188,15 +198,12 @@
               <div class="trx-footer-left">
                 <div class="trx-limit-picker">
                   <label for="limitSelect" class="trx-limit-label">Show:</label>
-                  <select 
-                    id="limitSelect" 
-                    class="trx-limit-select"
-                    onchange="window.location.href='?page=1&limit=' + this.value + '&search=<%= encodeURIComponent(filters.search) %>&status=<%= filters.status %>&startDate=<%= filters.startDate %>&endDate=<%= filters.endDate %>'"
-                  >
+                  <select id="limitSelect" class="trx-limit-select">
                     <option value="25" <%= pagination.limit === 25 ? 'selected' : '' %>>25 rows</option>
                     <option value="50" <%= pagination.limit === 50 ? 'selected' : '' %>>50 rows</option>
                     <option value="100" <%= pagination.limit === 100 ? 'selected' : '' %>>100 rows</option>
                   </select>
+
                 </div>
 
                 <span class="pagination-info">
@@ -239,5 +246,7 @@
 
     <%- include('../../partials/footer') %>
     <%- include('../../partials/loginModal') %>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="/js/admin-transactions.js"></script>
   </body>
 </html>

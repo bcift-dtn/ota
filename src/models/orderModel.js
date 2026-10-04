@@ -663,8 +663,14 @@ const getAdminTransactions = async ({ search, status, startDate, endDate, page =
 
     // Filter by Status
     if (status && status !== 'all') {
-        conditions.push(`o.status = $${idx++}`);
-        values.push(status);
+        if (status === 'completed' || status === 'paid') {
+            conditions.push(`o.status IN ('paid', 'completed')`);
+        } else if (status === 'cancelled') {
+            conditions.push(`o.status IN ('cancelled', 'cancel_requested')`);
+        } else {
+            conditions.push(`o.status = $${idx++}`);
+            values.push(status);
+        }
     }
 
     // Filter by Date Range (created_at)
@@ -682,7 +688,8 @@ const getAdminTransactions = async ({ search, status, startDate, endDate, page =
         const clean = `%${search.trim()}%`;
         conditions.push(`(
             CAST(o.id AS TEXT) ILIKE $${idx}
-            OR ('#TRX-' || o.id::text) ILIKE $${idx}
+            OR ('#MT-' || UPPER(COALESCE(p.type, 'ORDER')) || '-' || o.id::text) ILIKE $${idx}
+            OR ('MT-' || UPPER(COALESCE(p.type, 'ORDER')) || '-' || o.id::text) ILIKE $${idx}
             OR u.full_name ILIKE $${idx}
             OR u.email ILIKE $${idx}
             OR p.title ILIKE $${idx}
