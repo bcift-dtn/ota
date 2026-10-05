@@ -153,7 +153,7 @@
               <% orders.forEach(order =>  { %> 
                 <% 
                   const isPaid = order.payment_status === 'paid';
-                  const isCancelled = ['cancelled', 'cancel_requested'].includes(order.status) || order.payment_status === 'failed';
+const isCancelled = ['cancelled', 'cancel_requested'].includes(order.status) || ['failed', 'refunded'].includes(order.payment_status);
                   const orderDate = order.start_date ? new Date(order.start_date) : new Date(order.created_at);
 
                   let departTime = '';
@@ -188,7 +188,10 @@
                   let badgeText = 'Confirmed & Paid';
                   let badgeClass = 'badge-confirmed';
                   if (isCancelled) {
-                    if (order.status === 'cancel_requested') {
+                    if (order.payment_status === 'refunded' || order.status === 'refunded') {
+                      badgeText = 'Refunded';
+                      badgeClass = 'badge-cancelled';
+                    } else if (order.status === 'cancel_requested') {
                       badgeText = 'Cancel Requested';
                       badgeClass = 'badge-awaiting';
                     } else {

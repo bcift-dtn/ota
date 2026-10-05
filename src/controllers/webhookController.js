@@ -59,6 +59,13 @@ const handleWebhook = async (req, res) => {
 
         if (dbOrderId && txStatus === 'captured' && inquiryStatus === 'paid') {
             try {
+                // Prevent: Do not overwrite orders that are already cancelled or refunded
+                const currentOrder = await getOrderById(dbOrderId);
+                if (['cancelled', 'refunded', 'cancel_requested'].includes(currentOrder?.status) || currentOrder?.payment_status === 'refunded') {
+                    console.log(`[WEBHOOK] Order #${dbOrderId} is already ${currentOrder.status}/${currentOrder.payment_status}. Skipping payment.received overwrite.`);
+                    return res.json({ status: 'ok', validateSignature });
+                }
+
                 await updateOrderPaymentStatus(dbOrderId, {
                     status: 'paid',
                     paymentStatus: 'paid',

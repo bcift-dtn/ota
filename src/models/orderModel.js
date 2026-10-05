@@ -103,8 +103,8 @@ const updateOrderPaymentStatus = async (orderId, { status, paymentStatus, inquir
     await db.query(
         `
             UPDATE ota.orders SET
-                status          = COALESCE($2, status),
-                payment_status  = COALESCE($3, payment_status),
+                status = CASE WHEN status IN ('cancelled', 'refunded', 'cancel_requested') THEN status ELSE COALESCE($2, status) END,
+                payment_status = CASE WHEN payment_status = 'refunded' THEN payment_status ELSE COALESCE($3, payment_status) END,
                 inquiry_id      = COALESCE($4, inquiry_id),
                 transaction_id  = COALESCE($5, transaction_id),
                 auth_code       = COALESCE($6, auth_code),
@@ -116,7 +116,6 @@ const updateOrderPaymentStatus = async (orderId, { status, paymentStatus, inquir
         [orderId, status, paymentStatus, inquiryId, transactionId, authCode, maskedCard]
     );
 };
-
 
 // My Order
 const getUserOrderCounts = async (userId) => {
@@ -757,6 +756,58 @@ const getAdminTransactions = async ({ search, status, startDate, endDate, page =
     };
 }
 
+const getCancellationById = async (cancelId) => {
+    const res = await db.query(
+        `SELECT oc.*, o.transaction_id, o.total_amount, p.type AS product_type
+         FROM ota.order_cancellations oc
+         JOIN ota.orders o ON o.id = oc.order_id
+         JOIN ota.order_items oi ON oi.order_id = o.id
+         JOIN ota.products p ON p.id = oi.product_id
+         WHERE oc.id = $1 AND oc.status = 'pending'
+         LIMIT 1`,
+        [cancelId]
+    );
+    return res.rows[0] || null;
+};
+
+const recordOrderRefund = async ({ orderId, cancelId, adminId, partnerRefundNo, refundAmount }) => {
+    const client = await db.connect();
+    try {
+        await client.query('BEGIN');
+
+        await client.query(
+            `UPDATE ota.orders 
+             SET status = 'cancelled', 
+                 payment_status = 'refunded', 
+                 updated_at = NOW() 
+             WHERE id = $1`,
+            [orderId]
+        );
+
+        if (cancelId) {
+            await client.query(
+                `UPDATE ota.order_cancellations 
+                 SET status = 'approved', 
+                     reviewed_by = $2,
+                     yokke_refund_id = $3, 
+                     refund_amount = COALESCE($4, refund_amount),
+                     reviewed_at = NOW() 
+                 WHERE id = $1`,
+                [cancelId, adminId || null, partnerRefundNo, refundAmount]
+            );
+        }
+
+
+        await client.query('COMMIT');
+        return true;
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
+};
+
 module.exports = {
     createOrder,
     getOrderById,
@@ -776,5 +827,7 @@ module.exports = {
     approveReschedule,
     rejectReschedule,
     getAvailableTimeSlots,
-    getAdminTransactions
+    getAdminTransactions,
+    recordOrderRefund,
+    getCancellationById
 };

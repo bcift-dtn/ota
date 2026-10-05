@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const axios = require('axios');
 
 const BASE_URL = process.env.YOKKE_BASE_URL;
@@ -61,4 +62,41 @@ const createInquiry = async ({ orderId, amount, itemName, quantity, customer }) 
     return res.data;
 }
 
-module.exports = {getAccessToken, createInquiry};
+const refundPayment = async ({ orderId, transactionId, partnerRefundNo, amount, reason }) => {
+    const token = await getAccessToken();
+    const signPath = '/v2.0/payment/refund';
+
+    const formattedAmount = (typeof amount === 'number' ? amount : parseFloat(amount)).toFixed(2);
+
+    const body = JSON.stringify({
+        merchantId: process.env.YOKKE_MERCHANT_ID,
+        originalPartnerReferenceNo: orderId,
+        originalReferenceNo: transactionId,
+        partnerRefundNo,
+        refundAmount: { value: formattedAmount, currency: 'IDR' },
+        reason,
+        additionalInfo: { traceNo: String(Date.now()) }
+    });
+    const ts = new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 19) + '+07:00';
+    const bodyHash = crypto.createHash('sha256').update(body).digest('hex');
+    const signature = crypto
+        .createHmac('sha512', process.env.YOKKE_SECRET_KEY)
+        .update(['POST', signPath, token, bodyHash, ts].join(':'))
+        .digest('base64');
+
+    const res = await axios.post(`${BASE_URL}/gateway/IPGAPI${signPath}`, body, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'X-TIMESTAMP': ts,
+            'X-SIGNATURE': signature,
+            'X-PARTNER-ID': API_KEY,
+            'X-EXTERNAL-ID': String(Date.now()),
+            'CHANNEL-ID': '00000'
+        }
+    });
+    return res.data;
+};
+
+
+module.exports = {getAccessToken, createInquiry, refundPayment};
