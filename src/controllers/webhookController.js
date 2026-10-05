@@ -56,6 +56,16 @@ const handleWebhook = async (req, res) => {
         const dbOrderId = parseDbOrderId(body?.inquiry?.order?.id);
         const txStatus = body?.transaction?.status;
         const inquiryStatus = body?.inquiry?.status;
+        const voidStatus = body?.transaction?.voidStatus;
+
+        if (dbOrderId && voidStatus === 'accepted') {
+            console.log(`[WEBHOOK] Order #${dbOrderId} VOID accepted by gateway. Updating to cancelled/refunded.`);
+            await updateOrderPaymentStatus(dbOrderId, {
+                status: 'cancelled',
+                paymentStatus: 'refunded'
+            });
+            return res.json({ status: 'ok', validateSignature });
+        }
 
         if (dbOrderId && txStatus === 'captured' && inquiryStatus === 'paid') {
             try {
@@ -124,7 +134,8 @@ const handleWebhook = async (req, res) => {
                         await db.query(
                             `
                                 INSERT INTO ota.secret_codes(order_item_id, reference_id, secret_code, is_used)
-                                VALUES ($1, $2, $3, false);
+                                VALUES ($1, $2, $3, false)
+                                ON CONFLICT (order_item_id) DO NOTHING;
                             `,
                             [orderItemId, referenceId, secretCode]
                         );

@@ -186,13 +186,14 @@ const generateInvoicePDF = (order, res) => {
         { title: 'Amount (IDR)', x: 470, width: 80, align: 'right' }
     ];
 
-    const rowHeight = 24;
+    const rowHeight = 19;
+    const textOffsetY = 5;
 
     // Table Header
     doc.rect(leftCol, y, pageWidth, rowHeight).strokeColor('#000000').lineWidth(1).stroke();
     doc.font('Helvetica-Bold').fontSize(8.5).fillColor('#000000');
     cols.forEach(c => {
-        doc.text(c.title, c.x + 3, y + 7, { width: c.width - 6, align: c.align });
+        doc.text(c.title, c.x + 3, y + textOffsetY, { width: c.width - 6, align: c.align });
     });
     
     let currentX = leftCol;
@@ -250,12 +251,12 @@ const generateInvoicePDF = (order, res) => {
     doc.font('Helvetica').fontSize(8.5).fillColor('#000000');
     rows.forEach((row, idx) => {
         doc.rect(leftCol, y, pageWidth, rowHeight).strokeColor('#000000').lineWidth(1).stroke();
-        doc.text(String(idx + 1), cols[0].x + 3, y + 7, { width: cols[0].width - 6, align: 'center' });
-        doc.text(row.name, cols[1].x + 3, y + 7, { width: cols[1].width - 6, align: 'left' });
-        doc.text(row.desc, cols[2].x + 3, y + 7, { width: cols[2].width - 6, align: 'left' });
-        doc.text(String(row.qty), cols[3].x + 3, y + 7, { width: cols[3].width - 6, align: 'center' });
-        doc.text(formatCurrency(row.price), cols[4].x + 3, y + 7, { width: cols[4].width - 6, align: 'right' });
-        doc.font('Helvetica-Bold').text(formatCurrency(row.amount), cols[5].x + 3, y + 7, { width: cols[5].width - 6, align: 'right' }).font('Helvetica');
+        doc.text(String(idx + 1), cols[0].x + 3, y + textOffsetY, { width: cols[0].width - 6, align: 'center' });
+        doc.text(row.name, cols[1].x + 3, y + textOffsetY, { width: cols[1].width - 6, align: 'left' });
+        doc.text(row.desc, cols[2].x + 3, y + textOffsetY, { width: cols[2].width - 6, align: 'left' });
+        doc.text(String(row.qty), cols[3].x + 3, y + textOffsetY, { width: cols[3].width - 6, align: 'center' });
+        doc.text(formatCurrency(row.price), cols[4].x + 3, y + textOffsetY, { width: cols[4].width - 6, align: 'right' });
+        doc.font('Helvetica-Bold').text(formatCurrency(row.amount), cols[5].x + 3, y + textOffsetY, { width: cols[5].width - 6, align: 'right' }).font('Helvetica');
 
         let rX = leftCol;
         cols.slice(0, -1).forEach(c => {
@@ -272,8 +273,8 @@ const generateInvoicePDF = (order, res) => {
     const drawSummaryRow = (label, amount, isBold = false) => {
         doc.rect(totalsLeft, y, totalsWidth, rowHeight).strokeColor('#000000').lineWidth(1).stroke();
         doc.font(isBold ? 'Helvetica-Bold' : 'Helvetica').fontSize(8.5).fillColor('#000000');
-        doc.text(label, cols[4].x + 3, y + 7, { width: cols[4].width - 6, align: 'left' });
-        doc.text(formatCurrency(amount), cols[5].x + 3, y + 7, { width: cols[5].width - 6, align: 'right' });
+        doc.text(label, cols[4].x + 3, y + textOffsetY, { width: cols[4].width - 6, align: 'left' });
+        doc.text(formatCurrency(amount), cols[5].x + 3, y + textOffsetY, { width: cols[5].width - 6, align: 'right' });
         doc.moveTo(cols[5].x, y).lineTo(cols[5].x, y + rowHeight).stroke();
         y += rowHeight;
     };
