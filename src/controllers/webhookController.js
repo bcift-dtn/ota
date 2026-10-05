@@ -19,8 +19,10 @@ const generateCode = (prefix) => {
 
 // Get DB orderId
 const parseDbOrderId = (yokkeOrderId = '') => {
+    if (!yokkeOrderId.startsWith('MT-')) return null;
     const parts = yokkeOrderId.split('-');
-    return parseInt(parts.at(-1)) || null;
+    const id = parseInt(parts.at(-1), 10);
+    return (Number.isInteger(id) && id > 0 && id <= 2147483647) ? id : null;
 };
 
 const handleWebhook = async (req, res) => {
