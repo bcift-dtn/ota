@@ -1,5 +1,6 @@
 const yokkeService = require('../services/yokkeService');
 const orderModel = require('../models/orderModel');
+const { cancelBooking } = require('../services/majesticService');
 
 const getCancelRequests = async (req, res) => {
     try {
@@ -27,6 +28,35 @@ const approveCancelRequest = async (req, res) => {
         const orderIdentifier = `MT-${(cancel.product_type || 'ORDER').toUpperCase()}-${cancel.order_id}`;
         const fullAmount = parseFloat(cancel.total_amount);
         const partnerRefundNo = `REF-${orderIdentifier}-${Date.now()}`;
+
+        if (cancel.product_type === 'ferry' && cancel.vendor_booking_code) {
+            try {
+                const storedPassengers = typeof cancel.passengers === 'string' 
+                    ? JSON.parse(cancel.passengers) 
+                    : (cancel.passengers || {});
+                const firstPassport = storedPassengers?.passengers?.[0]?.passportNo || '';
+
+                if (firstPassport) {
+                    console.log(`[MFF] Cancelling booking ${cancel.vendor_booking_code} on Majestic Fast Ferry...`);
+                    const mffCancelRes = await cancelBooking({
+                        bookingCode: cancel.vendor_booking_code,
+                        passportNo: firstPassport
+                    });
+
+                    const cancelStatus = Array.isArray(mffCancelRes) ? mffCancelRes[0]?.BookingStatus : mffCancelRes?.BookingStatus;
+                    console.log(`[MFF] Majestic cancel response status: ${cancelStatus}`);
+                    if (cancel.order_item_id) {
+                        const db = require('../config/db');
+                        await db.query(
+                            `UPDATE ota.order_items SET vendor_status = $1 WHERE id = $2`,
+                            [cancelStatus || 'C', cancel.order_item_id]
+                        );
+                    }
+                }
+            } catch (mffErr) {
+                console.error('[MFF] Failed to cancel booking on Majestic:', mffErr.message);
+            }
+        }
 
         if (cancel.transaction_id) {
             console.log(`[REFUND] Sending full refund (${fullAmount}) to Yokke for order ${orderIdentifier}...`);

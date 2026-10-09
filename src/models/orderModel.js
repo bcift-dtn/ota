@@ -758,7 +758,8 @@ const getAdminTransactions = async ({ search, status, startDate, endDate, page =
 
 const getCancellationById = async (cancelId) => {
     const res = await db.query(
-        `SELECT oc.*, o.transaction_id, o.total_amount, p.type AS product_type
+        `SELECT oc.*, o.transaction_id, o.total_amount, p.type AS product_type,
+                oi.id AS order_item_id, oi.vendor_booking_code, oi.passengers
          FROM ota.order_cancellations oc
          JOIN ota.orders o ON o.id = oc.order_id
          JOIN ota.order_items oi ON oi.order_id = o.id
@@ -769,6 +770,7 @@ const getCancellationById = async (cancelId) => {
     );
     return res.rows[0] || null;
 };
+
 
 const recordOrderRefund = async ({ orderId, cancelId, adminId, partnerRefundNo, refundAmount }) => {
     const client = await db.connect();

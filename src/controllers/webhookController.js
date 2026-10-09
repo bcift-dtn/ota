@@ -119,7 +119,12 @@ const handleWebhook = async (req, res) => {
                             );
                             console.log(`[MFF] Booking created: ${mffBooking.BookingCode} for order #${dbOrderId}`);
                         } else {
-                            console.error(`[MFF] Booking failed for order #${dbOrderId}:`, JSON.stringify(mffResult));
+                            const errMessage = mffBooking?.Message || JSON.stringify(mffResult);
+                            await db.query(
+                                `UPDATE ota.order_items SET vendor_status = 'FAILED', notes = CONCAT(COALESCE(notes, ''), ' [MFF Error: ', $1::text, ']') WHERE id = $2`,
+                                [errMessage.slice(0, 200), orderItemId]
+                            );
+                            console.error(`[MFF] Booking failed for order #${dbOrderId}:`, errMessage);
                         }
                     }
                 } else {

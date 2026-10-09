@@ -434,6 +434,50 @@ const confirmCheckout = async (req, res) => {
         });
       }
 
+      const depDate = new Date(draftOrder.departureDate);
+      const minExpiry = new Date(depDate);
+      minExpiry.setDate(minExpiry.getDate() + 185);
+      const today = new Date();
+      const seenPassports = new Set();
+
+      for (let i = 0; i < passengers.length; i++) {
+        const p = passengers[i];
+        const pNo = (p.passportNo || '').trim();
+        const expDate = new Date(p.passportExpiredDate);
+        const bDate = new Date(p.birthDate);
+
+        if (!pNo || pNo.length > 10) {
+          console.warn(`[CHECKOUT] Passenger ${i + 1} invalid passport number length: ${pNo}`);
+          return res.redirect('/products/checkout?error=invalid_passport_number');
+        }
+
+        // Check for duplicate passport number
+        const upperPNo = pNo.toUpperCase();
+        if (seenPassports.has(upperPNo)) {
+          console.warn(`[CHECKOUT] Duplicate passport number in order: ${pNo}`);
+          return res.redirect('/products/checkout?error=duplicate_passport_number');
+        }
+        seenPassports.add(upperPNo);
+
+        if (isNaN(expDate.getTime()) || expDate < minExpiry) {
+          console.warn(`[CHECKOUT] Passenger ${i + 1} passport expiry less than 185 days: ${p.passportExpiredDate}`);
+          return res.redirect('/products/checkout?error=invalid_passport_expiry');
+        }
+
+        if (isNaN(bDate.getTime()) || bDate >= today) {
+          console.warn(`[CHECKOUT] Passenger ${i + 1} invalid birth date: ${p.birthDate}`);
+          return res.redirect('/products/checkout?error=invalid_birth_date');
+        }
+      }
+
+      if (draftOrder.journeyType === '2') {
+        const retDate = new Date(draftOrder.returnDate);
+        if (!draftOrder.returnTripCode || isNaN(retDate.getTime()) || retDate < depDate) {
+          console.warn(`[CHECKOUT] Invalid return trip details: ${draftOrder.returnTripCode}, ${draftOrder.returnDate}`);
+          return res.redirect('/products/checkout?error=invalid_return_trip');
+        }
+      }
+
       req.session.draftOrder.passengers = passengers;
       req.session.draftOrder.ferrySnapshot = {
         journeyType:          draftOrder.journeyType || '1',

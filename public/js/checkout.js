@@ -45,6 +45,7 @@ flatpickr('.expiry-date-picker', {
 checkoutForm?.addEventListener('submit', e => {
     const errorBox = document.getElementById('checkoutErrorBox');
     const passportCards = document.querySelectorAll('.visitor-card');
+    const seenPassports = new Set();
     let errorMessage = '';
 
     for (let i = 0; i < passportCards.length; i++) {
@@ -54,10 +55,16 @@ checkoutForm?.addEventListener('submit', e => {
         const birthDate = document.querySelector(`[name="birthDate_${idx}"]`);
 
         if (passportNo) {
-            if (passportNo.value.trim().length > 10) {
+            const pVal = passportNo.value.trim().toUpperCase();
+            if (pVal.length > 10) {
                 errorMessage = `Passenger ${idx}: Passport number cannot exceed 10 characters.`;
                 break;
             }
+            if (seenPassports.has(pVal)) {
+                errorMessage = `Passenger ${idx}: Duplicate passport number (${pVal}). Each passenger must have a unique passport.`;
+                break;
+            }
+            seenPassports.add(pVal);
         }
 
         if (expiryDate && departureDateVal) {

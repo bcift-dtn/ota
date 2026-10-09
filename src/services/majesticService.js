@@ -130,6 +130,29 @@ const bookFerry = ({ orderId, journeyType, isReturnOpenTicket, departTripCode,
     })
 }
 
+const cancelBooking = ({ bookingCode, passportNo }) => {
+    return mffPost('MFFCancelBooking', {
+        BookingCode: bookingCode,
+        PassportNo: passportNo
+    });
+};
+
+const checkBooking = ({ bookingCode = '', bookingName = '', passportNo }) => {
+    return mffPost('MFFCheckBooking', {
+        BookingCode: bookingCode,
+        BookingName: bookingName,
+        PassportNo: passportNo
+    });
+};
+
 module.exports = {
-    getSchedule, getPriceList, getTripCapacity, checkDeposit, getPriceByTripCode, getCountryList, bookFerry
+    getSchedule, 
+    getPriceList, 
+    getTripCapacity, 
+    checkDeposit, 
+    getPriceByTripCode, 
+    getCountryList, 
+    bookFerry,
+    cancelBooking,
+    checkBooking
 };
