@@ -191,6 +191,9 @@ const isCancelled = ['cancelled', 'cancel_requested'].includes(order.status) || 
                     if (order.status === 'cancel_requested') {
                       badgeText = 'Cancel Requested';
                       badgeClass = 'badge-awaiting';
+                    } else if (order.payment_status === 'refund_pending') {
+                      badgeText = 'Refund in Progress';
+                      badgeClass = 'badge-awaiting';
                     } else {
                       badgeText = 'Cancelled';
                       badgeClass = 'badge-cancelled';
@@ -300,6 +303,7 @@ const isCancelled = ['cancelled', 'cancel_requested'].includes(order.status) || 
                         <% 
                           let payLabel = 'Unpaid';
                           if (order.payment_status === 'paid') payLabel = 'Paid';
+                          else if (order.payment_status === 'refund_pending') payLabel = 'Refund in Progress';
                           else if (order.payment_status === 'refunded') payLabel = 'Refunded';
                         %>
                         <%= paymentDisplay %> (<%= payLabel %>)

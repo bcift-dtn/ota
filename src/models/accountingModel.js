@@ -252,7 +252,7 @@ const completeManualRefund = async ({ cancelId, orderId, accountingId, refundRef
 
         await client.query(
             `UPDATE ota.order_cancellations 
-             SET status = 'refunded', 
+             SET status = 'completed', 
                  refunded_at = NOW(), 
                  refunded_by = $2, 
                  refund_reference = $3 

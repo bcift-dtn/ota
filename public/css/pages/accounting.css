@@ -69,6 +69,12 @@
   transition: all 0.2s ease;
 }
 
+.accounting-sidebar-nav a:hover,
+.accounting-sidebar-nav a:focus,
+.accounting-sidebar-nav a.active {
+  text-decoration: none;
+}
+
 .accounting-sidebar-nav a:hover {
   background: #E6F3F3;
   color: #005F60;
@@ -128,9 +134,17 @@
   transition: all 0.2s;
 }
 
+.refund-tab:hover,
+.refund-tab:focus {
+  text-decoration: none;
+  background: #F1F5F9;
+  color: #4A5568;
+}
+
 .refund-tab.active {
   background: #E6F3F3;
   color: #005F60;
+  text-decoration: none;
 }
 
 .tab-badge {
@@ -261,7 +275,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 8px;
+  padding: 6px 10px;
   border-radius: 99px;
   font-size: 11px;
   font-weight: 600;
@@ -418,8 +432,8 @@
 /* Accounting & Settlement Page */
 .accounting-main {
   background-color: #FFFFFF;
-  min-height: calc(100vh - 160px);
-  padding: 2.5rem 2rem 5rem;
+  min-height: calc(100vh - 4.5rem);
+  padding: 6rem 2rem 5rem;
 }
 
 .accounting-container {
@@ -430,7 +444,7 @@
   flex-direction: column;
   gap: 2rem;
 }
-  
+
 /* Page Header */
 .accounting-header {
   margin-bottom: -0.25rem;
