@@ -81,6 +81,15 @@ app.use('/ferry', ferryRoutes);
 app.get('/about', (req, res) => res.render('pages/about'));
 app.get('/contact', contactController.renderContactPage);
 app.post('/contact/send', contactController.sendMessage);
+app.get('/terms', (req, res) => {
+  res.render('pages/terms', {
+    breadcrumbs: [
+      { label: 'Home', url: '/' },
+      { label: 'Terms & Conditions' }
+    ]
+  });
+});
+app.get('/terms-and-conditions', (req, res) => res.redirect('/terms'));
 app.post('/api/webhook/yokke', webhookController.handleWebhook);
 app.use((req, res) => {
   res.status(404).render('pages/404', { message: 'Page not found.' });
