@@ -199,10 +199,83 @@ const updateBatchSettlementStatus = async (orderIds, status) => {
     return res.rows;
 }
 
+const getRefundRequests = async (status = 'pending') => {
+    // status: 'pending' (approved by admin, awaiting payout) or 'refunded' (payout completed)
+    const isCompleted = status === 'refunded';
+    const query = `
+        SELECT
+            oc.id AS cancel_id,
+            oc.order_id,
+            oc.reason,
+            oc.refund_amount,
+            oc.cancel_fee,
+            oc.status AS cancel_status,
+            oc.bank_name,
+            oc.bank_account_no,
+            oc.bank_account_holder,
+            oc.created_at AS requested_at,
+            oc.reviewed_at AS approved_at,
+            oc.refunded_at,
+            oc.refund_reference,
+            o.total_amount,
+            o.payment_status,
+            o.transaction_id,
+            p.title AS product_title,
+            p.type AS product_type,
+            u.full_name AS customer_name,
+            u.email AS customer_email,
+            u.phone AS customer_phone
+        FROM ota.order_cancellations oc
+        JOIN ota.orders o ON o.id = oc.order_id
+        JOIN ota.order_items oi ON oi.order_id = o.id
+        JOIN ota.products p ON p.id = oi.product_id
+        JOIN ota.users u ON u.id = o.user_id
+        WHERE oc.status = ${isCompleted ? "'completed'" : "'approved'"}
+          AND o.payment_status = ${isCompleted ? "'refunded'" : "'refund_pending'"}
+        ORDER BY oc.reviewed_at DESC
+    `;
+    const res = await db.query(query);
+    return res.rows;
+};
+
+const completeManualRefund = async ({ cancelId, orderId, accountingId, refundReference }) => {
+    const client = await db.connect();
+    try {
+        await client.query('BEGIN');
+
+        await client.query(
+            `UPDATE ota.orders 
+             SET payment_status = 'refunded', updated_at = NOW() 
+             WHERE id = $1`,
+            [orderId]
+        );
+
+        await client.query(
+            `UPDATE ota.order_cancellations 
+             SET status = 'refunded', 
+                 refunded_at = NOW(), 
+                 refunded_by = $2, 
+                 refund_reference = $3 
+             WHERE id = $1`,
+            [cancelId, accountingId, refundReference || null]
+        );
+
+        await client.query('COMMIT');
+        return true;
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
+};
+
 module.exports = {
     getSettlementMetrics,
     getSettlementOrders,
     getAvailablePeriods,
     updateSettlementStatus,
-    updateBatchSettlementStatus
+    updateBatchSettlementStatus,
+    getRefundRequests,
+    completeManualRefund
 };

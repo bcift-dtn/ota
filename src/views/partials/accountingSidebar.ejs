@@ -1,0 +1,23 @@
+<aside class="accounting-sidebar">
+  <div class="accounting-sidebar-logo">
+    <i data-lucide="calculator"></i> Accounting
+  </div>
+  <ul class="accounting-sidebar-nav">
+    <li>
+      <a
+        href="/accounting"
+        class="<%= activeMenu === 'settlement' || activeMenu === 'accounting' ? 'active' : '' %>"
+      >
+        <i data-lucide="landmark"></i> Vendor Settlement
+      </a>
+    </li>
+    <li>
+      <a
+        href="/accounting/refunds"
+        class="<%= activeMenu === 'refunds' ? 'active' : '' %>"
+      >
+        <i data-lucide="receipt"></i> Customer Refunds
+      </a>
+    </li>
+  </ul>
+</aside>

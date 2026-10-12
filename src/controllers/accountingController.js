@@ -206,10 +206,49 @@ const updateBatchSettlementStatus = async (req, res) => {
     }
 }
 
+const getRefundsDashboard = async (req, res) => {
+    try {
+        const tab = req.query.tab === 'history' ? 'history' : 'pending';
+        const requests = await accountingModel.getRefundRequests(tab === 'history' ? 'refunded' : 'pending');
+
+        return res.render('pages/accounting/refunds', {
+            activeMenu: 'refunds',
+            tab,
+            requests
+        });
+    } catch (err) {
+        console.error('[ACCOUNTING] Refunds queue error:', err.message);
+        return res.status(500).render('pages/404', { message: 'Failed to load refund queue.' });
+    }
+};
+
+const completeRefund = async (req, res) => {
+    try {
+        const cancelId = req.params.id;
+        const { orderId, refundReference } = req.body;
+        const accountingId = req.session?.user?.id;
+
+        await accountingModel.completeManualRefund({
+            cancelId,
+            orderId,
+            accountingId,
+            refundReference: refundReference?.trim() || null
+        });
+
+        return res.redirect('/accounting/refunds?success=Refund+marked+as+completed');
+    } catch (err) {
+        console.error('[ACCOUNTING] Complete refund error:', err.message);
+        return res.redirect('/accounting/refunds?error=Failed+to+complete+refund');
+    }
+};
+
+
 module.exports = {
     getSettlementDashboard,
     exportSettlementCSV,
     updateSettlementStatus,
-    updateBatchSettlementStatus
+    updateBatchSettlementStatus,
+    getRefundsDashboard,
+    completeRefund
 };
 

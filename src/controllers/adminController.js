@@ -58,54 +58,38 @@ const approveCancelRequest = async (req, res) => {
             }
         }
 
-        if (cancel.transaction_id) {
-            console.log(`[REFUND] Sending full refund (${fullAmount}) to Yokke for order ${orderIdentifier}...`);
-            try {
-                const refundRes = await yokkeService.refundPayment({
-                    orderId: orderIdentifier,
-                    transactionId: cancel.transaction_id,
-                    partnerRefundNo,
-                    amount: fullAmount,
-                    reason: cancel.reason || 'Admin Approved Cancellation'
-                });
+        const db = require('../config/db');
+        const client = await db.connect();
+        try {
+            await client.query('BEGIN');
+            await client.query(
+                `UPDATE ota.orders 
+                 SET status = 'cancelled', 
+                     payment_status = 'refund_pending', 
+                     updated_at = NOW() 
+                 WHERE id = $1`,
+                [cancel.order_id]
+            );
 
-                if (refundRes.responseCode !== '2005800') {
-                    console.error('[REFUND] Yokke refund declined:', refundRes);
-                    return res.redirect(`/admin/cancel-requests?error=${encodeURIComponent(refundRes.responseMessage || 'Refund failed')}`);
-                }
-            } catch (apiErr) {
-                const resData = apiErr.response?.data;
-                const errCode = resData?.responseCode;
-                const errMsg = resData?.responseMessage || apiErr.message;
-                console.error('[REFUND] Yokke API error:', resData || apiErr.message);
+            await client.query(
+                `UPDATE ota.order_cancellations 
+                 SET status = 'approved', 
+                     reviewed_by = $2, 
+                     reviewed_at = NOW() 
+                 WHERE id = $1`,
+                [cancel.id, adminId]
+            );
 
-                // If Yokke reports it's already cancelled/refunded, sync local DB
-                if (errCode === '4045804') {
-                    console.log(`[REFUND] Order ${orderIdentifier} was already cancelled on Yokke. Syncing local DB...`);
-                    await orderModel.recordOrderRefund({
-                        orderId: cancel.order_id,
-                        cancelId: cancel.id,
-                        adminId,
-                        partnerRefundNo: 'ALREADY_CANCELLED_ON_GATEWAY',
-                        refundAmount: cancel.refund_amount || fullAmount
-                    });
-                    return res.redirect('/admin/cancel-requests?success=Already+refunded+on+gateway');
-                }
-                
-                return res.redirect(`/admin/cancel-requests?error=${encodeURIComponent(errMsg)}`);
-            }
+            await client.query('COMMIT');
+        } catch (dbErr) {
+            await client.query('ROLLBACK');
+            throw dbErr;
+        } finally {
+            client.release();
         }
 
-         await orderModel.recordOrderRefund({
-            orderId: cancel.order_id,
-            cancelId: cancel.id,
-            adminId,
-            partnerRefundNo,
-            refundAmount: cancel.refund_amount || fullAmount
-        });
-
-        console.log(`[REFUND] Successfully processed refund for order ${orderIdentifier}`);
-        return res.redirect('/admin/cancel-requests?success=Refund+processed');
+        console.log(`[CANCEL] Order #${cancel.order_id} approved by admin #${adminId}. Handed over to Accounting.`);
+        return res.redirect('/admin/cancel-requests?success=Cancellation+approved.+Handed+over+to+Accounting+for+payout.');
     } catch (err) {
         console.error('[ADMIN] Approve cancel error:', err.message);
         return res.redirect('/admin/cancel-requests?error=Server+error');

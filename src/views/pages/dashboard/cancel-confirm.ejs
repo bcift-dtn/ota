@@ -72,7 +72,7 @@
                     </div>
                     <p class="cancel-refund-note">
                     <i data-lucide="info"></i>
-                    Refund will be processed back to your original payment method within 3–7 business days.
+                    Refund will be transferred to your specified bank account within 3–7 business days.
                     </p>
                 <% } else { %>
                     <div class="cancel-refund-row cancel-refund-total">
@@ -84,6 +84,38 @@
 
                 <!-- Cancel Form -->
                 <form action="/dashboard/orders/<%= order.id %>/cancel" method="POST" class="cancel-form">
+                <% if (isPaid) { %>
+                  <div class="cancel-bank-section">
+                    <h4 class="cancel-bank-title">Refund Destination Bank Account</h4>
+                    
+                    <div class="cancel-form-group">
+                      <label for="bank_name">Bank Name <span class="required">*</span></label>
+                      <select id="bank_name" name="bank_name" required class="cancel-input">
+                        <option value="" disabled selected>Select Bank</option>
+                        <option value="BCA">BCA (Bank Central Asia)</option>
+                        <option value="Mandiri">Bank Mandiri</option>
+                        <option value="BRI">BRI (Bank Rakyat Indonesia)</option>
+                        <option value="BNI">BNI (Bank Negara Indonesia)</option>
+                        <option value="CIMB">CIMB Niaga</option>
+                        <option value="Permata">Bank Permata</option>
+                        <option value="Danamon">Bank Danamon</option>
+                        <option value="BSI">BSI (Bank Syariah Indonesia)</option>
+                        <option value="Other">Other Bank</option>
+                      </select>
+                    </div>
+
+                    <div class="cancel-form-group">
+                      <label for="bank_account_no">Account Number <span class="required">*</span></label>
+                      <input type="text" id="bank_account_no" name="bank_account_no" required placeholder="e.g. 1234567890" class="cancel-input" />
+                    </div>
+
+                    <div class="cancel-form-group">
+                      <label for="bank_account_holder">Account Holder Name (a.n.) <span class="required">*</span></label>
+                      <input type="text" id="bank_account_holder" name="bank_account_holder" required placeholder="Must match bank account name" class="cancel-input" />
+                    </div>
+                  </div>
+                <% } %>
+
                 <div class="cancel-reason-group">
                     <label for="reason">Reason for cancellation <span>(optional)</span></label>
                     <textarea id="reason" name="reason" rows="3" placeholder="Tell us why you're cancelling..."></textarea>
@@ -92,7 +124,7 @@
                     <a href="/dashboard/orders" class="btn-order-action btn-secondary">Keep My Order</a>
                     <button type="submit" class="btn-danger">Confirm Cancellation</button>
                 </div>
-                </form>
+              </form>
             </div>
         </section>
       </section>

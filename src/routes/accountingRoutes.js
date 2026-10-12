@@ -8,6 +8,9 @@ router.use(requireAccounting);
 
 router.get('/', accountingController.getSettlementDashboard);
 router.get('/export', accountingController.exportSettlementCSV);
+router.get('/refunds', accountingController.getRefundsDashboard);
+
+router.post('/refunds/:id/complete', accountingController.completeRefund);
 
 router.patch('/orders/:orderId/status', accountingController.updateSettlementStatus);
 

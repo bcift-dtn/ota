@@ -142,7 +142,7 @@ const submitCancelRequest = async (req, res) => {
         if (!userId) return res.redirect('/');
 
         const orderId = parseInt(req.params.orderId);
-        const { reason } = req.body;
+        const { reason, bank_name, bank_account_no, bank_account_holder } = req.body;
 
         const order = await orderModel.getOrderWithItemById(orderId, userId);
 
@@ -157,10 +157,25 @@ const submitCancelRequest = async (req, res) => {
         }
 
         const isPaid = order.payment_status === 'paid';
+        if (isPaid && (!bank_name?.trim() || !bank_account_no?.trim() || !bank_account_holder?.trim())) {
+            return res.redirect(`/dashboard/orders/${orderId}/cancel?error=missing_bank_details`);
+        }
+        
         const cancelFee = isPaid ? Math.round(order.total_amount * CANCEL_FEE_RATE) : 0;
         const refundAmount = order.total_amount - cancelFee;
 
-        await orderModel.createCancellationRequest(orderId, userId, reason || null, refundAmount, cancelFee);
+        await orderModel.createCancellationRequest(
+            orderId, 
+            userId, 
+            reason || null, 
+            refundAmount, 
+            cancelFee,
+            {
+                bankName: bank_name,
+                bankAccountNo: bank_account_no,
+                bankAccountHolder: bank_account_holder
+            }
+        );
 
         return res.redirect('/dashboard/orders?cancelled=1');
     } catch (err) {

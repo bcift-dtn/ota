@@ -287,16 +287,26 @@ const getOrderWithItemById = async (orderId, userId) => {
     return res.rows[0] || null;
 };
 
-const createCancellationRequest = async (orderId, userId, reason, refundAmount, cancelFee) => {
+const createCancellationRequest = async (orderId, userId, reason, refundAmount, cancelFee, bankInfo = {}) => {
     const client = await db.connect();
     try {
         await client.query('BEGIN');
 
         await client.query(
             `INSERT INTO ota.order_cancellations
-                (order_id, requested_by, reason, refund_amount, cancel_fee, status, created_at)
-             VALUES ($1, $2, $3, $4, $5, 'pending', NOW())`,
-            [orderId, userId, reason, refundAmount, cancelFee]
+                (order_id, requested_by, reason, refund_amount, cancel_fee, status, 
+                 bank_name, bank_account_no, bank_account_holder, created_at)
+             VALUES ($1, $2, $3, $4, $5, 'pending', $6, $7, $8, NOW())`,
+            [
+                orderId, 
+                userId, 
+                reason, 
+                refundAmount, 
+                cancelFee,
+                bankInfo.bankName || null,
+                bankInfo.bankAccountNo || null,
+                bankInfo.bankAccountHolder || null
+            ]
         );
         
         await client.query(

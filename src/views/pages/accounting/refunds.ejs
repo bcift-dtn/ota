@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Refunds - Accounting - MEGATERRA</title>
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages/accounting.css" />
+  </head>
+
+  <body>
+    <%- include('../../partials/navbar') %>
+    <main class="accounting-main">
+      <div class="accounting-layout">
+        <%- include('../../partials/accountingSidebar') %>
+
+        <section class="accounting-content">
+          <header class="accounting-page-header">
+            <div>
+              <h1 class="accounting-page-title">Customer Refunds Queue</h1>
+              <p class="accounting-page-subtitle">Disburse manual bank transfer refunds for approved order cancellations.</p>
+            </div>
+          </header>
+
+          <!-- Tab Bar -->
+          <div class="refund-tab-bar">
+            <a href="/accounting/refunds?tab=pending" class="refund-tab <%= tab !== 'history' ? 'active' : '' %>">
+              <i data-lucide="clock"></i> Pending Payouts
+              <% if (tab !== 'history' && requests.length > 0) { %>
+                <span class="tab-badge"><%= requests.length %></span>
+              <% } %>
+            </a>
+            <a href="/accounting/refunds?tab=history" class="refund-tab <%= tab === 'history' ? 'active' : '' %>">
+              <i data-lucide="check-circle-2"></i> Payout History
+            </a>
+          </div>
+
+          <% if (requests.length === 0) { %>
+            <div class="accounting-empty-state">
+              <i data-lucide="inbox"></i>
+              <p><%= tab === 'history' ? 'No refund history yet.' : 'No pending refunds awaiting bank transfer.' %></p>
+            </div>
+          <% } else { %>
+            <div class="accounting-table-wrapper">
+              <table class="accounting-table">
+                <thead>
+                  <tr>
+                    <th>Order & Service</th>
+                    <th>Customer</th>
+                    <th>Amount Paid</th>
+                    <th>Cancel Fee (20%)</th>
+                    <th>Net Refund (80%)</th>
+                    <th>Destination Bank Info</th>
+                    <th><%= tab === 'history' ? 'Transferred At' : 'Approved Date' %></th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% requests.forEach(r => { %>
+                    <tr>
+                      <td>
+                        <span class="order-code-badge">#MT-<%= (r.product_type || 'ORDER').toUpperCase() %>-<%= r.order_id %></span>
+                        <div class="product-title-sub"><%= r.product_title %></div>
+                        <% if (r.reason) { %>
+                          <div class="cancel-reason-text">Reason: "<%= r.reason %>"</div>
+                        <% } %>
+                      </td>
+                      <td>
+                        <div class="customer-name-text"><%= r.customer_name %></div>
+                        <div class="customer-contact-text"><%= r.customer_phone || r.customer_email %></div>
+                      </td>
+                      <td>IDR <%= Number(r.total_amount).toLocaleString('id-ID') %></td>
+                      <td class="fee-text">- IDR <%= Number(r.cancel_fee).toLocaleString('id-ID') %></td>
+                      <td class="net-refund-amount">
+                        IDR <%= Number(r.refund_amount).toLocaleString('id-ID') %>
+                      </td>
+                      <td>
+                        <div class="bank-card">
+                          <span class="bank-pill"><%= r.bank_name || 'BANK' %></span>
+                          <span class="bank-acc"><%= r.bank_account_no || '—' %></span>
+                          <span class="bank-holder">a.n. <%= r.bank_account_holder || '—' %></span>
+                        </div>
+                      </td>
+                      <td>
+                        <%= new Date(tab === 'history' && r.refunded_at ? r.refunded_at : r.approved_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                      </td>
+                      <td>
+                        <% if (tab !== 'history') { %>
+                          <button 
+                            type="button" 
+                            class="btn-mark-refunded"
+                            data-cancel-id="<%= r.cancel_id %>"
+                            data-order-id="<%= r.order_id %>"
+                            data-customer="<%= r.customer_name %>"
+                            data-bank-name="<%= r.bank_name || '' %>"
+                            data-bank-acc="<%= r.bank_account_no || '' %>"
+                            data-bank-holder="<%= r.bank_account_holder || '' %>"
+                            data-amount="IDR <%= Number(r.refund_amount).toLocaleString('id-ID') %>"
+                          >
+                            Mark as Refunded
+                          </button>
+                        <% } else { %>
+                          <span class="status-pill status-completed">
+                            <i data-lucide="check"></i> Completed
+                          </span>
+                          <% if (r.refund_reference) { %>
+                            <div class="ref-subtext">Ref: <%= r.refund_reference %></div>
+                          <% } %>
+                        <% } %>
+                      </td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          <% } %>
+        </section>
+      </div>
+    </main>
+
+    <!-- Modal: Mark as Refunded -->
+    <div id="refundModal" class="modal-backdrop hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Confirm Manual Bank Transfer</h3>
+          <button type="button" class="modal-close" id="modalCloseBtn">&times;</button>
+        </div>
+        <form id="refundForm" method="POST" action="">
+          <input type="hidden" name="orderId" id="modalOrderId" value="" />
+          <div class="modal-body">
+            <p class="modal-instruction">
+              Please confirm you have executed the bank transfer for this customer refund:
+            </p>
+            <div class="modal-summary-box">
+              <div class="summary-row"><span>Customer:</span> <strong id="modalCustomer">—</strong></div>
+              <div class="summary-row"><span>Transfer Amount:</span> <strong class="text-teal" id="modalAmount">—</strong></div>
+              <div class="summary-row"><span>Bank / Acc No:</span> <strong id="modalBank">—</strong></div>
+              <div class="summary-row"><span>Account Holder:</span> <strong id="modalHolder">—</strong></div>
+            </div>
+
+            <div class="modal-form-group">
+              <label for="refundReference">Transfer Reference / Trx No (Optional):</label>
+              <input type="text" id="refundReference" name="refundReference" placeholder="e.g. BCA-TRX-839219 or Receipt No" class="modal-input" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-cancel" id="modalCancelBtn">Cancel</button>
+            <button type="submit" class="btn-confirm-refund">Confirm Refund Completed</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <%- include('../../partials/footer') %>
+    <%- include('../../partials/loginModal') %>
+
+    <script src="/js/accounting-refunds.js"></script>
+  </body>
+
+</html>
