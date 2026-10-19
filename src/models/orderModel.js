@@ -820,6 +820,42 @@ const recordOrderRefund = async ({ orderId, cancelId, adminId, partnerRefundNo, 
     }
 };
 
+const getOrderVoucherData = async (orderId, userId) => {
+    const query = `
+        SELECT
+            o.id AS order_id,
+            o.user_id,
+            o.status AS order_status,
+            o.payment_status,
+            o.paid_at,
+            o.created_at AS booking_date,
+            u.full_name AS customer_name,
+            u.phone AS customer_phone,
+            oi.id AS order_item_id,
+            oi.start_date,
+            oi.vendor_booking_code,
+            p.title AS product_title,
+            p.type AS product_type,
+            sp.company_name AS seller_company,
+            seller_u.full_name AS seller_name,
+            sc.secret_code,
+            sc.reference_id
+        FROM ota.orders o
+        JOIN ota.users u ON u.id = o.user_id
+        JOIN ota.order_items oi ON oi.order_id = o.id
+        JOIN ota.products p ON p.id = oi.product_id
+        LEFT JOIN ota.seller_profiles sp ON sp.user_id = p.seller_id
+        LEFT JOIN ota.users seller_u ON seller_u.id = p.seller_id
+        LEFT JOIN ota.secret_codes sc ON sc.order_item_id = oi.id
+        WHERE o.id = $1 AND o.user_id = $2
+        LIMIT 1
+    `;
+    const res = await db.query(query, [orderId, userId]);
+    return res.rows[0] || null;
+};
+
+
+
 module.exports = {
     createOrder,
     getOrderById,
@@ -841,5 +877,6 @@ module.exports = {
     getAvailableTimeSlots,
     getAdminTransactions,
     recordOrderRefund,
-    getCancellationById
+    getCancellationById,
+    getOrderVoucherData
 };

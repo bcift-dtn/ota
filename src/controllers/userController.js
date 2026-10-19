@@ -186,6 +186,10 @@ const submitCancelRequest = async (req, res) => {
 
 const downloadInvoice = async (req, res) => { 
     try {
+        if (!req.session?.user) {
+            return res.redirect('/?login=1');
+        }
+        
         const orderId = req.params.orderId;
         const userId = req.session.user.id;
 
@@ -291,6 +295,34 @@ const submitRescheduleRequest = async (req, res) => {
     }
 }
 
+// Voucher
+const voucherService = require('../services/voucherService');
+
+const downloadVoucher = async (req, res) => {
+    try {
+        if (!req.session?.user) {
+            return res.redirect('/?login=1');
+        }
+
+        const orderId = req.params.orderId;
+        const userId = req.session.user.id;
+        const order = await orderModel.getOrderVoucherData(orderId, userId);
+
+        if (!order) {
+            return res.status(404).render('pages/404', { message: 'Booking voucher not found.' });
+        }
+
+        const voucherFilename = `Voucher-${(order.product_type || 'MT').toUpperCase()}-${order.order_id}.pdf`;
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `inline; filename="${voucherFilename}"`);
+        voucherService.generateVoucherPDF(order, res);
+    } catch (error) {
+        console.error('[VOUCHER] Generate voucher error:', error);
+        return res.status(500).render('pages/404', { message: 'Failed to generate voucher.' });
+    }
+};
+
+
 module.exports = {
     updateProfile,
     changePassword,
@@ -299,5 +331,6 @@ module.exports = {
     submitCancelRequest,
     downloadInvoice,
     getReschedulePage,
-    submitRescheduleRequest
+    submitRescheduleRequest,
+    downloadVoucher
 };

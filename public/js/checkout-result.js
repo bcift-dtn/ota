@@ -1,11 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const downloadBtn = document.getElementById('downloadVoucherBtn');
-  if (downloadBtn) {
-    downloadBtn.addEventListener('click', () => {
-      window.print();
-    });
-  }
-
   const timerSpan = document.getElementById('pendingTimer');
   if (timerSpan) {
     const maxRetries = 3;

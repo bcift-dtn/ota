@@ -328,7 +328,7 @@ const isCancelled = ['cancelled', 'cancel_requested'].includes(order.status) || 
                       <% } %>
 
                       <% if (!isFerryPendingVendor && isPaid && !isCancelled) { %>
-                        <a href="/products/checkout/result?orderId=<%= rawOrderId %>" class="btn-order-action btn-primary">
+                        <a href="/dashboard/orders/<%= order.id %>/voucher" target="_blank" class="btn-order-action btn-primary">
                           <i data-lucide="download"></i> Download E-Voucher
                         </a>
                       <% } %>

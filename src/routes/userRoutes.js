@@ -18,6 +18,8 @@ router.get('/status', (req, res) => {
 
 router.get('/orders/:orderId/invoice', userController.downloadInvoice);
 
+router.get('/orders/:orderId/voucher', userController.downloadVoucher);
+
 router.get('/orders/:orderId/cancel', userController.getCancelConfirmPage);
 
 router.post('/orders/:orderId/cancel', userController.submitCancelRequest);
