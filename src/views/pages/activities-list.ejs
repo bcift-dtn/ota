@@ -82,10 +82,12 @@
                     <p class="smaller-label">SELECT TRANSFER PACKAGE</p>
                     <p class="package-error smaller-label warning-text hidden">Please select a package first.</p>
                   </div>
-                  <div class="package-list">
+                                    <div class="package-list">
                     <% product.packages.forEach ((package, index)=> { %>
-                      <div class="package-option <%= index === 0 ? 'active' : '' %>" data-package-id="<%= package.id %>"
-                        data-price="<%= package.normal_price%>">
+                      <div class="package-option <%= index === 0 ? 'active' : '' %>" 
+                        data-package-id="<%= package.id %>"
+                        data-price="<%= package.normal_price %>"
+                        data-image="<%= package.image_url %>">
                         <div class="package-option-info">
                           <p class="package-name bigger-label <%= index === 0 ? 'active-text' : '' %>">
                             <%= package.name %>
@@ -98,8 +100,8 @@
                             package.formatted_price %>
                         </p>
                       </div>
-                      <% }) %>
-                        <button class="confirm-selection-btn">CONFIRM SELECTION</button>
+                    <% }) %>
+                    <button class="confirm-selection-btn">CONFIRM SELECTION</button>
                   </div>
                 </div>
               </div>

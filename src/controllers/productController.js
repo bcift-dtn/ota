@@ -164,6 +164,7 @@ const getActivities = async (req, res) => {
         .filter(pkg => pkg.product_id === p.id)
         .map(pkg => ({
           ...pkg,
+          image_url: pkg.package_image_url || p.image_url,
           formatted_price: Number(pkg.normal_price).toLocaleString('id-ID')
         }))
     }))

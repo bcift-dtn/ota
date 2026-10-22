@@ -78,10 +78,13 @@ const getPackagesByProductIds = async (productIds) => {
   }
 
   const query = `
-    SELECT *
-    FROM ota.product_packages
-    WHERE product_id = ANY($1) AND is_active = true
-    ORDER BY product_id, sort_order ASC
+    SELECT 
+      pp.*,
+      pi.image_url as package_image_url
+    FROM ota.product_packages pp
+    LEFT JOIN ota.product_images pi ON pp.id = pi.package_id
+    WHERE pp.product_id = ANY($1) AND pp.is_active = true
+    ORDER BY pp.product_id, pp.sort_order ASC
   `;
 
   try {
@@ -91,6 +94,7 @@ const getPackagesByProductIds = async (productIds) => {
     throw err;
   }
 }
+
 
 const getActivitiesListings = async (limit, offset) => {
   const query = `

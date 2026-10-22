@@ -30,13 +30,24 @@ document.querySelectorAll('.package-option').forEach(option => {
       child.classList.remove('active');
       child.querySelector('.package-name')?.classList.remove('active-text');
       child.querySelector('.package-price')?.classList.remove('active-text');
-    })
+    });
 
     optionName.classList.add('active-text');
     optionPrice.classList.add('active-text');
-    option.classList.add('active')
-  })
-})
+    option.classList.add('active');
+
+    // Dynamically update product card photo when package is clicked
+    const packageImage = option.getAttribute('data-image');
+    if (packageImage) {
+      const card = option.closest('.product-card-horizontal');
+      const cardImg = card?.querySelector('.product-card-image img');
+      if (cardImg) {
+        cardImg.src = packageImage;
+      }
+    }
+  });
+});
+
 
 document.querySelectorAll('.confirm-selection-btn').forEach(btn => {
   btn.addEventListener('click', () => {
