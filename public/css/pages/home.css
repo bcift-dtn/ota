@@ -677,15 +677,15 @@
   margin-bottom: 0.5rem;
 }
 
-.brand-grid-container {
+/* .brand-grid-container {
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
   align-items: center;
   width: 100%;
-}
+} */
 
-.brand-row {
+/* .brand-row {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -698,9 +698,9 @@
 
 .brand-row-2 {
   max-width: 100%;
-}
+} */
 
-.brand-row .brand-card {
+/* .brand-row .brand-card {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -755,7 +755,23 @@
 
 .brand-row .brand-card-mff img:hover {
   transform: scale(1.3);
+} */
+
+.our-brand-banner-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 0;
 }
+
+.our-brand-banner-image {
+  width: 100%;
+  max-width: 950px;
+  height: auto;
+  object-fit: contain;
+}
+
 
 /* Desktop Spacing */
 @media (min-width: 860px) {
