@@ -14,40 +14,8 @@
     <%- include('../../partials/navbar') %>
 
     <main class="admin-main">
-      <aside class="admin-sidebar">
-        <ul class="admin-sidebar-nav">
-          <li>
-            <a
-              href="#"
-              class="<%= activeMenu === 'overview' ? 'active' : '' %>"
-            >
-              <i data-lucide="layout-dashboard"></i> Dashboard Overview
-            </a>
-          </li>
-          <li>
-            <a href="/admin/transactions" class="<%= activeMenu === 'transactions' ? 'active' : '' %>">
-              <i data-lucide="receipt"></i> Transactions & Bookings
-            </a>
-          </li>
-          <li>
-            <a
-              href="/admin/cancel-requests"
-              class="<%= activeMenu === 'cancel-requests' ? 'active' : '' %>"
-            >
-              <i data-lucide="x-circle"></i> Cancel Requests
-            </a>
-          </li>
-          <li>
-            <a
-              href="/admin/reschedule-requests"
-              class="<%= activeMenu === 'reschedule-requests' ? 'active' : '' %>"
-            >
-              <i data-lucide="calendar"></i> Reschedule Requests
-            </a>
-          </li>
-        </ul>
-      </aside>
-
+      <%- include('../../partials/adminSidebar', { activeMenu }) %>
+      
       <section class="admin-content">
         <div class="admin-page-header">
           <h1 class="admin-page-title">Reschedule Requests</h1>

@@ -753,3 +753,99 @@
         width: 100%;
     }
 }
+
+
+.admin-doc-link {
+    color: var(--clr-primary);
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+/* Reject Reason Modal */
+.admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.admin-modal-overlay.hidden {
+  display: none;
+}
+
+.admin-modal {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+}
+
+.admin-modal-title {
+  margin: 0 0 0.4rem;
+  font-size: 1.2rem;
+}
+
+.admin-modal-subtitle {
+  margin: 0 0 1.25rem;
+  color: var(--clr-label-font);
+  font-size: 0.9rem;
+}
+
+.admin-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.admin-modal-field label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #6B7280;
+}
+
+.admin-modal-field textarea {
+  width: 100%;
+  min-height: 5.5rem;
+  max-height: 12rem;
+  padding: 0.75rem;
+  border: 1.5px solid #D1D5DB;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  outline: none;
+}
+
+.admin-modal-field textarea:focus {
+  border-color: var(--clr-primary);
+}
+
+.admin-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.btn-admin-cancel {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #D1D5DB;
+  background-color: #FFFFFF;
+  color: #374151;
+  font-family: inherit;
+  font-size: var(--fs-2);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-admin-cancel:hover {
+  background-color: #F3F4F6;
+}

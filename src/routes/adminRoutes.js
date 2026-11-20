@@ -20,4 +20,9 @@ router.post('/reschedule-requests/:id/reject', adminController.rejectRescheduleR
 
 router.get('/transactions', adminController.getTransactions);
 
+// Agent request
+router.get('/agent-requests', adminController.getAgentRequests);
+router.post('/agent-requests/:id/approve', adminController.approveAgentRequest);
+router.post('/agent-requests/:id/reject', adminController.rejectAgentRequest);
+
 module.exports = router;

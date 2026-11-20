@@ -28,41 +28,8 @@
       </div>
 
       <section class="dashboard-container">
-        <aside class="dashboard-sidebar">
-          <ul class="dashboard-sidebar-nav">
-            <li>
-              <a href="/dashboard/personal-info"
-                ><i data-lucide="user"></i> Personal info</a
-              >
-            </li>
-            <li>
-              <a href="/dashboard/account-security"
-                ><i data-lucide="lock"></i> Account and security</a
-              >
-            </li>
-            <li>
-              <a
-                href="/dashboard/points"
-                class="<%= activeMenu === 'points' ? 'active' : '' %>"
-                ><i data-lucide="tickets"></i> My points</a
-              >
-            </li>
-            <li>
-              <a
-                href="/dashboard/orders"
-                class="<%= activeMenu === 'orders' ? 'active' : '' %>"
-                ><i data-lucide="receipt-text"></i> My orders</a
-              >
-            </li>
-            <li>
-              <a
-                href="/dashboard/status"
-                class="<%= activeMenu === 'status' ? 'active' : '' %>"
-                ><i data-lucide="bell"></i> Status</a
-              >
-            </li>
-          </ul>
-        </aside>
+        <%- include('../../partials/dashboardSidebar', { activeMenu }) %>
+        
         <section class="dashboard-content">
           <div class="coming-soon-wrapper">
             <i data-lucide="hammer" class="coming-soon-icon"></i>

@@ -7,6 +7,12 @@ const { getFerryCheckout } = require('./ferryController');
 const { createOrder } = require('../models/orderModel');
 const { createInquiry } = require('../services/yokkeService');
 
+const getEffectivePrice = (normalPrice, agentPrice, isAgent) => {
+  const normal = Number(normalPrice) || 0;
+  const agent = Number(agentPrice) || 0;
+  return (isAgent && agent > 0) ? agent : normal;
+};
+
 const getCarRentals = async (req, res) => {
   const {
     'driver-needs': driverNeeds,

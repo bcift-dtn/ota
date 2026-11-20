@@ -2,9 +2,12 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 
-router.get('/personal-info', (req, res) => res.render('pages/dashboard/personal-info'));
+const requireAuth = require('../middlewares/requireAuth');
+router.use(requireAuth);
 
-router.get('/account-security', (req, res) => res.render('pages/dashboard/account-security'));
+router.get('/personal-info', (req, res) => res.render('pages/dashboard/personal-info', { activeMenu: 'personal-info' }));
+
+router.get('/account-security', (req, res) => res.render('pages/dashboard/account-security', { activeMenu: 'account-security' }));
 
 router.get('/points', (req, res) => {
     res.render('pages/dashboard/coming-soon', { activeMenu: 'points' });
@@ -31,6 +34,10 @@ router.post('/orders/:orderId/reschedule', userController.submitRescheduleReques
 router.post('/update-profile', userController.updateProfile);
 
 router.post('/change-password', userController.changePassword);
+
+// Agent
+router.get('/become-agent', userController.getBecomeAgentPage);
+router.post('/become-agent', userController.submitAgentApplication);
 
 
 module.exports = router;

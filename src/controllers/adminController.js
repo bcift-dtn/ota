@@ -1,6 +1,7 @@
 const yokkeService = require('../services/yokkeService');
 const orderModel = require('../models/orderModel');
 const { cancelBooking } = require('../services/majesticService');
+const agentModel = require('../models/agentModel');
 
 const getCancelRequests = async (req, res) => {
     try {
@@ -186,6 +187,49 @@ const getTransactions = async (req, res) => {
     }
 }
 
+// Agent
+const getAgentRequests = async (req, res) => {
+  try {
+    const requests = await agentModel.getPendingAgentApplications();
+    return res.render('pages/admin-dashboard/agent-requests', {
+      activeMenu: 'agent-requests',
+      requests
+    });
+  } catch (err) {
+    console.error('[ADMIN] Get agent requests error:', err.message);
+    return res.status(500).render('pages/404', { message: 'Server error.' });
+  }
+};
+
+const approveAgentRequest = async (req, res) => {
+  try {
+    const adminId = req.session?.user?.id;
+    const result = await agentModel.approveAgentApplication(req.params.id, adminId);
+    if (!result) {
+      return res.redirect('/admin/agent-requests?error=Request+not+found+or+already+processed');
+    }
+    return res.redirect('/admin/agent-requests?success=Agent+approved');
+  } catch (err) {
+    console.error('[ADMIN] Approve agent error:', err.message);
+    return res.redirect('/admin/agent-requests?error=Failed+to+approve+agent');
+  }
+};
+
+const rejectAgentRequest = async (req, res) => {
+  try {
+    const adminId = req.session?.user?.id;
+    const reason = req.body.reason?.trim() || null;
+    const result = await agentModel.rejectAgentApplication(req.params.id, adminId, reason);
+    if (!result) {
+      return res.redirect('/admin/agent-requests?error=Request+not+found+or+already+processed');
+    }
+    return res.redirect('/admin/agent-requests?success=Agent+rejected');
+  } catch (err) {
+    console.error('[ADMIN] Reject agent error:', err.message);
+    return res.redirect('/admin/agent-requests?error=Failed+to+reject+agent');
+  }
+};
+
 module.exports = {
     getCancelRequests,
     approveCancelRequest,
@@ -193,5 +237,9 @@ module.exports = {
     getRescheduleRequests,
     approveRescheduleRequest,
     rejectRescheduleRequest,
-    getTransactions
+    getTransactions,
+    getAgentRequests,
+    approveAgentRequest,
+    rejectAgentRequest
+    
 };

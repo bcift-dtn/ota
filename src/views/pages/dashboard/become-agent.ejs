@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Become an Agent - Dashboard - MEGATERRA</title>
+
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages/dashboard.css" />
+  </head>
+  <body>
+    <%- include('../../partials/navbar') %>
+
+    <main>
+      <div class="dashboard-banner">
+        <img
+          src="/images/hero-banners/contact-hero.webp"
+          alt="Dashboard Banner"
+        />
+      </div>
+
+      <section class="dashboard-container">
+        <%- include('../../partials/dashboardSidebar', { activeMenu }) %>
+
+        <section class="dashboard-content">
+          <h1 class="dashboard-title">Become an Agent</h1>
+
+          <% if (success) { %>
+            <p class="dashboard-status success"><%= success %></p>
+          <% } %>
+          <% if (error) { %>
+            <p class="dashboard-status error"><%= error %></p>
+          <% } %>
+
+          <% if (profile && profile.status === 'approved') { %>
+            <div class="agent-status-card status-approved">
+              <h2>Approved Travel Agent</h2>
+              <p class="agent-status-desc">
+                Your agent account is active. You now have access to special B2B agent rates and your prepaid Agent Wallet.
+              </p>
+              <div class="agent-status-details">
+                <p><strong>Company:</strong> <%= profile.company_name %></p>
+                <p><strong>Address:</strong> <%= profile.company_address %></p>
+                <% if (profile.business_doc_url) { %>
+                  <p>
+                    <strong>Document:</strong>
+                    <a href="<%= profile.business_doc_url %>" target="_blank" rel="noopener" class="agent-doc-link">View Document</a>
+                  </p>
+                <% } %>
+              </div>
+              <p class="agent-status-hint">
+                If you don't see your Agent Dashboard yet, please log out and log back in to refresh your session.
+              </p>
+            </div>
+          <% } else if (profile && profile.status === 'pending') { %>
+            <div class="agent-status-card status-pending">
+              <h2>Application Under Review</h2>
+              <p class="agent-status-desc">
+                Thank you for applying! Our admin team is reviewing your company details.
+              </p>
+              <div class="agent-status-details">
+                <p><strong>Company:</strong> <%= profile.company_name %></p>
+                <p><strong>Address:</strong> <%= profile.company_address %></p>
+                <p>
+                  <strong>Submitted:</strong>
+                  <%= new Date(profile.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                </p>
+              </div>
+            </div>
+          <% } else { %>
+            <% if (profile && profile.status === 'rejected') { %>
+              <div class="agent-status-card status-rejected">
+                <h3>Previous Application Not Approved</h3>
+                <% if (profile.rejection_reason) { %>
+                  <p><strong>Reason:</strong> <%= profile.rejection_reason %></p>
+                <% } %>
+                <p>You may update your company details below and submit a new application.</p>
+              </div>
+            <% } %>
+
+            <h3>Company Information</h3>
+            <form action="/dashboard/become-agent" method="POST" class="dashboard-form">
+              <div class="dashboard-form-group">
+                <label for="companyName">Company / Travel Agency Name</label>
+                <input
+                  type="text"
+                  id="companyName"
+                  name="companyName"
+                  placeholder="e.g. PT ... ..."
+                  required
+                />
+              </div>
+
+              <div class="dashboard-form-group">
+                <label for="companyAddress">Company Address</label>
+                <textarea
+                  id="companyAddress"
+                  name="companyAddress"
+                  rows="3"
+                  placeholder="Enter full business address"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="dashboard-form-group">
+                <label for="businessDocUrl">Business Document URL (NIB / SIUP / Google Drive Link)</label>
+                <input
+                  type="url"
+                  id="businessDocUrl"
+                  name="businessDocUrl"
+                  placeholder="https://drive.google.com/..."
+                />
+              </div>
+
+              <button type="submit" class="dashboard-submit-btn">
+                Submit Application
+              </button>
+            </form>
+          <% } %>
+        </section>
+      </section>
+    </main>
+
+    <%- include('../../partials/footer') %>
+    <%- include('../../partials/loginModal') %>
+  </body>
+</html>

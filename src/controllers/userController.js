@@ -2,6 +2,7 @@ const userModel = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const orderModel = require('../models/orderModel');
 const invoiceService = require('../services/invoiceService');
+const agentModel = require('../models/agentModel');
 
 const CANCEL_FEE_RATE = 0.20;
 
@@ -323,6 +324,49 @@ const downloadVoucher = async (req, res) => {
 };
 
 
+// Agent
+const getBecomeAgentPage = async (req, res) => {
+  try {
+    const userId = req.session?.user?.id;
+    if (!userId) return res.redirect('/');
+    const profile = await agentModel.getAgentProfileByUserId(userId);
+    return res.render('pages/dashboard/become-agent', {
+      activeMenu: 'become-agent',
+      profile,
+      success: req.query.success || null,
+      error: req.query.error || null
+    });
+  } catch (err) {
+    console.error('[USER] Become agent page error:', err.message);
+    return res.status(500).render('pages/404', { message: 'Server error.' });
+  }
+};
+
+const submitAgentApplication = async (req, res) => {
+  try {
+    const userId = req.session?.user?.id;
+    if (!userId) return res.redirect('/');
+    const { companyName, companyAddress, businessDocUrl } = req.body;
+    if (!companyName?.trim() || !companyAddress?.trim()) {
+      return res.redirect('/dashboard/become-agent?error=Company+name+and+address+are+required');
+    }
+    const existing = await agentModel.getAgentProfileByUserId(userId);
+    if (existing && (existing.status === 'pending' || existing.status === 'approved')) {
+      return res.redirect('/dashboard/become-agent?error=You+already+have+an+active+or+pending+application');
+    }
+    await agentModel.createAgentApplication({
+      userId,
+      companyName: companyName.trim(),
+      companyAddress: companyAddress.trim(),
+      businessDocUrl: businessDocUrl?.trim() || null
+    });
+    return res.redirect('/dashboard/become-agent?success=Application+submitted+for+admin+review');
+  } catch (err) {
+    console.error('[USER] Submit agent application error:', err.message);
+    return res.redirect('/dashboard/become-agent?error=Failed+to+submit+application');
+  }
+};
+
 module.exports = {
     updateProfile,
     changePassword,
@@ -332,5 +376,8 @@ module.exports = {
     downloadInvoice,
     getReschedulePage,
     submitRescheduleRequest,
-    downloadVoucher
+    downloadVoucher,
+    getBecomeAgentPage,
+    submitAgentApplication
+    
 };

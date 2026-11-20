@@ -149,15 +149,42 @@
     color: #9CA3AF;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    transition: color 0.2s ease;
 }
 
-.dashboard-form-group input {
+.dashboard-form-group:focus-within label {
+    color: var(--clr-primary);
+}
+
+.dashboard-form-group input,
+.dashboard-form-group textarea {
+    width: 100%;
     padding: 1rem;
-    border: 1px solid var(--clr-primary);
+    border: 1.5px solid #D1D5DB;
     border-radius: 8px;
+    font-family: inherit;
     font-size: var(--fs-3);
     outline: none;
     color: var(--clr-neutral);
+    background-color: #FFFFFF;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-form-group input:hover,
+.dashboard-form-group textarea:hover {
+    border-color: #9CA3AF;
+}
+
+.dashboard-form-group input:focus,
+.dashboard-form-group textarea:focus {
+    border-color: var(--clr-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--clr-primary) 18%, transparent);
+}
+
+.dashboard-form-group textarea {
+    min-height: 6.5rem;
+    max-height: 15rem;
+    resize: vertical;
 }
 
 /* Phone input field */
@@ -1175,4 +1202,64 @@
 
 .btn-danger:hover {
   background: #9b2c2c;
+}
+
+/* Agent Application Page */
+.agent-status-card {
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #E5E7EB;
+    background-color: #F9FAFB;
+}
+
+.agent-status-card h2,
+.agent-status-card h3 {
+    margin: 0 0 0.5rem;
+}
+
+.agent-status-desc {
+    margin: 0 0 1rem;
+    color: var(--clr-label-font);
+}
+
+.agent-status-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+}
+
+.agent-status-details p {
+    margin: 0;
+}
+
+.agent-status-hint {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--clr-label-font);
+}
+
+.agent-status-card.status-approved {
+    background-color: #ECFDF5;
+    border-color: #A7F3D0;
+    color: #065F46;
+}
+
+.agent-status-card.status-pending {
+    background-color: #FFFBEB;
+    border-color: #FDE68A;
+    color: #92400E;
+}
+
+.agent-status-card.status-rejected {
+    background-color: #FEF2F2;
+    border-color: #FECACA;
+    color: #991B1B;
+}
+
+.agent-doc-link {
+    color: var(--clr-primary);
+    text-decoration: underline;
+    font-weight: 600;
 }

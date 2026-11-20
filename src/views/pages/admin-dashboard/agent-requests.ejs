@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agent Requests - Admin - MEGATERRA</title>
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages/admin-dashboard.css" />
+  </head>
+
+  <body>
+    <%- include('../../partials/navbar') %>
+
+    <div id="rejectModal" class="admin-modal-overlay hidden">
+      <div class="admin-modal">
+        <h2 class="admin-modal-title">Reject Agent Application</h2>
+        <p class="admin-modal-subtitle">
+          Company: <strong id="rejectModalCompany"></strong>
+        </p>
+        <form id="rejectModalForm" method="POST" action="">
+          <div class="admin-modal-field">
+            <label for="rejectReason">Rejection Reason</label>
+            <textarea
+              id="rejectReason"
+              name="reason"
+              rows="3"
+              placeholder="e.g. Business document link is not accessible..."
+              required
+            ></textarea>
+          </div>
+          <div class="admin-modal-actions">
+            <button type="button" id="closeRejectModal" class="btn-admin-cancel">Cancel</button>
+            <button type="submit" class="btn-admin-reject">Confirm Reject</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <main class="admin-main">
+      <%- include('../../partials/adminSidebar', { activeMenu }) %>
+
+      <section class="admin-content">
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">Agent Requests</h1>
+          <span class="admin-badge-count"><%= requests.length %> Pending</span>
+        </div>
+
+        <% if (requests.length === 0) { %>
+          <div class="admin-empty-state">
+            <i data-lucide="inbox"></i>
+            <p>No pending agent applications.</p>
+          </div>
+        <% } else { %>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Applicant</th>
+                  <th>Phone</th>
+                  <th>Company</th>
+                  <th>Address</th>
+                  <th>Document</th>
+                  <th>Submitted</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% requests.forEach(agentReq => { %>
+                  <tr>
+                    <td>
+                      <span class="admin-customer-name"><%= agentReq.full_name %></span>
+                      <span class="admin-customer-email"><%= agentReq.email %></span>
+                    </td>
+                    <td><%= agentReq.phone || '—' %></td>
+                    <td><%= agentReq.company_name %></td>
+                    <td class="admin-reason-cell"><%= agentReq.company_address %></td>
+                    <td>
+                      <% if (agentReq.business_doc_url) { %>
+                        <a
+                          href="<%= agentReq.business_doc_url %>"
+                          target="_blank"
+                          rel="noopener"
+                          class="admin-doc-link"
+                        >
+                          View Doc
+                        </a>
+                      <% } else { %>
+                        —
+                      <% } %>
+                    </td>
+                    <td>
+                      <%= new Date(agentReq.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                    </td>
+                    <td class="admin-action-cell">
+                      <form
+                        action="/admin/agent-requests/<%= agentReq.id %>/approve"
+                        method="POST"
+                        class="admin-action-form"
+                      >
+                        <button type="submit" class="btn-admin-approve">Approve</button>
+                      </form>
+                      <button
+                          type="button"
+                          class="btn-admin-reject open-reject-modal"
+                          data-id="<%= agentReq.id %>"
+                          data-company="<%= agentReq.company_name %>"
+                        >
+                          Reject
+                      </button>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </section>
+    </main>
+
+    <%- include('../../partials/footer') %>
+    <%- include('../../partials/loginModal') %>
+
+    <script src="/js/admin-agent-requests.js"></script>
+  </body>
+</html>
