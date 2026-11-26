@@ -329,7 +329,13 @@ const getBecomeAgentPage = async (req, res) => {
   try {
     const userId = req.session?.user?.id;
     if (!userId) return res.redirect('/');
+    
     const profile = await agentModel.getAgentProfileByUserId(userId);
+
+    if (profile && profile.status === 'approved' && req.session.user) {
+    req.session.user.isAgent = true;
+    }
+
     return res.render('pages/dashboard/become-agent', {
       activeMenu: 'become-agent',
       profile,

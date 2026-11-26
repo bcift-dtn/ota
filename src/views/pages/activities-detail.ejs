@@ -25,13 +25,17 @@
         <div class="detail-top">
           <div class="detail-gallery">
             <% 
-              const packageImages = product.images.filter(img => 
+              let packageImages = product.images.filter(img => 
                 img.package_id === selectedPackage.id || img.package_id === null
               );
 
-              const mainImage = packageImages.length > 0 ? packageImages[0].url : '/images/placeholder.webp';
+              if (packageImages.length === 0) {
+                packageImages = product.images;
+              }
+
+              const mainImage = packageImages.length > 0 ? packageImages[0].url : '/images/promotions/placeholder-image-1.webp';
             %> 
-            <img class="detail-main-image" src="<%= mainImage %>" alt="Image of <%= product.brand %> <%= product.model %> car">
+              <img class="detail-main-image" src="<%= mainImage %>" alt="<%= product.title %>">
             <div class="detail-thumbnails">
               <% packageImages.forEach((img, index) => { %>
                <img class="detail-thumbnail <%= index === 0 ? 'active-thumb' : '' %>"

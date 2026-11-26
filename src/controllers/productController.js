@@ -6,7 +6,6 @@ const { getFerryCheckout } = require('./ferryController');
 
 const { createOrder } = require('../models/orderModel');
 const { createInquiry } = require('../services/yokkeService');
-
 const getEffectivePrice = (normalPrice, agentPrice, isAgent) => {
   const normal = Number(normalPrice) || 0;
   const agent = Number(agentPrice) || 0;
@@ -37,17 +36,31 @@ const getCarRentals = async (req, res) => {
     const allPackages = await getPackagesByProductIds(productIds);
     const amenities = await getProductAmenities(productIds);
 
-    const formattedProducts = carListing.map(p => ({
-      ...p,
-      amenities: amenities.filter(a => a.product_id === p.id),
-      formatted_starting_price: Number(p.starting_price).toLocaleString('id-ID'),
-      packages: allPackages
+    const isAgent = Boolean(req.session?.user?.isAgent);
+
+    const formattedProducts = carListing.map(p => {
+      const pkgs = allPackages
         .filter(pkg => pkg.product_id === p.id)
-        .map(pkg => ({
-          ...pkg,
-          formatted_price: Number(pkg.normal_price).toLocaleString('id-ID')
-        }))
-    }));
+        .map(pkg => {
+          const effectivePrice = getEffectivePrice(pkg.normal_price, pkg.agent_price, isAgent);
+          return {
+            ...pkg,
+            normal_price: effectivePrice,
+            formatted_price: effectivePrice.toLocaleString('id-ID')
+          };
+        });
+
+      const startingPrice = pkgs.length > 0
+        ? Math.min(...pkgs.map(pkg => pkg.normal_price))
+        : Number(p.starting_price);
+
+      return {
+        ...p,
+        amenities: amenities.filter(a => a.product_id === p.id),
+        formatted_starting_price: startingPrice.toLocaleString('id-ID'),
+        packages: pkgs
+      };
+    });
 
     return res.render('pages/car-rental-list', {
       products: formattedProducts,
@@ -81,6 +94,7 @@ const getCarRentalDetail = async (req, res) => {
 
     if (rows.length === 0) return res.status(404).render('pages/404', { message: 'Car not found.' });
 
+    const isAgent = Boolean(req.session?.user?.isAgent);
     const seenPackageIds = new Set();
     const packages = rows.filter(r => {
       if (r.package_id && !seenPackageIds.has(r.package_id)) {
@@ -88,19 +102,22 @@ const getCarRentalDetail = async (req, res) => {
         return true;
       }
       return false;
-    }).map(r => ({
-      id: r.package_id,
-      name: r.package_name,
-      description: r.package_description,
-      normal_price: r.package_price,
-      agent_price: r.package_agent_price,
-      max_quantity: r.max_quantity,
-      duration_hours: r.duration_hours,
-      important_info: r.package_important_info,
-      is_refundable: r.is_refundable,
-      is_reschedulable: r.is_reschedulable,
-      formatted_price: Number(r.package_price).toLocaleString('id-ID')
-    }));
+    }).map(r => {
+      const effectivePrice = getEffectivePrice(r.package_price, r.package_agent_price, isAgent);
+      return {
+        id: r.package_id,
+        name: r.package_name,
+        description: r.package_description,
+        normal_price: effectivePrice,
+        agent_price: r.package_agent_price,
+        max_quantity: r.max_quantity,
+        duration_hours: r.duration_hours,
+        important_info: r.package_important_info,
+        is_refundable: r.is_refundable,
+        is_reschedulable: r.is_reschedulable,
+        formatted_price: effectivePrice.toLocaleString('id-ID')
+      };
+    });
 
     const productAmenities = await getProductAmenities([carId]);
     const packageIds = packages.map(p => p.id);
@@ -162,18 +179,32 @@ const getActivities = async (req, res) => {
 
     const amenities = await getProductAmenities(productIds);
 
-    const formattedProducts = activitiesListing.map(p => ({
-      ...p,
-      amenities: amenities.filter(a => a.product_id === p.id),
-      formatted_starting_price: Number(p.starting_price).toLocaleString('id-ID'),
-      packages: allPackages
+        const isAgent = Boolean(req.session?.user?.isAgent);
+
+    const formattedProducts = activitiesListing.map(p => {
+      const pkgs = allPackages
         .filter(pkg => pkg.product_id === p.id)
-        .map(pkg => ({
-          ...pkg,
-          image_url: pkg.package_image_url || p.image_url,
-          formatted_price: Number(pkg.normal_price).toLocaleString('id-ID')
-        }))
-    }))
+        .map(pkg => {
+          const effectivePrice = getEffectivePrice(pkg.normal_price, pkg.agent_price, isAgent);
+          return {
+            ...pkg,
+            normal_price: effectivePrice,
+            image_url: pkg.package_image_url || p.image_url,
+            formatted_price: effectivePrice.toLocaleString('id-ID')
+          };
+        });
+
+      const startingPrice = pkgs.length > 0
+        ? Math.min(...pkgs.map(pkg => pkg.normal_price))
+        : Number(p.starting_price);
+
+      return {
+        ...p,
+        amenities: amenities.filter(a => a.product_id === p.id),
+        formatted_starting_price: startingPrice.toLocaleString('id-ID'),
+        packages: pkgs
+      };
+    });
 
     return res.render('pages/activities-list', {
       products: formattedProducts,
@@ -187,7 +218,7 @@ const getActivities = async (req, res) => {
       },
       currentPage: page,
       totalPages: totalPages
-    })
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Server error, please try again later.' });
@@ -204,6 +235,8 @@ const getActivitiesDetail = async (req, res) => {
 
     if (rows.length === 0) return res.status(404).render('pages/404', { message: 'Activities not found.'})
 
+    const isAgent = Boolean(req.session?.user?.isAgent);
+
     const seenPackageIds = new Set();
     const packages = rows.filter(r => {
       if (r.package_id && !seenPackageIds.has(r.package_id)) {
@@ -211,22 +244,25 @@ const getActivitiesDetail = async (req, res) => {
         return true;
       }
       return false;
-    }).map(r => ({
-      id: r.package_id,
-      name: r.package_name,
-      description: r.package_description,
-      normal_price: r.package_price,
-      agent_price: r.package_agent_price,
-      max_quantity: r.max_quantity,
-      max_pax_per_unit: r.max_pax_per_unit,
-      duration_hours: r.duration_hours,
-      pricing_type: r.pricing_type,
-      important_info: r.package_important_info,
-      itinerary: r.package_itinerary,
-      is_refundable: r.is_refundable,
-      is_reschedulable: r.is_reschedulable,
-      formatted_price: Number(r.package_price).toLocaleString('id-ID')
-    }))
+    }).map(r => {
+      const effectivePrice = getEffectivePrice(r.package_price, r.package_agent_price, isAgent);
+      return {
+        id: r.package_id,
+        name: r.package_name,
+        description: r.package_description,
+        normal_price: effectivePrice,
+        agent_price: r.package_agent_price,
+        max_quantity: r.max_quantity,
+        max_pax_per_unit: r.max_pax_per_unit,
+        duration_hours: r.duration_hours,
+        pricing_type: r.pricing_type,
+        important_info: r.package_important_info,
+        itinerary: r.package_itinerary,
+        is_refundable: r.is_refundable,
+        is_reschedulable: r.is_reschedulable,
+        formatted_price: effectivePrice.toLocaleString('id-ID')
+      };
+    });
 
     const packageIds = packages.map(p => p.id);
 
@@ -236,12 +272,21 @@ const getActivitiesDetail = async (req, res) => {
     const timeSlots = await getPackageTimeSlots(packageIds);
     const addons = await getProductAddons(activityId, packageIds);
 
+    
+    
     packages.forEach(pkg => {
       pkg.amenities = packageAmenities.filter(a => a.package_id === pkg.id);
-      pkg.pricingTiers = pricingTiers.filter(p => p.package_id === pkg.id);
+      pkg.pricingTiers = pricingTiers
+      .filter(p => p.package_id === pkg.id)
+      .map(tier => ({
+        ...tier,
+        normal_price: getEffectivePrice(tier.normal_price, tier.agent_price, isAgent)
+      }));
       pkg.timeSlots = timeSlots.filter(t => t.package_id === pkg.id);
       pkg.addons = addons.filter(a => a.package_id === null || a.package_id === pkg.id);
     })
+
+    
     
     const startingPrice = packages.length > 0 
       ? Math.min(...packages.map(p => Number(p.normal_price)))
@@ -309,6 +354,7 @@ const getCheckoutPage = async (req, res) => {
 
     const selectedPackage = rows.find(r => r.package_id === parseInt(draftOrder.packageId));
     
+    const isAgent = Boolean(req.session?.user?.isAgent);
     let filteredBasePrice = 0;
 
     if (selectedPackage.pricing_type === 'per_unit') {
@@ -318,7 +364,8 @@ const getCheckoutPage = async (req, res) => {
         selectedPackage.max_quantity || 99
       );
 
-      filteredBasePrice = Number(selectedPackage.package_price) * safeQuantity;
+      const unitPrice = getEffectivePrice(selectedPackage.package_price, selectedPackage.package_agent_price, isAgent);
+      filteredBasePrice = unitPrice * safeQuantity;
 
     } else if (selectedPackage.pricing_type === 'per_pax') {
       const dbTiers = await getPackagePricingTiers([selectedPackage.package_id]);
@@ -328,7 +375,8 @@ const getCheckoutPage = async (req, res) => {
           const matchingDbTier = dbTiers.find(db => db.tier_title.toLowerCase() === draftTier.tier);
           
           if (matchingDbTier) {
-            filteredBasePrice += (Number(matchingDbTier.normal_price) * Number(draftTier.quantity));
+            const tierPrice = getEffectivePrice(matchingDbTier.normal_price, matchingDbTier.agent_price, isAgent);
+            filteredBasePrice += tierPrice * Number(draftTier.quantity);
           }
         });
       }
